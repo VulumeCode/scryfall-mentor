@@ -1,0 +1,35 @@
+@font-face {
+  font-family: "Lato";
+  src: url("https://assets.scryfall.com/assets/lato/light-7ff9f6899f30bd0b016af8102c8f4b3a229cc8488e085aad35ed6559989955b2.woff2") format("woff2"), url("https://assets.scryfall.com/assets/lato/light-7f2cb6e369b6a1e8929ebd0dde35bcf160d7a8097be0ce5777c7fea32b21d5fd.woff") format("woff");
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lato";
+  src: url("https://assets.scryfall.com/assets/lato/regular-ee530872dda8ea465291050e212386acf1514d4ecc4bddb15eb252715bcd2668.woff2") format("woff2"), url("https://assets.scryfall.com/assets/lato/regular-1bd393e95fa6735ba3dc8215197c0e3dc95f4496f889abc16249507ba07081f0.woff") format("woff");
+  font-style: normal;
+  font-weight: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lato";
+  src: url("https://assets.scryfall.com/assets/lato/semibold-681adc23e687e014fdbcc83dd31f98cecd29e449c9e6a594155dda9778d58d70.woff2") format("woff2"), url("https://assets.scryfall.com/assets/lato/semibold-1a2bbec5969be15bdeac705633b1372595b089674d807d322d1aa1a25206ebcc.woff") format("woff");
+  font-style: normal;
+  font-weight: bold;
+  font-display: swap;
+}
+
+body {
+  width: 432px;
+  margin: 0;
+  font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  float: right;
+  overflow: hidden;
+}
+
+code {
+  font-family: Consolas, "Liberation Mono", Courier, monospace;
+}
