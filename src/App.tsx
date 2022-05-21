@@ -8,19 +8,23 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.tsx</code> and save to reloado.
+          Edit <code>src/App.tsx</code> and save to reload.
         </p>
-        <a
+        <button
           className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+          onClick={search}
         >
           Learn React
-        </a>
+        </button>
       </header>
     </div>
   );
+}
+
+async function search() {
+  
+  const activeTab = (await browser.tabs.query({ currentWindow: true, active: true }) )[0]
+  browser.tabs.update(activeTab.id, { url: "https://scryfall.com/random" });
 }
 
 export default App;

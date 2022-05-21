@@ -10,5 +10,10 @@
     "default_icon": "scryfall.svg",
     "default_title": "Scryfall Mentor",
     "default_panel": "index.html"
-  }
+  },
+  "permissions": [
+    "history",
+    "tabs",
+    "storage"
+  ]
 }
