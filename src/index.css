@@ -1208,13 +1208,13 @@ tr:hover .diff li.unchanged {
   -ms-appearance: none;
   -webkit-appearance: none;
   appearance: none;
-  background-color: #FEFEFE;
+  /* background-color: #FEFEFE; */
   -webkit-border-radius: 2px;
   border-radius: 2px;
   border: 1px solid #AEAEAE;
   color: #343242;
   font-size: 20px;
-  color: #551A8B;
+  color: #fefefe;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1235,7 +1235,7 @@ tr:hover .diff li.unchanged {
   transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear, -webkit-box-shadow 60ms linear
 }
 
-.advanced-search-checkbox input[type=checkbox]:focus,
+/* .advanced-search-checkbox input[type=checkbox]:focus,
 .advanced-search-checkbox input[type=checkbox]:active,
 .advanced-search-checkbox input[type=checkbox]:hover,
 .advanced-search-checkbox input[type=checkbox]:checked {
@@ -1244,7 +1244,7 @@ tr:hover .diff li.unchanged {
   border-bottom-color: #551A8B;
   border-right-color: #551A8B;
   outline: none
-}
+} */
 
 .advanced-search-checkbox input[type=checkbox]:focus,
 .advanced-search-checkbox input[type=checkbox]:active,
@@ -2010,12 +2010,12 @@ tr:hover .diff li.unchanged {
   transition-timing-function: linear
 }
 
-.button-n+.button-n,
+/* .button-n+.button-n,
 .select-n+.button-n,
 .button-n+.select-n,
 .select-n+.select-n {
   margin: 0 0 0 6px
-}
+} */
 
 .button-n-wrapper+.button-n,
 .button-n-wrapper+.select-n,
@@ -12445,13 +12445,4 @@ select.form-n-input optgroup {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content
-}
-
-
-
-
-body {
-  width: 100vw;
-  margin: 0;
-  font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }

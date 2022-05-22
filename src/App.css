@@ -1,20 +1,56 @@
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  margin: 0;
+  font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+body::before {
+  background-image: url("scryfall.svg");
+  background-repeat: no-repeat;
+  background-size: 100vw;
+  background-position: top;
+  width: 100%;
+  height: 100%;
+  opacity: 0.6;
+  opacity: 0.1;
+  content: " ";
+  position: absolute;
+}
+
+
 .App {
   text-align: center;
 }
 
 .App-logo {
   width: 100vw;
-  pointer-events: none;
   opacity: 0.1;
 }
 
 .App-header {
-  background-color: #2B253A;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   /* font-size: calc(10px + 2vw); */
   color: white;
+}
+
+.App {
+  padding: 1em;
+}
+
+.App button {
+  margin: 0.2em;
+}
+
+.advanced-search-checkbox {
+  width: 100%;
+  margin: 0 16px 8px 0;
+}
+
+.advanced-search-checkbox input[type=text] {
+  flex-grow: 100;
 }
