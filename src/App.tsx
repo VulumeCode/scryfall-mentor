@@ -1,22 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import { useImmer } from "use-immer";
 
 type QueryPart = {
   enabled: boolean
-  part: string
+  query: string
 }
 
 function App() {
   const [searchHistory, setSearchHistory] = useState<Array<browser.history.HistoryItem>>([]);
-
-  const [queryParts, setQueryParts] = useImmer<Array<QueryPart>>([{ enabled: true, part: "Hans" }, { enabled: false, part: "Ach" }]);
-
   // useEffect(() => {
   //   async function fetchData() {
   //     setSearchHistory(await browser.history.search({
   //       text: "://scryfall.com/search",
-  //       maxResults: 1000000000000,
+  //       maxResults: 20,
   //       startTime: new Date(0)
   //     }));
   //   }
@@ -29,11 +26,33 @@ function App() {
   //   });
   // }, []);
 
+  const [queries, setQueries] = useImmer<{ [id: string]: Array<QueryPart> }>({
+    "Hans": [
+      { enabled: true, query: "Hans" },
+      { enabled: false, query: "Ach" },
+      { enabled: false, query: "" },
+    ],
+    "Toxrill": [
+      { enabled: true, query: "t:slug" },
+      { enabled: true, query: "t:legendary" },
+      { enabled: true, query: "c:b" },
+      { enabled: false, query: "" },
+    ],
+    "Gingerbrute": [
+      { enabled: true, query: "t:food" },
+      { enabled: true, query: "t:creature" },
+      { enabled: false, query: "" },
+    ],
+  });
+
+  const [queryParts, setQueryParts] = useImmer<Array<QueryPart>>(Object.values(queries)[0]);
+
   console.log("Update", Date.now())
 
   return (
     <div className="App">
       <header className="App-header inverted">
+
         {// history
           searchHistory.map((historyItem, i) =>
             <button
@@ -46,72 +65,103 @@ function App() {
             </button>
           )
         }
+
+        {// workspace
+          Object.keys(queries).map((queryName, i) =>
+            <button
+              key={"workspace" + i}
+              className='button-n inverted'
+              onClick={() => setQueryParts(queries[queryName])}
+              title={queryName}
+            >
+              {queryName}
+            </button>
+          )
+        }
+
+        <div key='pushDownSpacer' className='pushDownSpacer'></div>
+        <div key='activeQueryName' className='activeQueryName'>
+          Search for Magic cards...
+        </div>
         {
-          queryParts.map((queryPart, i) =>
-            <label
-              id={"queryPart" + i}
+          queryParts.map((queryPart, i) => {
+            const last = i === queryParts.length - 1
+            return <label
               key={"queryPart" + i}
               className="advanced-search-checkbox">
               <input
-                id={"queryPartCheckbox" + i}
                 key={"queryPartCheckbox" + i}
                 className='button-n inverted'
-                type="checkbox" checked={queryPart.enabled} onChange={
+                type="checkbox"
+                checked={queryPart.enabled}
+                disabled={last}
+                onChange={
                   (e) => setQueryParts(draft => { draft[i].enabled = e.target.checked; })
-                } ></input>
+                }
+                onDoubleClick={(e) => setQueryParts(draft => {
+                  draft[i].query = "LOCKED";
+                })}></input>
               <input
-                id={"queryPartText" + i}
                 key={"queryPartText" + i}
-                className='button-n inverted' type="text" value={queryPart.part} onChange={
-                  (e) => setQueryParts(draft => { draft[i].part = e.target.value; })
+                className='button-n inverted'
+                type="text"
+                value={queryPart.query}
+                placeholder={last ? "Query" : undefined}
+                onChange={
+                  (e) => setQueryParts(draft => {
+                    draft[i].query = e.target.value;
+                    if (last) {
+                      draft[i].enabled = true;
+                      draft.push({ enabled: false, query: "" })
+                    }
+                  })
                 } ></input>
+              {<button
+                className='remove'
+                disabled={last}
+                onClick={() =>
+                  setQueryParts(draft => {
+                    draft.splice(i, 1);
+                  })
+                }>🞪</button>}
             </label>
+          }
           )
         }
-        <label
-          id={"queryPart" + queryParts.length}
-          key={"queryPart" + queryParts.length}
-          className="advanced-search-checkbox">
-          <input
-            id={"queryPartCheckbox" + queryParts.length}
-            key={"queryPartCheckbox" + queryParts.length}
+
+        <div>
+          <button
+            key={"searh"}
             className='button-n inverted'
-            type="checkbox" checked={false} disabled={true}
-          ></input>
-          <input
-            id={"queryPartText" + queryParts.length}
-            key={"queryPartText" + queryParts.length}
-            className='button-n inverted' type="text" value={""} placeholder="query" onChange={
-              (e) => setQueryParts(draft => { draft.push({ enabled: true, part: e.target.value }) })
-            } ></input>
-        </label>
-
-
-
-        <button
-          key={"searh"}
-          className='button-n inverted'
-          onClick={() => search(queryParts)}
-        >
-          Search
-        </button>
-        <button
-          key={"random"}
-          className='button-n inverted'
-          onClick={() => goto("https://scryfall.com/random")}
-        >
-          Random card
-        </button>
+            onClick={() => search(queryParts)}
+          >
+            Search
+          </button>
+          <button
+            key={"save"}
+            className='button-n inverted'
+            onClick={() => setQueries(draft => { draft[Date.now()] = queryParts })}
+          >
+            Save
+          </button>
+          <button
+            key={"random"}
+            className='button-n inverted'
+            onClick={() => goto("https://scryfall.com/random")}
+          >
+            Random card
+          </button>
+        </div>
       </header>
     </div >
   );
 }
 
-async function search(queryParts: QueryPart[]) {
+function search(queryParts: QueryPart[]) {
   let queryUrl = "https://scryfall.com/search?q=";
 
   queryUrl += encodeURIComponent(queryParts.filter(p => p.enabled).map(p =>
-    "(" + (p.part) + ")"
+    "(" + (p.query) + ")"
   ).join(' '));
 
   goto(queryUrl)

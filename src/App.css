@@ -19,27 +19,41 @@ body::before {
   position: absolute;
 }
 
+#root {
+  height: 100%;
+}
 
 .App {
   text-align: center;
-}
-
-.App-logo {
-  width: 100vw;
-  opacity: 0.1;
+  padding: 1em;
+  height: 100%;
 }
 
 .App-header {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: flex-start;
   /* font-size: calc(10px + 2vw); */
   color: white;
+  height: 100%;
 }
 
-.App {
-  padding: 1em;
+
+.activeQueryName {
+  position: relative;
+  color: #999;
+  font-size: 12px;
+  font-weight: bold;
+  /* text-transform: uppercase; */
+  border-bottom: 1px solid #999;
+  max-width: 220px;
+  margin: 0 auto 6px 0;
+  padding: 0 0 6px 0;
+}
+
+.pushDownSpacer {
+  height: 20%;
 }
 
 .App button {
@@ -53,4 +67,14 @@ body::before {
 
 .advanced-search-checkbox input[type=text] {
   flex-grow: 100;
+}
+
+.App button.remove {
+  color: #786076;
+  position: relative;
+  margin: 0.2em 0 0.2em 0.5em;
+}
+
+.App button.remove:disabled {
+  visibility: hidden;
 }
