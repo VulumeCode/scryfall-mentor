@@ -78,3 +78,12 @@ body::before {
 .App button.remove:disabled {
   visibility: hidden;
 }
+
+
+.advanced-search-checkbox input[type="checkbox"].locked:checked::before {
+  content: "🔒";
+  font-family: "emojisymbols";
+  font-weight: 100;
+  line-height: 0ex;
+  margin-bottom: 0.6ex;
+}

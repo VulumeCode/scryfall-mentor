@@ -37,6 +37,18 @@
   display: none !important
 }
 
+
+@font-face {
+  /*
+    EmojiSymbols Font (c)blockworks - Kenichi Kaneko
+    http://emojisymbols.com/
+  */
+  font-family: "emojisymbols";
+  src:
+    url("EmojiSymbols-Regular.woff") format("woff");
+}
+
+
 @font-face {
   font-family: "Lato";
   font-weight: 300;

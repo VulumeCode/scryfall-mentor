@@ -3,7 +3,7 @@ import './App.css';
 import { useImmer } from "use-immer";
 
 type QueryPart = {
-  enabled: boolean
+  enabled: boolean | "locked"
   query: string
 }
 
@@ -91,15 +91,15 @@ function App() {
               className="advanced-search-checkbox">
               <input
                 key={"queryPartCheckbox" + i}
-                className='button-n inverted'
+                className={'button-n inverted ' + queryPart.enabled}
                 type="checkbox"
-                checked={queryPart.enabled}
+                checked={!!queryPart.enabled}
                 disabled={last}
                 onChange={
                   (e) => setQueryParts(draft => { draft[i].enabled = e.target.checked; })
                 }
                 onDoubleClick={(e) => setQueryParts(draft => {
-                  draft[i].query = "LOCKED";
+                  draft[i].enabled = "locked";
                 })}></input>
               <input
                 key={"queryPartText" + i}
@@ -160,7 +160,7 @@ function App() {
 function search(queryParts: QueryPart[]) {
   let queryUrl = "https://scryfall.com/search?q=";
 
-  queryUrl += encodeURIComponent(queryParts.filter(p => p.enabled).map(p =>
+  queryUrl += encodeURIComponent(queryParts.filter(p => !!p.enabled).map(p =>
     "(" + (p.query) + ")"
   ).join(' '));
 
