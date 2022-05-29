@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import './App.css';
 import { useImmer } from "use-immer";
-import { UncontrolledTreeEnvironment, Tree, StaticTreeDataProvider, TreeRef } from 'react-complex-tree';
-import "react-complex-tree/lib/style.css";
+
 
 import { longTree } from "./data";
+import Collections from './Collections';
 
 type QueryPart = {
   enabled: boolean | "locked"
@@ -13,7 +13,7 @@ type QueryPart = {
 
 
 function App() {
-  const [searchHistory, setSearchHistory] = useState<Array<browser.history.HistoryItem>>([]);
+  // const [searchHistory, setSearchHistory] = useState<Array<browser.history.HistoryItem>>([]);
   // useEffect(() => {
   //   async function fetchData() {
   //     setSearchHistory(await browser.history.search({
@@ -31,7 +31,7 @@ function App() {
   //   });
   // }, []);
 
-  const [queries, setQueries] = useImmer<{ [id: string]: Array<QueryPart> }>({
+  const [queryCollection, setQueryCollection] = useImmer<{ [id: string]: Array<QueryPart> }>({
     "Hans": [
       { enabled: true, query: "Hans" },
       { enabled: false, query: "Ach" },
@@ -50,63 +50,35 @@ function App() {
     ],
   });
 
-  const [queryParts, setQueryParts] = useImmer<Array<QueryPart>>(Object.values(queries)[0]);
+  const [queryParts, setQueryParts] = useImmer<Array<QueryPart>>(Object.values(queryCollection)[0]);
 
   console.log("Update", Date.now())
-
-
-  const tree = useRef<TreeRef>(null);
 
   return (
     <div className="App">
       <header className="App-header inverted">
 
         {// history
-          searchHistory.map((historyItem, i) =>
-            <button
-              key={"history" + i}
-              className='button-n inverted'
-              onClick={() => goto(historyItem.url)}
-              title={historyItem.url}
-            >
-              {historyItem.title?.replace(" · Scryfall Magic: The Gathering Search", "")}
-            </button>
-          )
-        }
-
-
-        {// workspace
-          // Object.keys(queries).map((queryName, i) =>
+          // searchHistory.map((historyItem, i) =>
           //   <button
-          //     key={"workspace" + i}
+          //     key={"history" + i}
           //     className='button-n inverted'
-          //     onClick={() => setQueryParts(queries[queryName])}
-          //     title={queryName}
+          //     onClick={() => goto(historyItem.url)}
+          //     title={historyItem.url}
           //   >
-          //     {queryName}
+          //     {historyItem.title?.replace(" · Scryfall Magic: The Gathering Search", "")}
           //   </button>
           // )
         }
-        <UncontrolledTreeEnvironment
-          dataProvider={new StaticTreeDataProvider(longTree.items, (item, data) => ({ ...item, data }))}
-          getItemTitle={item => item.data}
-          viewState={{}}
-          canReorderItems
-          canDragAndDrop
-        >
-          <Tree
-            treeId="tree-1"
-            rootItem="root"
-            treeLabel="Tree Example"
-            ref={tree}
-            renderItemArrow={(props) => props.item.hasChildren
-              ? <span className='blueprint-icons-standard' onClick={() => tree.current?.toggleItemExpandedState(props.item.index)}> {props.context.isExpanded
-                ? "\uF1BA"
-                : "\uF1B8"}</span>
-              : null}
-            renderItemTitle={({ title, item }) => <div onDoubleClick={() => tree.current?.startRenamingItem(item.index)}>{title}</div>}
-          />
-        </UncontrolledTreeEnvironment>
+
+        <Collections
+          treeData={longTree.items}
+          onSelectQuery={(queryKey) => {
+            console.log(queryKey)
+            setQueryParts(queryCollection[queryKey])
+          }
+          }
+        />
 
 
         <div key='pushDownSpacer' className='pushDownSpacer'></div>
@@ -170,7 +142,7 @@ function App() {
           <button
             key={"save"}
             className='button-n inverted'
-            onClick={() => setQueries(draft => { draft[Date.now()] = queryParts })}
+            onClick={() => setQueryCollection(draft => { draft[Date.now()] = queryParts })}
           >
             Save
           </button>

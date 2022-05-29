@@ -37,9 +37,9 @@ const readTemplate = (template: any, data: any = { items: {} }) => {
   const longTreeTemplate = {
     root: {
       Fruit: {
-        Apple: null,
-        Orange: null,
-        Lemon: null,
+        Hans: null,
+        Gingerbrute: null,
+        Lemon: {},
         Berries: {
           Strawberry: null,
           Blueberry: null
