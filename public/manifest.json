@@ -16,5 +16,12 @@
     "tabs",
     "storage",
     "webNavigation"
-  ]
+  ],
+  "commands": {
+    "_execute_sidebar_action": {
+      "suggested_key": {
+        "default": "Alt+Ctrl+S"
+      }
+    }
+  }
 }
