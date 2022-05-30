@@ -81,6 +81,7 @@ body::before {
 
 
 .advanced-search-checkbox input[type="checkbox"].locked:checked::before {
+  /* lock */
   content: "\F232";
   font-family: "blueprint-icons-16";
   font-weight: 100;
@@ -130,7 +131,7 @@ body::before {
   font-family: "emojisymbols";
 }
 
-.blueprint-icons-standard {
+.blueprint-icons {
   font-family: "blueprint-icons-16";
   margin-bottom: 0.2ex;
   margin-right: 0.2em;
@@ -138,4 +139,11 @@ body::before {
 
 .blueprint-icons-big {
   font-family: "blueprint-icons-20";
+  margin-bottom: 0.2ex;
+  margin-right: 0.2em;
+}
+
+input.collections-filter::placeholder {
+  font-family: "blueprint-icons-20";
+  font-weight: 100;
 }

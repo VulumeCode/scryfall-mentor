@@ -1,91 +1,95 @@
 const readTemplate = (template: any, data: any = { items: {} }) => {
     for (const [key, value] of Object.entries(template)) {
-      data.items[key] = {
-        index: key,
-        canMove: true,
-        hasChildren: value !== null,
-        children: value !== null ? Object.keys(value as object) : undefined,
-        data: key,
-        canRename: true
-      };
-  
-      if (value !== null) {
-        readTemplate(value, data);
-      }
+        const isDir = typeof value === "object";
+
+        data.items[key] = {
+            index: key,
+            canMove: true,
+            hasChildren: isDir,
+            children: isDir ? Object.keys(value!) : undefined,
+            data: {
+                title: key,
+                queryId: value,
+            },
+            canRename: true
+        };
+
+        if (isDir) {
+            readTemplate(value, data);
+        }
     }
     return data;
-  };
-  
-  const shortTreeTemplate = {
+};
+
+const shortTreeTemplate = {
     root: {
-      container: {
-        item0: null,
-        item1: null,
-        item2: null,
-        item3: {
-          inner0: null,
-          inner1: null,
-          inner2: null,
-          inner3: null
-        },
-        item4: null,
-        item5: null
-      }
-    }
-  };
-  
-  const longTreeTemplate = {
-    root: {
-      Fruit: {
-        Hans: null,
-        Gingerbrute: null,
-        Lemon: {},
-        Berries: {
-          Strawberry: null,
-          Blueberry: null
-        },
-        Banana: null
-      },
-      Meals: {
-        America: {
-          SmashBurger: null,
-          Chowder: null,
-          Ravioli: null,
-          MacAndCheese: null,
-          Brownies: null
-        },
-        Europe: {
-          Risotto: null,
-          Spaghetti: null,
-          Pizza: null,
-          Weisswurst: null,
-          Spargel: null
-        },
-        Asia: {
-          Curry: null,
-          PadThai: null,
-          Jiaozi: null,
-          Sushi: null
-        },
-        Australia: {
-          PotatoWedges: null,
-          PokeBowl: null,
-          LemonCurd: null,
-          KumaraFries: null
+        container: {
+            item0: 0,
+            item1: 1,
+            item2: 2,
+            item3: {
+                inner0: 0,
+                inner1: 1,
+                inner2: 2,
+                inner3: 3
+            },
+            item4: 4,
+            item5: 5
         }
-      },
-      Desserts: {
-        Cookies: null,
-        IceCream: null
-      },
-      Drinks: {
-        PinaColada: null,
-        Cola: null,
-        Juice: null
-      }
     }
-  };
-  
-  export const longTree = readTemplate(longTreeTemplate);
-  export const shortTree = readTemplate(shortTreeTemplate);
-  
+};
+
+const longTreeTemplate = {
+    root: {
+        Fruit: {
+            Hans: 1,
+            Gingerbrute: 3,
+            Lemon: {},
+            Berries: {
+                Strawberry: 1,
+                Blueberry: 1
+            },
+            Toxrill: 2
+        },
+        Meals: {
+            America: {
+                SmashBurger: 1,
+                Chowder: 1,
+                Ravioli: 1,
+                MacAndCheese: 1,
+                Brownies: 1
+            },
+            Europe: {
+                Risotto: 1,
+                Spaghetti: 1,
+                Pizza: 1,
+                Weisswurst: 1,
+                Spargel: 1
+            },
+            Asia: {
+                Curry: 1,
+                PadThai: 1,
+                Jiaozi: 1,
+                Sushi: 1
+            },
+            Australia: {
+                PotatoWedges: 1,
+                PokeBowl: 1,
+                LemonCurd: 1,
+                KumaraFries: 1
+            }
+        },
+        Desserts: {
+            Cookies: 1,
+            IceCream: 1
+        },
+        Drinks: {
+            PinaColada: 1,
+            Cola: 1,
+            Juice: 1
+        }
+    }
+};
+
+export const longTree = readTemplate(longTreeTemplate);
+export const shortTree = readTemplate(shortTreeTemplate);

@@ -31,19 +31,19 @@ function App() {
   //   });
   // }, []);
 
-  const [queryCollection, setQueryCollection] = useImmer<{ [id: string]: Array<QueryPart> }>({
-    "Hans": [
+  const [queryCollection, setQueryCollection] = useImmer<{ [id: number]: Array<QueryPart> }>({
+    1: [
       { enabled: true, query: "Hans" },
       { enabled: false, query: "Ach" },
       { enabled: false, query: "" },
     ],
-    "Toxrill": [
+    2: [
       { enabled: true, query: "t:slug" },
       { enabled: true, query: "t:legendary" },
       { enabled: true, query: "c:b" },
       { enabled: false, query: "" },
     ],
-    "Gingerbrute": [
+    3: [
       { enabled: true, query: "t:food" },
       { enabled: true, query: "t:creature" },
       { enabled: false, query: "" },
