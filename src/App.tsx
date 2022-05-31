@@ -3,13 +3,38 @@ import './App.css';
 import { useImmer } from "use-immer";
 
 
-import { longTree } from "./data";
+import { longTreeTemplate } from "./data";
 import Collections from './Collections';
 
 type QueryPart = {
   enabled: boolean | "locked"
   query: string
 }
+
+const readCollections = (collection: any, data: any = { items: {} }) => {
+  for (const [key, value] of Object.entries(collection)) {
+    const isDir = typeof value === "object";
+
+    data.items[key] = {
+      index: key,
+      canMove: true,
+      hasChildren: isDir,
+      children: isDir ? Object.keys(value!) : undefined,
+      data: {
+        title: key,
+        queryId: value,
+      },
+      canRename: true
+    };
+
+    if (isDir) {
+      readCollections(value, data);
+    }
+  }
+  return data;
+};
+
+
 
 
 function App() {
@@ -30,8 +55,10 @@ function App() {
   //       ]
   //   });
   // }, []);
+  const [queryCollection, setQueryCollection] = useImmer<any>(longTreeTemplate)
 
-  const [queryCollection, setQueryCollection] = useImmer<{ [id: number]: Array<QueryPart> }>({
+
+  const [queries, setQueries] = useImmer<{ [id: number]: Array<QueryPart> }>({
     1: [
       { enabled: true, query: "Hans" },
       { enabled: false, query: "Ach" },
@@ -50,7 +77,7 @@ function App() {
     ],
   });
 
-  const [queryParts, setQueryParts] = useImmer<Array<QueryPart>>(Object.values(queryCollection)[0]);
+  const [queryParts, setQueryParts] = useImmer<Array<QueryPart>>(Object.values(queries)[0]);
 
   console.log("Update", Date.now())
 
@@ -72,12 +99,14 @@ function App() {
         }
 
         <Collections
-          treeData={longTree.items}
+          treeData={readCollections(queryCollection).items}
           onSelectQuery={(queryKey) => {
             console.log(queryKey)
-            setQueryParts(queryCollection[queryKey])
+            setQueryParts(queries[queryKey])
           }
           }
+          onAddCollection={() =>
+            setQueryCollection((draft: any) => { draft.root["new"] = {} })}
         />
 
 
@@ -131,7 +160,7 @@ function App() {
           )
         }
 
-        <div className='queryEditor'>
+        <div className='queryEditor' style={{ display: 'flex', width: '100%' }}>
           <button
             key={"searh"}
             className='button-n inverted'
@@ -142,7 +171,7 @@ function App() {
           <button
             key={"save"}
             className='button-n inverted'
-            onClick={() => setQueryCollection(draft => { draft[Date.now()] = queryParts })}
+            onClick={() => setQueries(draft => { draft[Date.now()] = queryParts })}
           >
             Save
           </button>

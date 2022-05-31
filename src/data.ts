@@ -1,27 +1,5 @@
-const readTemplate = (template: any, data: any = { items: {} }) => {
-    for (const [key, value] of Object.entries(template)) {
-        const isDir = typeof value === "object";
 
-        data.items[key] = {
-            index: key,
-            canMove: true,
-            hasChildren: isDir,
-            children: isDir ? Object.keys(value!) : undefined,
-            data: {
-                title: key,
-                queryId: value,
-            },
-            canRename: true
-        };
-
-        if (isDir) {
-            readTemplate(value, data);
-        }
-    }
-    return data;
-};
-
-const shortTreeTemplate = {
+export const shortTreeTemplate = {
     root: {
         container: {
             item0: 0,
@@ -39,7 +17,7 @@ const shortTreeTemplate = {
     }
 };
 
-const longTreeTemplate = {
+export const longTreeTemplate = {
     root: {
         Fruit: {
             Hans: 1,
@@ -91,5 +69,3 @@ const longTreeTemplate = {
     }
 };
 
-export const longTree = readTemplate(longTreeTemplate);
-export const shortTree = readTemplate(shortTreeTemplate);
