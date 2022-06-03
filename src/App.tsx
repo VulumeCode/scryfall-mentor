@@ -14,6 +14,7 @@ type QueryPart = {
 const readCollections = (collection: any, data: any = { items: {} }) => {
   for (const [key, value] of Object.entries(collection)) {
     const isDir = typeof value === "object";
+    const isQueryId = typeof value === "number";
 
     data.items[key] = {
       index: key,
@@ -22,7 +23,7 @@ const readCollections = (collection: any, data: any = { items: {} }) => {
       children: isDir ? Object.keys(value!) : undefined,
       data: {
         title: key,
-        queryId: value,
+        queryId: isQueryId ? value : null,
       },
       canRename: true
     };
@@ -105,8 +106,10 @@ function App() {
             setQueryParts(queries[queryKey])
           }
           }
-          onAddCollection={() =>
-            setQueryCollection((draft: any) => { draft.root["new"] = {} })}
+          onAddCollection={() => {
+            setQueryCollection((draft: any) => { draft.root["new"] = {} });
+            return "new"
+          }}
         />
 
 
