@@ -1,4 +1,3 @@
-
 export const shortTreeTemplate = {
     root: {
         container: {
@@ -9,12 +8,12 @@ export const shortTreeTemplate = {
                 inner0: 0,
                 inner1: 1,
                 inner2: 2,
-                inner3: 3
+                inner3: 3,
             },
             item4: 4,
-            item5: 5
-        }
-    }
+            item5: 5,
+        },
+    },
 };
 
 export const longTreeTemplate = {
@@ -25,9 +24,9 @@ export const longTreeTemplate = {
             Lemon: {},
             Berries: {
                 Strawberry: 1,
-                Blueberry: 1
+                Blueberry: 1,
             },
-            Toxrill: 2
+            Toxrill: 2,
         },
         Meals: {
             America: {
@@ -35,37 +34,36 @@ export const longTreeTemplate = {
                 Chowder: 1,
                 Ravioli: 1,
                 MacAndCheese: 1,
-                Brownies: 1
+                Brownies: 1,
             },
             Europe: {
                 Risotto: 1,
                 Spaghetti: 1,
                 Pizza: 1,
                 Weisswurst: 1,
-                Spargel: 1
+                Spargel: 1,
             },
             Asia: {
                 Curry: 1,
                 PadThai: 1,
                 Jiaozi: 1,
-                Sushi: 1
+                Sushi: 1,
             },
             Australia: {
                 PotatoWedges: 1,
                 PokeBowl: 1,
                 LemonCurd: 1,
-                KumaraFries: 1
-            }
+                KumaraFries: 1,
+            },
         },
         Desserts: {
             Cookies: 1,
-            IceCream: 1
+            IceCream: 1,
         },
         Drinks: {
             PinaColada: 1,
             Cola: 1,
-            Juice: 1
-        }
-    }
+            Juice: 1,
+        },
+    },
 };
-
