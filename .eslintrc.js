@@ -70,17 +70,14 @@ module.exports = {
         "@typescript-eslint/no-use-before-define": "off",
         "@typescript-eslint/member-ordering": "off",
         "@typescript-eslint/no-floating-promises": "off",
-        "@typescript-eslint/no-namespace": [
-            "error",
-            { allowDeclarations: true },
-        ],
+        "@typescript-eslint/no-namespace": ["error", { allowDeclarations: true }],
         "@typescript-eslint/no-non-null-assertion": "error",
         "@typescript-eslint/no-explicit-any": "error",
         "@typescript-eslint/explicit-function-return-type": [
             "error",
             {
                 allowTypedFunctionExpressions: true,
-                allowExpressions: false,
+                allowExpressions: true,
             },
         ],
         "no-unused-vars": "off",
@@ -97,16 +94,16 @@ module.exports = {
             "error",
             {
                 multiline: {
-                    delimiter: "none",
-                    requireLast: false,
+                    delimiter: "comma",
+                    requireLast: true,
                 },
                 singleline: {
                     delimiter: "comma",
-                    requireLast: false,
+                    requireLast: true,
                 },
             },
         ],
         "react/jsx-uses-react": "error",
         "react/jsx-uses-vars": "error",
     },
-};
+}

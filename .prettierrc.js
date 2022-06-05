@@ -1,8 +1,8 @@
 module.exports = {
-    printWidth: 80,
+    printWidth: 120,
     tabWidth: 4,
     useTabs: false,
-    semi: true,
+    semi: false,
     singleQuote: false,
     quoteProps: "consistent",
     trailingComma: "all",
@@ -10,4 +10,4 @@ module.exports = {
     bracketSameLine: false,
     arrowParens: "always",
     endOfLine: "crlf",
-};
+}

@@ -43,7 +43,7 @@
     http://emojisymbols.com/
   */
     font-family: "emojisymbols";
-    src: url("EmojiSymbols-Regular.woff") format("woff");
+    src: url("fonts/EmojiSymbols-Regular.woff") format("woff");
 }
 
 @font-face {
@@ -51,7 +51,7 @@
     https://blueprintjs.com/docs/#icons
   */
     font-family: "blueprint-icons-16";
-    src: url("blueprint-icons-16.woff2") format("woff2");
+    src: url("fonts/blueprint-icons-16.woff2") format("woff2");
 }
 
 @font-face {
@@ -59,58 +59,46 @@
     https://blueprintjs.com/docs/#icons
   */
     font-family: "blueprint-icons-20";
-    src: url("blueprint-icons-20.woff2") format("woff2");
+    src: url("fonts/blueprint-icons-20.woff2") format("woff2");
 }
 
+/* lato-300 - latin */
 @font-face {
     font-family: "Lato";
+    font-style: normal;
     font-weight: 300;
-    font-style: normal;
-    src: url(https://assets.scryfall.com/assets/lato/light-7ff9f6899f30bd0b016af8102c8f4b3a229cc8488e085aad35ed6559989955b2.woff2)
-            format("woff2"),
-        url(https://assets.scryfall.com/assets/lato/light-7f2cb6e369b6a1e8929ebd0dde35bcf160d7a8097be0ce5777c7fea32b21d5fd.woff)
-            format("woff");
-    font-display: swap;
-    font-synthesis: style;
+    src: url("fonts/lato-v23-latin-300.woff2") format("woff2");
+    /* Super Modern Browsers */
 }
 
+/* lato-regular - latin */
 @font-face {
     font-family: "Lato";
-    font-weight: normal;
     font-style: normal;
-    src: url(https://assets.scryfall.com/assets/lato/regular-ee530872dda8ea465291050e212386acf1514d4ecc4bddb15eb252715bcd2668.woff2)
-            format("woff2"),
-        url(https://assets.scryfall.com/assets/lato/regular-1bd393e95fa6735ba3dc8215197c0e3dc95f4496f889abc16249507ba07081f0.woff)
-            format("woff");
-    font-display: swap;
-    font-synthesis: style;
+    font-weight: 400;
+    src: url("fonts/lato-v23-latin-regular.woff2") format("woff2");
+    /* Super Modern Browsers */
 }
 
+/* lato-italic - latin */
 @font-face {
     font-family: "Lato";
-    font-weight: normal;
     font-style: italic;
-    src: url(https://assets.scryfall.com/assets/lato/italic-54c570210a624d619c5aa6273b6178daacb9649e8601672bf86bca41a3de74a0.woff2)
-            format("woff2"),
-        url(https://assets.scryfall.com/assets/lato/italic-a250b4b086b15ba3012ac541c25063a55b9c4af4826b1d2c4ab1c0ff7cb3dab9.woff)
-            format("woff");
-    font-display: swap;
-    font-synthesis: style;
+    font-weight: 400;
+    src: url("fonts/lato-v23-latin-italic.woff2") format("woff2");
+    /* Super Modern Browsers */
 }
 
+/* lato-700 - latin */
 @font-face {
     font-family: "Lato";
-    font-weight: bold;
     font-style: normal;
-    src: url(https://assets.scryfall.com/assets/lato/semibold-681adc23e687e014fdbcc83dd31f98cecd29e449c9e6a594155dda9778d58d70.woff2)
-            format("woff2"),
-        url(https://assets.scryfall.com/assets/lato/semibold-1a2bbec5969be15bdeac705633b1372595b089674d807d322d1aa1a25206ebcc.woff)
-            format("woff");
-    font-display: swap;
-    font-synthesis: style;
+    font-weight: 700;
+    src: url("fonts/lato-v23-latin-700.woff2") format("woff2");
+    /* Super Modern Browsers */
 }
 
-@font-face {
+/* @font-face {
     font-family: "MPlantin";
     font-weight: normal;
     font-style: italic;
@@ -119,9 +107,9 @@
         url(https://assets.scryfall.com/assets/mplantin/italic-c4fa240644f71596ce304024c2c1c8bd21003201876432429a634335d06b048a.woff)
             format("woff");
     font-display: swap;
-}
+} */
 
-@font-face {
+/* @font-face {
     font-family: "FiraMono";
     font-weight: normal;
     font-style: normal;
@@ -141,7 +129,7 @@
         url(https://assets.scryfall.com/assets/phyrexian-horizontal/regular-139371bc51305cd33924c949858e7fbd3503dab9a08b01c27abe4021d7d4b53b.woff)
             format("woff");
     font-display: swap;
-}
+} */
 
 *,
 *:before,
@@ -434,8 +422,8 @@ html.modal-dialog-open {
 body {
     color: #16161d;
     font-size: 15px;
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif,
-        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+        "Segoe UI Symbol";
     background-color: #2b253a;
 }
 
@@ -555,7 +543,7 @@ svg.sprite-set {
     }
 }
 
-.form-row + .form-row {
+.form-row+.form-row {
     border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
 
@@ -694,16 +682,12 @@ svg.sprite-set {
     height: 38px;
     line-height: 20px;
     padding: 8px 10px;
-    -webkit-transition: background-color 60ms linear, border-color 60ms linear,
+    -webkit-transition: background-color 60ms linear, border-color 60ms linear, -webkit-box-shadow 60ms linear;
+    transition: background-color 60ms linear, border-color 60ms linear, -webkit-box-shadow 60ms linear;
+    -o-transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear;
+    transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear;
+    transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear,
         -webkit-box-shadow 60ms linear;
-    transition: background-color 60ms linear, border-color 60ms linear,
-        -webkit-box-shadow 60ms linear;
-    -o-transition: background-color 60ms linear, border-color 60ms linear,
-        box-shadow 60ms linear;
-    transition: background-color 60ms linear, border-color 60ms linear,
-        box-shadow 60ms linear;
-    transition: background-color 60ms linear, border-color 60ms linear,
-        box-shadow 60ms linear, -webkit-box-shadow 60ms linear;
 }
 
 .form-input:focus {
@@ -754,16 +738,12 @@ textarea.form-input {
     max-width: 420px;
     display: block;
     min-height: 38px;
-    -webkit-transition: background-color 60ms linear, border-color 60ms linear,
+    -webkit-transition: background-color 60ms linear, border-color 60ms linear, -webkit-box-shadow 60ms linear;
+    transition: background-color 60ms linear, border-color 60ms linear, -webkit-box-shadow 60ms linear;
+    -o-transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear;
+    transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear;
+    transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear,
         -webkit-box-shadow 60ms linear;
-    transition: background-color 60ms linear, border-color 60ms linear,
-        -webkit-box-shadow 60ms linear;
-    -o-transition: background-color 60ms linear, border-color 60ms linear,
-        box-shadow 60ms linear;
-    transition: background-color 60ms linear, border-color 60ms linear,
-        box-shadow 60ms linear;
-    transition: background-color 60ms linear, border-color 60ms linear,
-        box-shadow 60ms linear, -webkit-box-shadow 60ms linear;
 }
 
 .form-layout .select2.short {
@@ -1075,6 +1055,7 @@ tr:hover .diff li.unchanged {
 }
 
 @media screen and (min-width: 740px) {
+
     .advanced-search input[type="text"],
     .advanced-search input[type="number"],
     .advanced-search select:not(.advanced-search-subjoiner),
@@ -1103,6 +1084,7 @@ tr:hover .diff li.unchanged {
 }
 
 @media screen and (min-width: 610px) {
+
     .advanced-search input.auto[type="text"],
     .advanced-search input.auto[type="number"],
     .advanced-search select.auto:not(.advanced-search-subjoiner),
@@ -1137,6 +1119,7 @@ tr:hover .diff li.unchanged {
 }
 
 @media (max-width: 600px) {
+
     .advanced-search select.small-select,
     .advanced-search input.small-select {
         float: left;
@@ -1274,16 +1257,12 @@ tr:hover .diff li.unchanged {
     -ms-flex-align: center;
     align-items: center;
     margin: 0 8px 0 0;
-    -webkit-transition: background-color 60ms linear, border-color 60ms linear,
+    -webkit-transition: background-color 60ms linear, border-color 60ms linear, -webkit-box-shadow 60ms linear;
+    transition: background-color 60ms linear, border-color 60ms linear, -webkit-box-shadow 60ms linear;
+    -o-transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear;
+    transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear;
+    transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear,
         -webkit-box-shadow 60ms linear;
-    transition: background-color 60ms linear, border-color 60ms linear,
-        -webkit-box-shadow 60ms linear;
-    -o-transition: background-color 60ms linear, border-color 60ms linear,
-        box-shadow 60ms linear;
-    transition: background-color 60ms linear, border-color 60ms linear,
-        box-shadow 60ms linear;
-    transition: background-color 60ms linear, border-color 60ms linear,
-        box-shadow 60ms linear, -webkit-box-shadow 60ms linear;
 }
 
 /* .advanced-search-checkbox input[type=checkbox]:focus,
@@ -1511,8 +1490,8 @@ tr:hover .diff li.unchanged {
     display: block;
     padding: 0 4px 0 4px;
     cursor: help;
-    font-family: "Helvetica Neue", "HelveticaNeueWF", Arial, Helvetica,
-        sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: "Helvetica Neue", "HelveticaNeueWF", Arial, Helvetica, sans-serif, "Apple Color Emoji",
+        "Segoe UI Emoji", "Segoe UI Symbol";
     font-size: 10px;
     line-height: 18px;
     height: 18px;
@@ -2013,8 +1992,8 @@ tr:hover .diff li.unchanged {
 
 .button-n,
 .select-n {
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif,
-        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+        "Segoe UI Symbol";
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -2070,11 +2049,11 @@ tr:hover .diff li.unchanged {
   margin: 0 0 0 6px
 } */
 
-.button-n-wrapper + .button-n,
-.button-n-wrapper + .select-n,
-.button-n + .button-n-wrapper,
-.select-n + .button-n-wrapper,
-.button-n-wrapper + .button-n-wrapper {
+.button-n-wrapper+.button-n,
+.button-n-wrapper+.select-n,
+.button-n+.button-n-wrapper,
+.select-n+.button-n-wrapper,
+.button-n-wrapper+.button-n-wrapper {
     margin: 0 0 0 6px;
 }
 
@@ -2893,6 +2872,7 @@ tr:hover .diff li.unchanged {
 }
 
 @-moz-document url-prefix() {
+
     .button-n,
     .select-n {
         padding-top: 2px !important;
@@ -2966,27 +2946,9 @@ tr:hover .diff li.unchanged {
 img.card {
     -webkit-border-radius: 4.75% / 3.5%;
     border-radius: 4.75% / 3.5%;
-    background-image: -webkit-repeating-linear-gradient(
-        145deg,
-        #ddd,
-        #ddd 5px,
-        #ccc 5px,
-        #ccc 10px
-    );
-    background-image: -o-repeating-linear-gradient(
-        145deg,
-        #ddd,
-        #ddd 5px,
-        #ccc 5px,
-        #ccc 10px
-    );
-    background-image: repeating-linear-gradient(
-        -55deg,
-        #ddd,
-        #ddd 5px,
-        #ccc 5px,
-        #ccc 10px
-    );
+    background-image: -webkit-repeating-linear-gradient(145deg, #ddd, #ddd 5px, #ccc 5px, #ccc 10px);
+    background-image: -o-repeating-linear-gradient(145deg, #ddd, #ddd 5px, #ccc 5px, #ccc 10px);
+    background-image: repeating-linear-gradient(-55deg, #ddd, #ddd 5px, #ccc 5px, #ccc 10px);
     color: #000;
     display: block;
     font-size: 14px;
@@ -3063,10 +3025,10 @@ img.card.ced {
     margin-bottom: 1.25em;
 }
 
-.card-content-warning .button-n + .button-n,
-.card-content-warning .select-n + .button-n,
-.card-content-warning .button-n + .select-n,
-.card-content-warning .select-n + .select-n {
+.card-content-warning .button-n+.button-n,
+.card-content-warning .select-n+.button-n,
+.card-content-warning .button-n+.select-n,
+.card-content-warning .select-n+.select-n {
     margin: 7px 0 0 0;
 }
 
@@ -3869,7 +3831,7 @@ img.card.ced {
     flex-flow: row nowrap;
 }
 
-.card-actions > * {
+.card-actions>* {
     margin-right: 6px;
 }
 
@@ -3988,6 +3950,7 @@ img.card.ced {
 }
 
 @media screen and (min-width: 980px) {
+
     .card-text-type-line,
     .card-text-stats {
         padding: 9px 12px 9px 27px;
@@ -4023,7 +3986,7 @@ img.card.ced {
     line-height: 16px;
 }
 
-.card-text-box p + p {
+.card-text-box p+p {
     margin: 8px 0 0 0;
 }
 
@@ -4034,7 +3997,7 @@ img.card.ced {
     line-height: 17px;
 }
 
-.card-text-flavor p + p {
+.card-text-flavor p+p {
     margin: 0 0 0 0;
 }
 
@@ -4046,7 +4009,7 @@ img.card.ced {
     margin: 0 1px 0 1px;
 }
 
-.card-text-oracle + .card-text-flavor {
+.card-text-oracle+.card-text-flavor {
     margin: 10px 0 0 0;
 }
 
@@ -4059,6 +4022,7 @@ img.card.ced {
 }
 
 @media screen and (min-width: 980px) {
+
     .card-text-stats,
     .card-text-watermark,
     .card-text-artist,
@@ -4125,7 +4089,7 @@ img.card.ced {
     cursor: help;
 }
 
-.card-symbol + .card-symbol {
+.card-symbol+.card-symbol {
     margin-left: 2px;
 }
 
@@ -4485,27 +4449,9 @@ img.card.ced {
     pointer-events: none;
     position: absolute;
     z-index: 9000000;
-    background-image: -webkit-repeating-linear-gradient(
-        145deg,
-        #ddd,
-        #ddd 5px,
-        #ccc 5px,
-        #ccc 10px
-    );
-    background-image: -o-repeating-linear-gradient(
-        145deg,
-        #ddd,
-        #ddd 5px,
-        #ccc 5px,
-        #ccc 10px
-    );
-    background-image: repeating-linear-gradient(
-        -55deg,
-        #ddd,
-        #ddd 5px,
-        #ccc 5px,
-        #ccc 10px
-    );
+    background-image: -webkit-repeating-linear-gradient(145deg, #ddd, #ddd 5px, #ccc 5px, #ccc 10px);
+    background-image: -o-repeating-linear-gradient(145deg, #ddd, #ddd 5px, #ccc 5px, #ccc 10px);
+    background-image: repeating-linear-gradient(-55deg, #ddd, #ddd 5px, #ccc 5px, #ccc 10px);
     -webkit-border-radius: 4.75% / 3.5%;
     border-radius: 4.75% / 3.5%;
     height: 340px !important;
@@ -4685,8 +4631,8 @@ img.card.ced {
     border-left: 2px solid #551a8b;
 }
 
-.checklist td > a,
-.checklist td > span {
+.checklist td>a,
+.checklist td>span {
     display: block;
     color: #16161d;
     padding: 5px 6px 5px 6px;
@@ -4694,13 +4640,13 @@ img.card.ced {
     white-space: nowrap;
 }
 
-.checklist td > a:focus:not(:hover):not(:active),
-.checklist td > span:focus:not(:hover):not(:active) {
+.checklist td>a:focus:not(:hover):not(:active),
+.checklist td>span:focus:not(:hover):not(:active) {
     background-color: #bb88e9;
 }
 
-.checklist td > a em,
-.checklist td > span em {
+.checklist td>a em,
+.checklist td>span em {
     font-style: italic;
 }
 
@@ -4975,8 +4921,8 @@ img.card.ced {
 }
 
 .control-panel {
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif,
-        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+        "Segoe UI Symbol";
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -5015,24 +4961,24 @@ img.card.ced {
     width: 100%;
 }
 
-.control-panel-actions > form,
-.control-panel-actions > .button-n,
-.control-panel-actions > .select-n {
+.control-panel-actions>form,
+.control-panel-actions>.button-n,
+.control-panel-actions>.select-n {
     min-width: 25%;
 }
 
-.control-panel-actions > form > .button-n,
-.control-panel-actions > form > .select-n {
+.control-panel-actions>form>.button-n,
+.control-panel-actions>form>.select-n {
     width: 100%;
 }
 
-.control-panel-actions form + form,
-.control-panel-actions .button-n + form,
-.control-panel-actions .select-n + form {
+.control-panel-actions form+form,
+.control-panel-actions .button-n+form,
+.control-panel-actions .select-n+form {
     margin-left: 6px;
 }
 
-.control-panel-actions + .control-panel-actions {
+.control-panel-actions+.control-panel-actions {
     margin-top: 12px;
 }
 
@@ -5328,8 +5274,8 @@ img.card.ced {
     pointer-events: none;
 }
 
-.sidebar > .button-n,
-.sidebar > .select-n {
+.sidebar>.button-n,
+.sidebar>.select-n {
     margin-top: 16px;
     min-width: 100%;
 }
@@ -5430,7 +5376,7 @@ img.card.ced {
     color: #16161d;
 }
 
-.control-panel-prose > *:not(:first-child) {
+.control-panel-prose>*:not(:first-child) {
     margin-top: 14px;
 }
 
@@ -5527,8 +5473,8 @@ img.card.ced {
     padding-left: 20px;
 }
 
-.control-panel-table td > span,
-.control-panel-table td > a {
+.control-panel-table td>span,
+.control-panel-table td>a {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -5542,27 +5488,27 @@ img.card.ced {
     white-space: nowrap;
 }
 
-.control-panel-table td > span svg,
-.control-panel-table td > a svg {
+.control-panel-table td>span svg,
+.control-panel-table td>a svg {
     width: 14px;
     height: 14px;
     margin: 0 8px 0 0;
 }
 
-.control-panel-table td > span path,
-.control-panel-table td > span g,
-.control-panel-table td > a path,
-.control-panel-table td > a g {
+.control-panel-table td>span path,
+.control-panel-table td>span g,
+.control-panel-table td>a path,
+.control-panel-table td>a g {
     fill: #343242;
 }
 
-.control-panel-table td > span circle,
-.control-panel-table td > a circle {
+.control-panel-table td>span circle,
+.control-panel-table td>a circle {
     stroke: #343242;
 }
 
-.control-panel-table td:first-child > span,
-.control-panel-table td:first-child > a {
+.control-panel-table td:first-child>span,
+.control-panel-table td:first-child>a {
     padding-left: 20px;
 }
 
@@ -5678,7 +5624,7 @@ img.card.ced {
     background-color: #9c202b;
 }
 
-.currency-wildcard + .currency-wildcard {
+.currency-wildcard+.currency-wildcard {
     margin-left: 2px;
 }
 
@@ -5723,7 +5669,7 @@ img.card.ced {
     margin-right: 6px;
 }
 
-* + .deck-controls label {
+*+.deck-controls label {
     margin-left: 6px;
 }
 
@@ -5792,7 +5738,7 @@ img.card.ced {
     order: 1;
 }
 
-.sidebar-account-summary-item + .sidebar-account-summary-item {
+.sidebar-account-summary-item+.sidebar-account-summary-item {
     margin-top: 3px;
 }
 
@@ -5859,7 +5805,7 @@ img.card.ced {
     width: 100%;
 }
 
-.sidebar-toolbox li + li {
+.sidebar-toolbox li+li {
     margin: 4px 0 0 0;
 }
 
@@ -5966,7 +5912,7 @@ img.card.ced {
     height: 22px;
 }
 
-.sidebar-prices-price > *:first-child {
+.sidebar-prices-price>*:first-child {
     text-align: left !important;
     font-size: 15px;
     -webkit-box-flex: 1;
@@ -5978,7 +5924,7 @@ img.card.ced {
     text-overflow: ellipsis;
 }
 
-.sidebar-prices-price > *:last-child {
+.sidebar-prices-price>*:last-child {
     font-size: 14px;
 }
 
@@ -6117,8 +6063,8 @@ img.card.ced {
 }
 
 .deck-wizard-category {
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif,
-        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+        "Segoe UI Symbol";
     background-color: #fdfdfd;
     -webkit-border-radius: 4px;
     border-radius: 4px;
@@ -6328,8 +6274,8 @@ img.card.ced {
 }
 
 .deckbuilder-deck-name {
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif,
-        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+        "Segoe UI Symbol";
     font-size: 18px;
     color: #551a8b;
     padding: 4px 8px 4px 26px;
@@ -6354,8 +6300,8 @@ img.card.ced {
 }
 
 .deckbuilder-deck-description {
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif,
-        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+        "Segoe UI Symbol";
     font-size: 14px;
     color: #535353;
     width: 100%;
@@ -6490,12 +6436,12 @@ img.card.ced {
     }
 }
 
-.deckbuilder-column + .deckbuilder-column {
+.deckbuilder-column+.deckbuilder-column {
     margin-top: 24px;
 }
 
 @media screen and (min-width: 760px) {
-    .deckbuilder-column + .deckbuilder-column {
+    .deckbuilder-column+.deckbuilder-column {
         margin-top: 0;
         margin-left: 34px;
     }
@@ -6505,12 +6451,12 @@ img.card.ced {
     width: 100%;
 }
 
-.deckbuilder-section + .deckbuilder-section {
+.deckbuilder-section+.deckbuilder-section {
     margin-top: 24px;
 }
 
 @media screen and (min-width: 760px) {
-    .deckbuilder-section + .deckbuilder-section {
+    .deckbuilder-section+.deckbuilder-section {
         margin-top: 38px;
     }
 }
@@ -6539,16 +6485,16 @@ img.card.ced {
 }
 
 .deckbuilder-section-title {
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif,
-        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+        "Segoe UI Symbol";
     font-size: 12px;
     font-weight: bold;
     color: #5f4f66;
 }
 
 .deckbuilder-section-count {
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif,
-        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+        "Segoe UI Symbol";
     font-size: 12px;
     color: #535353;
 }
@@ -6585,8 +6531,8 @@ img.card.ced {
     display: -ms-flexbox;
     display: flex;
     border: none !important;
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif,
-        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+        "Segoe UI Symbol";
     font-size: 15px;
     height: 28px;
     line-height: 24px;
@@ -6684,24 +6630,9 @@ img.card.ced {
 .deckbuilder-entry-badge.foil {
     color: #fff;
     background-color: #91d370;
-    background-image: -webkit-linear-gradient(
-        131deg,
-        #91d370 0%,
-        #bca0ff 37%,
-        #f2cd54 100%
-    );
-    background-image: -o-linear-gradient(
-        131deg,
-        #91d370 0%,
-        #bca0ff 37%,
-        #f2cd54 100%
-    );
-    background-image: linear-gradient(
-        319deg,
-        #91d370 0%,
-        #bca0ff 37%,
-        #f2cd54 100%
-    );
+    background-image: -webkit-linear-gradient(131deg, #91d370 0%, #bca0ff 37%, #f2cd54 100%);
+    background-image: -o-linear-gradient(131deg, #91d370 0%, #bca0ff 37%, #f2cd54 100%);
+    background-image: linear-gradient(319deg, #91d370 0%, #bca0ff 37%, #f2cd54 100%);
     border-bottom-color: rgba(0, 0, 0, 0.5);
     min-width: 20px;
 }
@@ -6787,8 +6718,8 @@ img.card.ced {
 }
 
 .deckbuilder-cmc-stat {
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif,
-        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+        "Segoe UI Symbol";
     font-size: 12px;
     line-height: 1.33;
     display: -webkit-box;
@@ -7102,8 +7033,8 @@ img.card.ced {
     border-top: 1px solid transparent;
     border-bottom: 1px solid transparent;
     font-weight: bold !important;
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif,
-        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+        "Segoe UI Symbol";
 }
 
 .dropdown-menu-item svg {
@@ -7157,7 +7088,7 @@ img.card.ced {
     margin-left: -10px;
 }
 
-.faq-link + .faq-link {
+.faq-link+.faq-link {
     margin-top: 0 !important;
 }
 
@@ -7377,12 +7308,12 @@ img.card.ced {
     }
 }
 
-.footer-column + .footer-column {
+.footer-column+.footer-column {
     margin-top: 24px;
 }
 
 @media screen and (min-width: 600px) {
-    .footer-column + .footer-column {
+    .footer-column+.footer-column {
         margin-top: 0;
     }
 }
@@ -7420,7 +7351,7 @@ img.card.ced {
     color: #777;
 }
 
-.footer-legal p + p {
+.footer-legal p+p {
     margin-top: 10px;
 }
 
@@ -7451,7 +7382,7 @@ img.card.ced {
     }
 }
 
-.form-n + .form-n {
+.form-n+.form-n {
     margin-top: 18px;
 }
 
@@ -7501,10 +7432,10 @@ img.card.ced {
     margin-top: 0 !important;
 }
 
-.form-n-stage .button-n + .button-n,
-.form-n-stage .select-n + .button-n,
-.form-n-stage .button-n + .select-n,
-.form-n-stage .select-n + .select-n {
+.form-n-stage .button-n+.button-n,
+.form-n-stage .select-n+.button-n,
+.form-n-stage .button-n+.select-n,
+.form-n-stage .select-n+.select-n {
     margin-left: 6px;
 }
 
@@ -7541,7 +7472,7 @@ img.card.ced {
     max-width: 36em;
 }
 
-* + .form-n-description {
+*+.form-n-description {
     margin-top: 14px;
 }
 
@@ -7563,7 +7494,7 @@ img.card.ced {
     color: #fff !important;
 }
 
-.form-n-description + .form-n-description {
+.form-n-description+.form-n-description {
     margin-top: 6px;
 }
 
@@ -7654,7 +7585,7 @@ img.card.ced {
     color: rgba(0, 0, 0, 0.2);
 }
 
-.form-n-code-table-item + .form-n-code-table-item {
+.form-n-code-table-item+.form-n-code-table-item {
     margin-top: 3px;
 }
 
@@ -7694,13 +7625,13 @@ img.card.ced {
     width: 40%;
 }
 
-.form-n > *:first-child {
+.form-n>*:first-child {
     margin-top: 0 !important;
 }
 
 .form-n-input {
-    font-family: "Helvetica Neue", "HelveticaNeueWF", Arial, Helvetica,
-        sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: "Helvetica Neue", "HelveticaNeueWF", Arial, Helvetica, sans-serif, "Apple Color Emoji",
+        "Segoe UI Emoji", "Segoe UI Symbol";
     margin: 6px 0 0 0;
     background-color: rgba(0, 0, 0, 0.01);
     -webkit-border-radius: 2px;
@@ -7713,16 +7644,12 @@ img.card.ced {
     padding: 7px 10px;
     width: 100%;
     max-width: 450px;
-    -webkit-transition: background-color 60ms linear, border-color 60ms linear,
+    -webkit-transition: background-color 60ms linear, border-color 60ms linear, -webkit-box-shadow 60ms linear;
+    transition: background-color 60ms linear, border-color 60ms linear, -webkit-box-shadow 60ms linear;
+    -o-transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear;
+    transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear;
+    transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear,
         -webkit-box-shadow 60ms linear;
-    transition: background-color 60ms linear, border-color 60ms linear,
-        -webkit-box-shadow 60ms linear;
-    -o-transition: background-color 60ms linear, border-color 60ms linear,
-        box-shadow 60ms linear;
-    transition: background-color 60ms linear, border-color 60ms linear,
-        box-shadow 60ms linear;
-    transition: background-color 60ms linear, border-color 60ms linear,
-        box-shadow 60ms linear, -webkit-box-shadow 60ms linear;
 }
 
 .form-n-input:focus {
@@ -8074,8 +8001,8 @@ select.form-n-input optgroup {
     height: 52px;
     line-height: 22px;
     padding: 15px 3px 15px 3px;
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif,
-        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+        "Segoe UI Symbol";
     color: #fdfdfd;
     font-size: 16px;
     -webkit-box-flex: 1;
@@ -8318,13 +8245,7 @@ select.form-n-input optgroup {
 }
 
 .homepage {
-    background: -webkit-gradient(
-        linear,
-        left top,
-        left bottom,
-        from(#1d1c25),
-        to(#431e3f)
-    );
+    background: -webkit-gradient(linear, left top, left bottom, from(#1d1c25), to(#431e3f));
     background: -webkit-linear-gradient(top, #1d1c25, #431e3f);
     background: -o-linear-gradient(top, #1d1c25, #431e3f);
     background: linear-gradient(to bottom, #1d1c25, #431e3f);
@@ -9008,10 +8929,10 @@ select.form-n-input optgroup {
     margin-top: 0 !important;
 }
 
-.modal-dialog-stage .button-n + .button-n,
-.modal-dialog-stage .select-n + .button-n,
-.modal-dialog-stage .button-n + .select-n,
-.modal-dialog-stage .select-n + .select-n {
+.modal-dialog-stage .button-n+.button-n,
+.modal-dialog-stage .select-n+.button-n,
+.modal-dialog-stage .button-n+.select-n,
+.modal-dialog-stage .select-n+.select-n {
     margin-left: 6px;
 }
 
@@ -9172,8 +9093,8 @@ select.form-n-input optgroup {
 }
 
 .modal-dialog-dropzone {
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif,
-        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+        "Segoe UI Symbol";
     width: 100%;
     margin: 0 auto;
     border: 1px dashed #cbaaf5;
@@ -9488,18 +9409,13 @@ select.form-n-input optgroup {
     border-radius: 4px;
     margin-top: 6px;
     width: 100%;
-    -webkit-box-shadow: 0 0 0 0.5px rgba(50, 50, 93, 0.17),
-        0 2px 5px 0 rgba(50, 50, 93, 0.1), 0 1px 1.5px 0 rgba(0, 0, 0, 0.07),
+    -webkit-box-shadow: 0 0 0 0.5px rgba(50, 50, 93, 0.17), 0 2px 5px 0 rgba(50, 50, 93, 0.1),
+        0 1px 1.5px 0 rgba(0, 0, 0, 0.07), 0 1px 2px 0 rgba(0, 0, 0, 0.08), 0 0 0 0 transparent;
+    box-shadow: 0 0 0 0.5px rgba(50, 50, 93, 0.17), 0 2px 5px 0 rgba(50, 50, 93, 0.1), 0 1px 1.5px 0 rgba(0, 0, 0, 0.07),
         0 1px 2px 0 rgba(0, 0, 0, 0.08), 0 0 0 0 transparent;
-    box-shadow: 0 0 0 0.5px rgba(50, 50, 93, 0.17),
-        0 2px 5px 0 rgba(50, 50, 93, 0.1), 0 1px 1.5px 0 rgba(0, 0, 0, 0.07),
-        0 1px 2px 0 rgba(0, 0, 0, 0.08), 0 0 0 0 transparent;
-    -webkit-animation: notification-slide-in 200ms
-        cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-    -o-animation: notification-slide-in 200ms
-        cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-    animation: notification-slide-in 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94)
-        both;
+    -webkit-animation: notification-slide-in 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+    -o-animation: notification-slide-in 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+    animation: notification-slide-in 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
 .notification.purple {
@@ -9533,8 +9449,8 @@ select.form-n-input optgroup {
 }
 
 .notification-title {
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif,
-        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+        "Segoe UI Symbol";
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -9708,7 +9624,7 @@ select.form-n-input optgroup {
     margin: 0 0 -1px -8px;
 }
 
-.deck-tray-option + .deck-tray-option {
+.deck-tray-option+.deck-tray-option {
     margin-top: 5px;
 }
 
@@ -9722,7 +9638,7 @@ select.form-n-input optgroup {
     max-width: 200px;
 }
 
-.oracle-reconciliation-table > tbody > tr > td {
+.oracle-reconciliation-table>tbody>tr>td {
     padding-top: 10px;
     padding-bottom: 10px;
 }
@@ -9853,7 +9769,7 @@ select.form-n-input optgroup {
     color: #fff !important;
 }
 
-.pillbox-item + .pillbox-item {
+.pillbox-item+.pillbox-item {
     margin-left: 3px;
 }
 
@@ -9908,7 +9824,7 @@ select.form-n-input optgroup {
     color: #fff;
 }
 
-.print-langs-item + .print-langs-item {
+.print-langs-item+.print-langs-item {
     margin-left: 3px;
 }
 
@@ -10031,7 +9947,7 @@ select.form-n-input optgroup {
     border-right: 1px solid #b3b3b3;
 }
 
-.prints-current-prices .pill + .pill {
+.prints-current-prices .pill+.pill {
     margin-left: 5px;
 }
 
@@ -10063,7 +9979,7 @@ select.form-n-input optgroup {
     font-size: 12px;
 }
 
-.prints-table + .prints-table {
+.prints-table+.prints-table {
     margin-top: 12px;
 }
 
@@ -10071,8 +9987,8 @@ select.form-n-input optgroup {
     background-color: #343242;
 }
 
-.prints-table th > span,
-.prints-table th > a {
+.prints-table th>span,
+.prints-table th>a {
     display: block;
     width: 100%;
     padding: 7px 5px 6px 2px;
@@ -10088,8 +10004,8 @@ select.form-n-input optgroup {
     width: 100%;
 }
 
-.prints-table th:first-child > a,
-.prints-table th:first-child > span {
+.prints-table th:first-child>a,
+.prints-table th:first-child>span {
     padding-left: 8px;
     text-align: left;
     position: relative;
@@ -10111,8 +10027,8 @@ select.form-n-input optgroup {
     background-color: rgba(0, 0, 0, 0.04);
 }
 
-.prints-table td > span,
-.prints-table td > a {
+.prints-table td>span,
+.prints-table td>a {
     display: block;
     width: 100%;
     height: 100%;
@@ -10124,8 +10040,8 @@ select.form-n-input optgroup {
     cursor: pointer;
 }
 
-.prints-table td:first-child > a,
-.prints-table td:first-child > span {
+.prints-table td:first-child>a,
+.prints-table td:first-child>span {
     padding-left: 13px;
     text-align: left;
 }
@@ -10149,7 +10065,7 @@ select.form-n-input optgroup {
     color: #323232;
 }
 
-.prose > *:not(:first-child) {
+.prose>*:not(:first-child) {
     margin-top: 14px;
 }
 
@@ -10213,7 +10129,7 @@ select.form-n-input optgroup {
     margin-left: 1.33em;
 }
 
-.prose li + li {
+.prose li+li {
     margin-top: 0.25em;
 }
 
@@ -10375,6 +10291,7 @@ select.form-n-input optgroup {
 }
 
 @media screen and (min-width: 560px) {
+
     .prose-button-grid .button-n,
     .prose-button-grid .select-n {
         width: 49%;
@@ -10612,10 +10529,8 @@ select.form-n-input optgroup {
         border-bottom: none;
         border-top: none;
         padding: 15px 15px 15px 15px;
-        -webkit-box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.07),
-            0 7px 17px 0 rgba(0, 0, 0, 0.1);
-        box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.07),
-            0 7px 17px 0 rgba(0, 0, 0, 0.1);
+        -webkit-box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.07), 0 7px 17px 0 rgba(0, 0, 0, 0.1);
+        box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.07), 0 7px 17px 0 rgba(0, 0, 0, 0.1);
     }
 }
 
@@ -10727,11 +10642,11 @@ select.form-n-input optgroup {
     margin: 0 0 12px 4px;
 }
 
-.reference-doc-menu > ul {
+.reference-doc-menu>ul {
     margin-bottom: 26px;
 }
 
-.reference-doc-menu > ul ul {
+.reference-doc-menu>ul ul {
     margin: 0 0 10px 11px;
     padding: 0 0 0 6px;
     border-left: 1px solid rgba(255, 255, 255, 0.5);
@@ -11159,8 +11074,8 @@ select.form-n-input optgroup {
     color: #634496;
 }
 
-.search-controls label:not(.vh) + select,
-.search-controls select + label:not(.vh) {
+.search-controls label:not(.vh)+select,
+.search-controls select+label:not(.vh) {
     margin-left: 8px;
 }
 
@@ -11234,7 +11149,7 @@ select.form-n-input optgroup {
     max-width: 550px;
 }
 
-.search-controls-mobile-option + .search-controls-mobile-option {
+.search-controls-mobile-option+.search-controls-mobile-option {
     margin-top: 8px;
 }
 
@@ -11329,13 +11244,7 @@ select.form-n-input optgroup {
 
 .session {
     background: #141e30;
-    background: -webkit-gradient(
-        linear,
-        left bottom,
-        left top,
-        from(#5f4f66),
-        to(#343242)
-    );
+    background: -webkit-gradient(linear, left bottom, left top, from(#5f4f66), to(#343242));
     background: -webkit-linear-gradient(bottom, #5f4f66, #343242);
     background: -o-linear-gradient(bottom, #5f4f66, #343242);
     background: linear-gradient(to top, #5f4f66, #343242);
@@ -11502,7 +11411,7 @@ select.form-n-input optgroup {
     cursor: not-allowed;
 }
 
-.session-form input + label + input {
+.session-form input+label+input {
     margin-top: 8px;
 }
 
@@ -11813,6 +11722,7 @@ select.form-n-input optgroup {
 }
 
 @-webkit-keyframes session-shake {
+
     from,
     to {
         -webkit-transform: translate3d(0, 0, 0);
@@ -11840,6 +11750,7 @@ select.form-n-input optgroup {
 }
 
 @-o-keyframes session-shake {
+
     from,
     to {
         transform: translate3d(0, 0, 0);
@@ -11864,6 +11775,7 @@ select.form-n-input optgroup {
 }
 
 @keyframes session-shake {
+
     from,
     to {
         -webkit-transform: translate3d(0, 0, 0);
@@ -12171,39 +12083,33 @@ select.form-n-input optgroup {
     background-color: #eff0f7;
     background-color: #2b253a;
     min-height: 80vh;
-    background: -webkit-linear-gradient(
-        top,
-        #5f4f66 0px,
-        #5f4f66 4px,
-        #7a6583 4px,
-        #7a6583 8px,
-        #5f4f66 8px,
-        #5f4f66 12px,
-        #eff0f7 12px,
-        #eff0f7 100%
-    );
-    background: -o-linear-gradient(
-        top,
-        #5f4f66 0px,
-        #5f4f66 4px,
-        #7a6583 4px,
-        #7a6583 8px,
-        #5f4f66 8px,
-        #5f4f66 12px,
-        #eff0f7 12px,
-        #eff0f7 100%
-    );
-    background: linear-gradient(
-        to bottom,
-        #5f4f66 0px,
-        #5f4f66 4px,
-        #7a6583 4px,
-        #7a6583 8px,
-        #5f4f66 8px,
-        #5f4f66 12px,
-        #eff0f7 12px,
-        #eff0f7 100%
-    );
+    background: -webkit-linear-gradient(top,
+            #5f4f66 0px,
+            #5f4f66 4px,
+            #7a6583 4px,
+            #7a6583 8px,
+            #5f4f66 8px,
+            #5f4f66 12px,
+            #eff0f7 12px,
+            #eff0f7 100%);
+    background: -o-linear-gradient(top,
+            #5f4f66 0px,
+            #5f4f66 4px,
+            #7a6583 4px,
+            #7a6583 8px,
+            #5f4f66 8px,
+            #5f4f66 12px,
+            #eff0f7 12px,
+            #eff0f7 100%);
+    background: linear-gradient(to bottom,
+            #5f4f66 0px,
+            #5f4f66 4px,
+            #7a6583 4px,
+            #7a6583 8px,
+            #5f4f66 8px,
+            #5f4f66 12px,
+            #eff0f7 12px,
+            #eff0f7 100%);
 }
 
 .skip-links a {
@@ -12349,7 +12255,7 @@ select.form-n-input optgroup {
     margin: 0 0 10px 0;
 }
 
-.toolbox-column ul + h6 {
+.toolbox-column ul+h6 {
     margin: 12px 0 10px 0;
 }
 
@@ -12439,7 +12345,7 @@ select.form-n-input optgroup {
     margin: 0 0 20px 0;
 }
 
-.deckbuilder-tutorial-block > span {
+.deckbuilder-tutorial-block>span {
     max-width: 24em;
     marign: 0 auto;
 }

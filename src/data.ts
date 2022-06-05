@@ -14,7 +14,7 @@ export const shortTreeTemplate = {
             item5: 5,
         },
     },
-};
+}
 
 export const longTreeTemplate = {
     root: {
@@ -66,4 +66,4 @@ export const longTreeTemplate = {
             Juice: 1,
         },
     },
-};
+}

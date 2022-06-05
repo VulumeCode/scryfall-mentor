@@ -2786,6 +2786,6 @@ const icons = {
         tags: "number, float, double, decimal",
         utf: "\uF32C",
     },
-};
+}
 
-export default icons;
+export default icons
