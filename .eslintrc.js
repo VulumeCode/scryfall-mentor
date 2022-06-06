@@ -58,6 +58,7 @@ module.exports = {
         ],
         "no-extra-boolean-cast": "off",
         "indent": "off",
+        "@typescript-eslint/indent": ["error"],
         "no-trailing-spaces": [
             "error",
             {
@@ -99,11 +100,15 @@ module.exports = {
                 },
                 singleline: {
                     delimiter: "comma",
-                    requireLast: true,
+                    requireLast: false,
                 },
             },
         ],
+        "no-extra-semi": "off",
+        "@typescript-eslint/no-extra-semi": ["error"],
+        "semi": "off",
+        "@typescript-eslint/semi": ["error"],
         "react/jsx-uses-react": "error",
         "react/jsx-uses-vars": "error",
     },
-}
+};

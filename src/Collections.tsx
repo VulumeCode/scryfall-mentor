@@ -1,5 +1,5 @@
-import React from "react"
-import { useRef } from "react"
+import React, { useState } from "react";
+import { useRef } from "react";
 
 import {
     ControlledTreeEnvironment,
@@ -9,53 +9,39 @@ import {
     TreeItem,
     TreeEnvironmentRef,
     TreeItemRenderContext,
-} from "react-complex-tree"
-import "react-complex-tree/lib/style.css"
+} from "react-complex-tree";
+import "react-complex-tree/lib/style.css";
 
-import icons from "./icons"
+import icons from "./icons";
 
 export type TreeItemData = {
     title: string,
     queryId: number | null,
-}
+};
 
-export type TreeData = Record<TreeItemIndex, TreeItem<TreeItemData>>
+export type TreeData = Record<TreeItemIndex, TreeItem<TreeItemData>>;
 
 const Collections: React.FC<{
     treeData: TreeData,
     onSelectQuery: (queryKey: number) => void,
-    // onAddCollection: () => string,
-}> = ({ treeData, onSelectQuery }) => {
-    const tree = useRef<TreeRef>(null)
-    const environment = useRef<TreeEnvironmentRef>(null)
+    onAddCollection: () => string,
+    onRenameItem: (item: TreeItem<TreeItemData>, name: string, treeId: string) => void,
+}> = ({ treeData, onSelectQuery, onAddCollection, onRenameItem }) => {
+    const tree = useRef<TreeRef>(null);
+    const environment = useRef<TreeEnvironmentRef>(null);
 
-    // const dataProvider = new StaticTreeDataProvider(
-    //     treeData,
-    //     (item, newName) => ({
-    //         ...item,
-    //         data: { ...item.data, title: newName },
-    //     }),
-    // );
-
-    // console.log(treeData);
-    // console.dir({ render: dataProvider.data.items })
+    const [focusedItem, setFocusedItem] = useState<TreeItemIndex>();
+    const [expandedItems, setExpandedItems] = useState<Array<TreeItemIndex>>([]);
+    const [selectedItems, setSelectedItems] = useState<Array<TreeItemIndex>>([]);
 
     return (
         <>
-            {/* <span style={{ display: "flex", width: "100%" }}>
+            <span style={{ display: "flex", width: "100%" }}>
                 <button
                     className="blueprint-icons-big button-n inverted"
-                    onClick={async () => {
+                    onClick={() => {
                         const newIndex = onAddCollection();
-                        environment.current!.items = treeData;
-                        await dataProvider.onChangeItemChildren("root", [
-                            ...treeData.root.children!,
-                            newIndex,
-                        ]);
-                        // await dataProvider.onChangeItemChildren(newIndex, [])
-                        // console.dir({ click: dataProvider.data.items })
-                        console.dir(await dataProvider.getTreeItem(newIndex));
-                        // tree.current?.startRenamingItem("Drinks")
+                        tree.current?.startRenamingItem(newIndex);
                     }}
                 >
                     {icons["folder-new"].utf}
@@ -66,20 +52,36 @@ const Collections: React.FC<{
                     type={"search"}
                     placeholder={icons["filter-list"].utf + "doesn't work "}
                 />
-            </span> */}
-
+            </span>
             <ControlledTreeEnvironment
                 ref={environment}
                 items={treeData}
                 getItemTitle={(item: TreeItem<TreeItemData>): string => item.data.title}
-                viewState={{}}
+                viewState={{
+                    ["Collections"]: {
+                        focusedItem,
+                        expandedItems,
+                        selectedItems,
+                    },
+                }}
                 canReorderItems
                 canDragAndDrop
+                canDropOnItemWithChildren
+                canDropOnItemWithoutChildren={false}
+                onDrop={(_items, target) => console.log(target)}
                 onFocusItem={(item: TreeItem<TreeItemData>): void => {
+                    setFocusedItem(item.index);
                     if (!item.hasChildren) {
-                        onSelectQuery(item.data.queryId as number)
+                        onSelectQuery(item.data.queryId as number);
                     }
                 }}
+                onExpandItem={(item) => setExpandedItems([...expandedItems, item.index])}
+                onCollapseItem={(item) =>
+                    setExpandedItems(expandedItems.filter((expandedItemIndex) => expandedItemIndex !== item.index))
+                }
+                onSelectItems={setSelectedItems}
+                onStartRenamingItem={console.log}
+                {...{ onRenameItem }}
             >
                 <Tree
                     treeId="Collections"
@@ -98,9 +100,7 @@ const Collections: React.FC<{
                                 onClick={() => tree.current?.toggleItemExpandedState(item.index)}
                             >
                                 {" "}
-                                {context.isExpanded
-                                    ? icons["folder-open"].utf
-                                    : icons["folder-close"].utf}
+                                {context.isExpanded ? icons["folder-open"].utf : icons["folder-close"].utf}
                             </span>
                         ) : null
                     }
@@ -110,7 +110,7 @@ const Collections: React.FC<{
                 />
             </ControlledTreeEnvironment>
         </>
-    )
-}
+    );
+};
 
-export default Collections
+export default Collections;

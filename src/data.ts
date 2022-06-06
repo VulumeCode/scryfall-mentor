@@ -1,22 +1,4 @@
-export const shortTreeTemplate = {
-    root: {
-        container: {
-            item0: 0,
-            item1: 1,
-            item2: 2,
-            item3: {
-                inner0: 0,
-                inner1: 1,
-                inner2: 2,
-                inner3: 3,
-            },
-            item4: 4,
-            item5: 5,
-        },
-    },
-}
-
-export const longTreeTemplate = {
+export const defaultTemplate = {
     root: {
         Fruit: {
             Hans: 1,
@@ -66,4 +48,64 @@ export const longTreeTemplate = {
             Juice: 1,
         },
     },
-}
+};
+
+export const defautlQueries = {
+    1: [
+        { enabled: true, query: "Hans" },
+        { enabled: false, query: "Ach" },
+        { enabled: false, query: "" },
+    ],
+    2: [
+        { enabled: true, query: "t:slug" },
+        { enabled: true, query: "t:legendary" },
+        { enabled: true, query: "c:b" },
+        { enabled: false, query: "" },
+    ],
+    3: [
+        { enabled: true, query: "t:food" },
+        { enabled: true, query: "t:creature" },
+        { enabled: false, query: "" },
+    ],
+};
+
+export const defaultNames = {
+    Fruit: "Fruit",
+    Hans: "Hans",
+    Gingerbrute: "Gingerbrute",
+    Lemon: "Lemon",
+    Berries: "Berries",
+    Strawberry: "Strawberry",
+    Blueberry: "Blueberry",
+    Toxrill: "Toxrill",
+    Meals: "Meals",
+    America: "America",
+    SmashBurger: "SmashBurger",
+    Chowder: "Chowder",
+    Ravioli: "Ravioli",
+    MacAndCheese: "MacAndCheese",
+    Brownies: "Brownies",
+    Europe: "Europe",
+    Risotto: "Risotto",
+    Spaghetti: "Spaghetti",
+    Pizza: "Pizza",
+    Weisswurst: "Weisswurst",
+    Spargel: "Spargel",
+    Asia: "Asia",
+    Curry: "Curry",
+    PadThai: "PadThai",
+    Jiaozi: "Jiaozi",
+    Sushi: "Sushi",
+    Australia: "Australia",
+    PotatoWedges: "PotatoWedges",
+    PokeBowl: "PokeBowl",
+    LemonCurd: "LemonCurd",
+    KumaraFries: "KumaraFries",
+    Desserts: "Desserts",
+    Cookies: "Cookies",
+    IceCream: "IceCream",
+    Drinks: "Drinks",
+    PinaColada: "PinaColada",
+    Cola: "Cola",
+    Juice: "Juice",
+};
