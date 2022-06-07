@@ -12,28 +12,47 @@ type QueryPart = {
     query: string,
 };
 
-const buildCollectionsTree = (names: Names, collection: Template, data: TreeData = {}): TreeData => {
+const buildCollectionsTree = (names: Names, filter: string, collection: Template, data: TreeData = {}): [TreeData, boolean] => {
+    let hasMatch = false;
     for (const [key, value] of Object.entries(collection)) {
         const isDir = typeof value === "object";
         const isQueryId = typeof value === "number";
 
-        if (isDir) {
-            buildCollectionsTree(names, value, data);
-        }
-        data[key] = {
-            index: key,
-            canMove: true,
-            hasChildren: isDir,
-            children: isDir ? Object.keys(value) : undefined,
-            data: {
-                title: names[key],
-                queryId: isQueryId ? value : null,
-            },
-            canRename: true,
-        };
+        const title = names[key];
 
+        let doesMatchFilter = matchFilter(title, filter);
+
+
+        if (isDir) {
+            const [_, childMatch] = buildCollectionsTree(names, doesMatchFilter ? "" : filter, value, data);
+            doesMatchFilter ||= childMatch;
+        }
+        if (doesMatchFilter) {
+            hasMatch ||= doesMatchFilter;
+            data[key] = {
+                index: key,
+                canMove: true,
+                hasChildren: isDir,
+                children: isDir ? Object.keys(value) : undefined,
+                data: {
+                    title: title,
+                    queryId: isQueryId ? value : null,
+                },
+                canRename: true,
+            };
+        }
     }
-    return data;
+    return [data, hasMatch];
+};
+
+const matchFilter = (value: string, filter: string): boolean => {
+    if (filter === "") {
+        return true;
+    } else {
+        const filters = filter.toLowerCase().split(" ");
+        const testValue = value.toLowerCase();
+        return filters.every(f => testValue.indexOf(f) >= 0);
+    }
 };
 
 type Template = { [index: string]: number | Template };
@@ -42,6 +61,8 @@ type Names = { [index: string]: string };
 function App(): JSX.Element {
     const [queryCollection, setQueryCollection] = useImmer<Template>(defaultTemplate);
     const [names, setNames] = useImmer<Names>(defaultNames);
+
+    const [filter, setFilter] = useImmer<string>("");
 
     const [queries, setQueries] = useImmer<{ [id: number]: Array<QueryPart> }>(defautlQueries);
 
@@ -53,7 +74,7 @@ function App(): JSX.Element {
         <div className="App">
             <header className="App-header inverted">
                 <Collections
-                    treeData={buildCollectionsTree(names, queryCollection)}
+                    treeData={buildCollectionsTree(names, filter, queryCollection)[0]}
                     onSelectQuery={(queryKey): void => {
                         console.log("onSelectQuery", queryKey);
                         setQueryParts(queries[queryKey]);
@@ -70,6 +91,7 @@ function App(): JSX.Element {
                         console.log(item, name);
                         setNames((draft) => { draft[item.index] = name; });
                     }}
+                    {...{ filter, setFilter }}
                 />
 
                 <div key="pushDownSpacer" className="pushDownSpacer"></div>

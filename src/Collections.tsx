@@ -9,6 +9,7 @@ import {
     TreeItem,
     TreeEnvironmentRef,
     TreeItemRenderContext,
+    InteractionMode,
 } from "react-complex-tree";
 import "react-complex-tree/lib/style.css";
 
@@ -21,19 +22,31 @@ export type TreeItemData = {
 
 export type TreeData = Record<TreeItemIndex, TreeItem<TreeItemData>>;
 
+
+declare global {
+    interface Window {
+        tree: unknown,
+        environment: unknown,
+    }
+}
+
 const Collections: React.FC<{
     treeData: TreeData,
     onSelectQuery: (queryKey: number) => void,
     onAddCollection: () => string,
     onRenameItem: (item: TreeItem<TreeItemData>, name: string, treeId: string) => void,
-}> = ({ treeData, onSelectQuery, onAddCollection, onRenameItem }) => {
+    filter: string,
+    setFilter: (filter: string) => void,
+}> = ({ treeData, onSelectQuery, onAddCollection, onRenameItem, filter, setFilter }) => {
     const tree = useRef<TreeRef>(null);
     const environment = useRef<TreeEnvironmentRef>(null);
-
     const [focusedItem, setFocusedItem] = useState<TreeItemIndex>();
     const [expandedItems, setExpandedItems] = useState<Array<TreeItemIndex>>([]);
     const [selectedItems, setSelectedItems] = useState<Array<TreeItemIndex>>([]);
 
+
+    window.tree = tree;
+    window.environment = environment;
     return (
         <>
             <span style={{ display: "flex", width: "100%" }}>
@@ -49,14 +62,24 @@ const Collections: React.FC<{
                 <input
                     className="button-n inverted collections-filter"
                     style={{ width: "100%" }}
-                    type={"search"}
-                    placeholder={icons["filter-list"].utf + "doesn't work "}
+                    type={"text"}
+                    value={filter}
+                    placeholder={icons["filter-list"].utf}
+                    onChange={(e) => setFilter(e.target.value)}
                 />
+                <button
+                    id="clear-filter"
+                    className="blueprint-icons-big button-n inverted"
+                    onClick={() => setFilter("")}
+                >
+                    {icons["cross"].utf}
+                </button>
             </span>
             <ControlledTreeEnvironment
                 ref={environment}
                 items={treeData}
                 getItemTitle={(item: TreeItem<TreeItemData>): string => item.data.title}
+                defaultInteractionMode={InteractionMode.ClickArrowToExpand}
                 viewState={{
                     ["Collections"]: {
                         focusedItem,
@@ -67,20 +90,21 @@ const Collections: React.FC<{
                 canReorderItems
                 canDragAndDrop
                 canDropOnItemWithChildren
-                canDropOnItemWithoutChildren={false}
-                onDrop={(_items, target) => console.log(target)}
+                // canDropOnItemWithoutChildren
+                onDrop={(items, target) => console.log(items, target)}
                 onFocusItem={(item: TreeItem<TreeItemData>): void => {
                     setFocusedItem(item.index);
                     if (!item.hasChildren) {
                         onSelectQuery(item.data.queryId as number);
                     }
                 }}
-                onExpandItem={(item) => setExpandedItems([...expandedItems, item.index])}
+                onExpandItem={(item) =>
+                    setExpandedItems([...expandedItems, item.index])
+                }
                 onCollapseItem={(item) =>
                     setExpandedItems(expandedItems.filter((expandedItemIndex) => expandedItemIndex !== item.index))
                 }
                 onSelectItems={setSelectedItems}
-                onStartRenamingItem={console.log}
                 {...{ onRenameItem }}
             >
                 <Tree

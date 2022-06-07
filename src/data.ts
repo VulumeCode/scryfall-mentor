@@ -70,6 +70,7 @@ export const defautlQueries = {
 };
 
 export const defaultNames = {
+    root: "*",
     Fruit: "Fruit",
     Hans: "Hans",
     Gingerbrute: "Gingerbrute",

@@ -118,6 +118,14 @@ body::before {
     --rct-color-renaming-input-submitbutton-text-active: #ffffff;
 }
 
+#clear-filter {
+    position: absolute;
+    right: 1em;
+    background-color: transparent;
+    border-color: transparent;
+}
+
+
 .rct-tree-root {
     font-family: Lato !important;
     margin-top: 1ex;
