@@ -137,6 +137,38 @@ body::before {
   mask-image: linear-gradient(180deg, #000 60%, transparent 90%); */
 }
 
+.rct-tree-item-renaming-input {
+    font-family: inherit;
+}
+
+
+.rct-tree-item-renaming-submit-button-sfm {
+    border: none;
+    background-color: var(--rct-color-renaming-input-submitbutton-bg);
+    color: var(--rct-color-renaming-input-submitbutton-text);
+    cursor: pointer;
+    padding: 0.3em;
+}
+
+.rct-tree-item-renaming-submit-button-sfm:hover {
+    /* background-color: var(--rct-color-renaming-input-submitbutton-bg-hover); */
+    color: var(--rct-color-renaming-input-submitbutton-text-hover);
+}
+
+.rct-tree-item-renaming-submit-button-sfm:active {
+    /* background-color: var(--rct-color-renaming-input-submitbutton-bg-active); */
+    color: var(--rct-color-renaming-input-submitbutton-text-active);
+}
+
+
+
+/* mana symbols */
+.ms {
+    vertical-align: bottom;
+}
+
+
+
 .emojisymbols {
     font-family: "emojisymbols";
 }

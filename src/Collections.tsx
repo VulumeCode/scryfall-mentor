@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useRef } from "react";
+import reactStringReplace from "react-string-replace";
+
 
 import {
     ControlledTreeEnvironment,
@@ -128,12 +130,77 @@ const Collections: React.FC<{
                         ) : null
                     }
                     renderItemTitle={({ item }) => (
-                        <div onDoubleClick={() => tree.current?.startRenamingItem(item.index)}>{item.data.title}</div>
+                        <div onDoubleClick={() => tree.current?.startRenamingItem(item.index)}>{renderManaTitle(item.data.title)}</div>
+                    )}
+                    renderRenameInput={({ inputProps, inputRef, submitButtonProps, submitButtonRef, formProps }) => (
+                        <form {...formProps} className="rct-tree-item-renaming-form">
+                            <input {...inputProps} ref={inputRef} className="rct-tree-item-renaming-input" />
+                            {/* <input
+                                {...submitButtonProps}
+                                ref={submitButtonRef}
+                                type="submit"
+
+                                className="ms ms-artist-nib rct-tree-item-renaming-submit-button"
+                            // value="🗸"
+                            /> */}
+                            <button
+                                {...submitButtonProps}
+                                ref={submitButtonRef}
+                                type="submit"
+                                className="ms ms-artist-nib rct-tree-item-renaming-submit-button-sfm"></button>
+                        </form>
                     )}
                 />
             </ControlledTreeEnvironment>
         </>
     );
 };
+
+
+const renderManaTitle = (title: string): React.ReactElement => {
+    return <>{reactStringReplace(
+        title,
+        /{(.+)}/g,
+        (match, i) => {
+            return costs.indexOf(match) >= 0
+                ? (<i key={match + i} className={`ms ms-${match} ms-cost ms-shadow`}></i>)
+                : (<i key={match + i} className={`ms ms-${match}`}></i>);
+        })}</>;
+};
+
+
+const costs = ["2b",
+    "2g",
+    "2r",
+    "2u",
+    "2w",
+    "b",
+    "bg",
+    "bp",
+    "br",
+    "g",
+    "gp",
+    "gu",
+    "gw",
+    "p",
+    "r",
+    "rg",
+    "rp",
+    "rw",
+    "s",
+    "s-mtga",
+    "tap-alt",
+    "u",
+    "ub",
+    "untap",
+    "up",
+    "ur",
+    "w",
+    "wb",
+    "wp",
+    "wu",
+];
+
+
 
 export default Collections;

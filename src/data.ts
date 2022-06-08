@@ -102,7 +102,7 @@ export const defaultNames = {
     PokeBowl: "PokeBowl",
     LemonCurd: "LemonCurd",
     KumaraFries: "KumaraFries",
-    Desserts: "Desserts",
+    Desserts: "Desserts {g}",
     Cookies: "Cookies",
     IceCream: "IceCream",
     Drinks: "Drinks",
