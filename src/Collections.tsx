@@ -69,10 +69,9 @@ const Collections: React.FC<{
                 />
                 <button
                     id="clear-filter"
-                    className="blueprint-icons-big button-n inverted"
+                    className="button-n inverted"
                     onClick={() => setFilter("")}
-                >
-                    {icons["cross"].utf}
+                >🞪
                 </button>
             </span>
             <ControlledTreeEnvironment

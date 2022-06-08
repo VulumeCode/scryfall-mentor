@@ -87,6 +87,7 @@ body::before {
     line-height: 0ex;
     margin-bottom: 0.4ex;
     font-size: 77%;
+    flex-shrink: 0;
 }
 
 .App {
