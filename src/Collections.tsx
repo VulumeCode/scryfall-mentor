@@ -178,6 +178,7 @@ const costs = ["2b",
     "bg",
     "bp",
     "br",
+    "e",
     "g",
     "gp",
     "gu",
@@ -199,6 +200,9 @@ const costs = ["2b",
     "wb",
     "wp",
     "wu",
+    "x",
+    "y",
+    "z",
 ];
 
 

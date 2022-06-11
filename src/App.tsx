@@ -96,7 +96,7 @@ function App(): JSX.Element {
 
                 <div key="pushDownSpacer" className="pushDownSpacer"></div>
                 <div key="activeQueryName" className="activeQueryName">
-                    <i className="ms ms-gw ms-cost"></i> Search for Magic cards...
+                    Search for Magic cards...
                 </div>
                 {queryParts.map((queryPart, i) => {
                     const last = i === queryParts.length - 1;
