@@ -80,7 +80,7 @@ function App(): JSX.Element {
                         setQueryParts(queries[queryKey]);
                     }}
                     onAddCollection={() => {
-                        const newIndex = Date.now().toString();
+                        const newIndex = crypto.randomUUID();
                         setQueryCollection((draft) => {
                             (draft.root as WritableDraft<Template>)[newIndex] = {};
                         });
