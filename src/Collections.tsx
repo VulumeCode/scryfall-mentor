@@ -91,7 +91,7 @@ const Collections: React.FC<{
                 canReorderItems
                 canDragAndDrop
                 canDropOnItemWithChildren
-                // canDropOnItemWithoutChildren
+                canDropOnItemWithoutChildren
                 onDrop={(items, target) => console.log(items, target)}
                 onFocusItem={(item: TreeItem<TreeItemData>): void => {
                     setFocusedItem(item.index);
@@ -130,19 +130,22 @@ const Collections: React.FC<{
                         ) : null
                     }
                     renderItemTitle={({ item }) => (
-                        <div onDoubleClick={() => tree.current?.startRenamingItem(item.index)}>{renderManaTitle(item.data.title)}</div>
+                        <span className="itemTitle">
+                            <div
+                                className="itemTitleText"
+                                onDoubleClick={() => tree.current?.startRenamingItem(item.index)}>
+                                {renderManaTitle(item.data.title)}
+                            </div>
+                            <div
+                                className="blueprint-icons itemMenuButton"
+                                onClick={console.dir}>
+                                {icons["more"].utf}
+                            </div>
+                        </span>
                     )}
                     renderRenameInput={({ inputProps, inputRef, submitButtonProps, submitButtonRef, formProps }) => (
                         <form {...formProps} className="rct-tree-item-renaming-form">
                             <input {...inputProps} ref={inputRef} className="rct-tree-item-renaming-input" />
-                            {/* <input
-                                {...submitButtonProps}
-                                ref={submitButtonRef}
-                                type="submit"
-
-                                className="ms ms-artist-nib rct-tree-item-renaming-submit-button"
-                            // value="🗸"
-                            /> */}
                             <button
                                 {...submitButtonProps}
                                 ref={submitButtonRef}

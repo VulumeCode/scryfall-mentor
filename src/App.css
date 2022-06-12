@@ -160,7 +160,25 @@ body::before {
     color: var(--rct-color-renaming-input-submitbutton-text-active);
 }
 
+.itemTitle {
+    display: flex;
+    width: 100%;
+    --itemMenuButtonOpacity: 0;
+}
 
+.itemTitle:hover {
+    --itemMenuButtonOpacity: 1;
+}
+
+
+.itemTitleText {
+    width: 100%;
+}
+
+.itemMenuButton {
+    align-self: flex-end;
+    opacity: var(--itemMenuButtonOpacity);
+}
 
 /* mana symbols */
 .ms {
