@@ -6,11 +6,15 @@ import { useImmer } from "use-immer";
 import { defaultTemplate, defaultNames, defautlQueries } from "./data";
 import Collections, { TreeData } from "./Collections";
 import { WritableDraft } from "immer/dist/internal";
+import { TreeItemIndex } from "react-complex-tree";
 
 type QueryPart = {
     enabled: boolean | "locked",
     query: string,
 };
+
+type Template = { [index: TreeItemIndex]: number | Template };
+type Names = { [index: string]: string };
 
 const buildCollectionsTree = (names: Names, filter: string, collection: Template, data: TreeData = {}): [TreeData, boolean] => {
     let hasMatch = false;
@@ -55,8 +59,21 @@ const matchFilter = (value: string, filter: string): boolean => {
     }
 };
 
-type Template = { [index: string]: number | Template };
-type Names = { [index: string]: string };
+
+const removeProp = (obj: Template, match: TreeItemIndex): void => {
+    for (const prop in obj) {
+        if (prop === match) {
+            delete obj[prop];
+            return;
+        }
+        else {
+            const children = obj[prop];
+            if (typeof children === "object") {
+                removeProp(children, match);
+            }
+        }
+    }
+};
 
 function App(): JSX.Element {
     const [queryCollection, setQueryCollection] = useImmer<Template>(defaultTemplate);
@@ -88,8 +105,12 @@ function App(): JSX.Element {
                         return newIndex;
                     }}
                     onRenameItem={(item, name) => {
-                        console.log(item, name);
                         setNames((draft) => { draft[item.index] = name; });
+                    }}
+                    onDeleteItem={item => {
+                        setQueryCollection((draft) => {
+                            removeProp(draft, item.index);
+                        });
                     }}
                     {...{ filter, setFilter }}
                 />
@@ -156,7 +177,8 @@ function App(): JSX.Element {
                 })}
 
                 <div className="queryEditor" style={{ display: "flex", width: "100%" }}>
-                    <button key={"searh"} className="button-n inverted" onClick={() => search(queryParts)}>
+                    <button key={"searh"} className="button-n inverted"
+                        onClick={(e) => search(queryParts, e)}>
                         Search
                     </button>
                     <button
@@ -173,7 +195,7 @@ function App(): JSX.Element {
                     <button
                         key={"random"}
                         className="button-n inverted"
-                        onClick={() => goto("https://scryfall.com/random")}
+                        onClick={(e) => goto("https://scryfall.com/random", e)}
                     >
                         Random card
                     </button>
@@ -183,7 +205,7 @@ function App(): JSX.Element {
     );
 }
 
-function search(queryParts: QueryPart[]): void {
+function search(queryParts: QueryPart[], e?: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
     let queryUrl = "https://scryfall.com/search?q=";
 
     queryUrl += encodeURIComponent(
@@ -193,12 +215,16 @@ function search(queryParts: QueryPart[]): void {
             .join(" "),
     );
 
-    goto(queryUrl);
+    goto(queryUrl, e);
 }
 
-async function goto(url?: string): Promise<void> {
-    const activeTab = (await browser.tabs.query({ currentWindow: true, active: true }))[0];
-    browser.tabs.update(activeTab.id, { url });
+async function goto(url?: string, e?: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> {
+    if ((!!e?.ctrlKey) || (!!e?.metaKey)) {
+        browser.tabs.create({ active: true, url: url });
+    } else {
+        const activeTab = (await browser.tabs.query({ currentWindow: true, active: true }))[0];
+        browser.tabs.update(activeTab.id, { url });
+    }
 }
 
 export default App;

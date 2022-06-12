@@ -37,9 +37,10 @@ const Collections: React.FC<{
     onSelectQuery: (queryKey: number) => void,
     onAddCollection: () => string,
     onRenameItem: (item: TreeItem<TreeItemData>, name: string, treeId: string) => void,
+    onDeleteItem: (item: TreeItem<TreeItemData>) => void,
     filter: string,
     setFilter: (filter: string) => void,
-}> = ({ treeData, onSelectQuery, onAddCollection, onRenameItem, filter, setFilter }) => {
+}> = ({ treeData, onSelectQuery, onAddCollection, onRenameItem, filter, setFilter, onDeleteItem }) => {
     const tree = useRef<TreeRef>(null);
     const environment = useRef<TreeEnvironmentRef>(null);
     const [focusedItem, setFocusedItem] = useState<TreeItemIndex>();
@@ -138,7 +139,7 @@ const Collections: React.FC<{
                             </div>
                             <div
                                 className="blueprint-icons itemMenuButton"
-                                onClick={console.dir}>
+                                onClick={() => onDeleteItem(item)}>
                                 {icons["more"].utf}
                             </div>
                         </span>
