@@ -7,6 +7,7 @@ import { defaultTemplate, defaultNames, defautlQueries } from "./data";
 import Collections, { TreeData } from "./Collections";
 import { WritableDraft } from "immer/dist/internal";
 import { TreeItemIndex } from "react-complex-tree";
+import ContextMenu from "./ContextMenu";
 
 type QueryPart = {
     enabled: boolean | "locked",
@@ -90,6 +91,9 @@ function App(): JSX.Element {
     return (
         <div className="App">
             <header className="App-header inverted">
+
+
+                {/* <ContextMenu yPos={80} /> */}
                 <Collections
                     treeData={buildCollectionsTree(names, filter, queryCollection)[0]}
                     onSelectQuery={(queryKey): void => {
@@ -211,7 +215,7 @@ function search(queryParts: QueryPart[], e?: React.MouseEvent<HTMLButtonElement,
     queryUrl += encodeURIComponent(
         queryParts
             .filter((p) => !!p.enabled)
-            .map((p) => "(" + p.query + ")")
+            .map((p) => `(${p.query})`)
             .join(" "),
     );
 

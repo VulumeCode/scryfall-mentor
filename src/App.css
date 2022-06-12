@@ -94,15 +94,17 @@ body::before {
     --rct-color-tree-bg: #0000;
     --rct-color-tree-focus-outline: #0000;
 
-    --rct-color-focustree-item-selected-bg: rgba(255, 255, 255, 0.15);
+    --rct-color-focustree-item-selected-bg: #786076bb;
     --rct-color-focustree-item-selected-text: inherit;
-    --rct-color-focustree-item-focused-border: rgba(255, 255, 255, 0.6);
+    /* --rct-color-focustree-item-focused-border: rgba(255, 255, 255, 0.6); */
+    --rct-color-focustree-item-focused-border: #0000;
     --rct-color-focustree-item-draggingover-bg: #ebf0f4;
     --rct-color-focustree-item-draggingover-color: inherit;
 
-    --rct-color-nonfocustree-item-selected-bg: #786076;
+    --rct-color-nonfocustree-item-selected-bg: #786076bb;
     --rct-color-nonfocustree-item-selected-text: inherit;
-    --rct-color-nonfocustree-item-focused-border: #dbdbdb;
+    /* --rct-color-nonfocustree-item-focused-border: #dbdbdb; */
+    --rct-color-nonfocustree-item-focused-border: #0000;
 
     --rct-color-search-highlight-bg: #a2aed2;
     --rct-color-drag-between-line-bg: #947a92;
@@ -181,7 +183,7 @@ body::before {
 }
 
 /* mana symbols */
-.ms {
+.itemTitle .ms {
     vertical-align: bottom;
 }
 

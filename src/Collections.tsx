@@ -67,7 +67,7 @@ const Collections: React.FC<{
                     style={{ width: "100%" }}
                     type={"text"}
                     value={filter}
-                    placeholder={icons["filter-list"].utf}
+                    placeholder={icons["filter"].utf}
                     onChange={(e) => setFilter(e.target.value)}
                 />
                 <button
@@ -98,6 +98,7 @@ const Collections: React.FC<{
                     setFocusedItem(item.index);
                     if (!item.hasChildren) {
                         onSelectQuery(item.data.queryId as number);
+                        // setSelectedItems([item.index]);
                     }
                 }}
                 onExpandItem={(item) =>
@@ -131,7 +132,8 @@ const Collections: React.FC<{
                         ) : null
                     }
                     renderItemTitle={({ item }) => (
-                        <span className="itemTitle">
+                        <div className="itemTitle"
+                            onContextMenuCapture={console.dir}>
                             <div
                                 className="itemTitleText"
                                 onDoubleClick={() => tree.current?.startRenamingItem(item.index)}>
@@ -142,7 +144,7 @@ const Collections: React.FC<{
                                 onClick={() => onDeleteItem(item)}>
                                 {icons["more"].utf}
                             </div>
-                        </span>
+                        </div>
                     )}
                     renderRenameInput={({ inputProps, inputRef, submitButtonProps, submitButtonRef, formProps }) => (
                         <form {...formProps} className="rct-tree-item-renaming-form">
