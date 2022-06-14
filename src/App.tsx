@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import "./App.css";
 import { useImmer } from "use-immer";
@@ -85,14 +85,15 @@ function App(): JSX.Element {
 
     const [queryParts, setQueryParts] = useImmer<Array<QueryPart>>(Object.values(queries)[0]);
 
+    const [modal, setModal] = useState<JSX.Element | undefined>(undefined);
+
+
     console.log("Update", Date.now());
 
     return (
         <div className="App">
+            {modal}
             <header className="App-header inverted">
-
-
-                {/* <ContextMenu yPos={80} /> */}
                 <Collections
                     treeData={buildCollectionsTree(names, filter, queryCollection)[0]}
                     onSelectQuery={(queryKey): void => {
@@ -115,7 +116,7 @@ function App(): JSX.Element {
                             removeProp(draft, item.index);
                         });
                     }}
-                    {...{ filter, setFilter }}
+                    {...{ filter, setFilter, setModal }}
                 />
 
                 <div key="pushDownSpacer" className="pushDownSpacer"></div>

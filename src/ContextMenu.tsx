@@ -1,16 +1,16 @@
 import React from "react";
+
 import "./ContextMenu.css";
 
 
 
 
 const ContextMenu: React.FC<{
-    // yPos: number,
+    yPos: number,
     onClose: () => void,
     onDelete: () => void,
     onRename: () => void,
-    menuRef: HTMLDivElement | null,
-}> = ({ onClose, onDelete, onRename, menuRef }) => {
+}> = ({ onClose, onDelete, onRename, yPos }) => {
 
     const doIt = (action: () => void): (() => void) => {
         return () => {
@@ -27,7 +27,7 @@ const ContextMenu: React.FC<{
             </div>
             <div
                 className="modalMenu"
-                style={{ top: `${menuRef?.getBoundingClientRect().bottom}px` }}
+                style={{ top: `${yPos}px` }}
             >
                 <ul>
                     <li>

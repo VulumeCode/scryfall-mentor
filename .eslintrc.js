@@ -72,7 +72,7 @@ module.exports = {
         "@typescript-eslint/member-ordering": "off",
         "@typescript-eslint/no-floating-promises": "off",
         "@typescript-eslint/no-namespace": ["error", { allowDeclarations: true }],
-        "@typescript-eslint/no-non-null-assertion": "error",
+        // "@typescript-eslint/no-non-null-assertion": "error",
         "@typescript-eslint/no-explicit-any": "error",
         "@typescript-eslint/explicit-function-return-type": [
             "error",
