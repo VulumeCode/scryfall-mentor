@@ -16,6 +16,7 @@ input.collections-filter::placeholder {
     --rct-color-tree-focus-outline: #0000;
 
     --rct-color-focustree-item-selected-bg: #786076bb;
+    --rct-color-focustree-item-hover-bg: #78607644;
     --rct-color-focustree-item-selected-text: inherit;
     /* --rct-color-focustree-item-focused-border: rgba(255, 255, 255, 0.6); */
     --rct-color-focustree-item-focused-border: #0000;
@@ -43,14 +44,18 @@ input.collections-filter::placeholder {
 }
 
 
+
 .rct-tree-root {
     font-family: Lato !important;
+}
+
+#treeContainer {
     margin-top: 1ex;
     width: 100%;
     height: 50%;
     overflow-y: auto;
-    /* scrollbar-width: none;
-    mask-image: linear-gradient(180deg, #000 60%, transparent 90%); */
+    scrollbar-width: none;
+    mask-image: linear-gradient(180deg, #000 90%, transparent 100%);
 }
 
 .rct-tree-item-renaming-input {
@@ -76,13 +81,22 @@ input.collections-filter::placeholder {
     color: var(--rct-color-renaming-input-submitbutton-text-active);
 }
 
+
+
+.rct-tree-item-title-container:hover {}
+
 .itemTitle {
     display: flex;
     width: 100%;
+    height: 100%;
+    align-items: center;
     --itemMenuButtonOpacity: 0;
 }
 
-.itemTitle:hover {
+.itemTitle:hover,
+.itemTitle.menuItem {
+    background-color: var(--rct-color-focustree-item-hover-bg);
+    /* TODO background-color: linear-gradient(270deg, var(--rct-color-focustree-item-hover-bg) 0%, transparent 100%); */
     --itemMenuButtonOpacity: 1;
 }
 
@@ -92,7 +106,6 @@ input.collections-filter::placeholder {
 }
 
 .itemMenuButton {
-    align-self: flex-end;
     opacity: var(--itemMenuButtonOpacity);
 }
 

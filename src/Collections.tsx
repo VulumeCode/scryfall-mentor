@@ -50,13 +50,16 @@ const Collections: React.FC<{
     const [expandedItems, setExpandedItems] = useState<Array<TreeItemIndex>>(["Fruit", "Lemon", "Berries", "Meals", "America", "Europe", "Asia", "Australia", "Desserts", "Drinks"]);
     const [selectedItems, setSelectedItems] = useState<Array<TreeItemIndex>>([]);
 
+    const [menuItem, setMenuItem] = useState<TreeItemIndex | undefined>();
+
 
     const setContextMenuItem = (item: TreeItem<TreeItemData>, e: HTMLElement | null,
     ): void => {
         if (!!e) {
+            setMenuItem(item.index);
             setModal(<ContextMenu
                 yPos={e.getBoundingClientRect().bottom}
-                onClose={() => setModal()}
+                onClose={() => { setModal(); setMenuItem(undefined); }}
                 onDelete={() => onDeleteItem(item)}
                 onRename={() => tree.current?.startRenamingItem(item.index)}
             />);
@@ -68,7 +71,8 @@ const Collections: React.FC<{
     window.environment = environment;
     return (
         <>
-            <span style={{ display: "flex", width: "100%" }}>
+            < span style={{ display: "flex", width: "100%" }
+            }>
                 <button
                     className="blueprint-icons-big button-n inverted"
                     onClick={() => {
@@ -92,90 +96,94 @@ const Collections: React.FC<{
                     onClick={() => setFilter("")}
                 >🞪
                 </button>
-            </span>
-            <ControlledTreeEnvironment
-                ref={environment}
-                items={treeData}
-                getItemTitle={(item: TreeItem<TreeItemData>): string => item.data.title}
-                defaultInteractionMode={InteractionMode.ClickArrowToExpand}
-                viewState={{
-                    ["Collections"]: {
-                        focusedItem,
-                        expandedItems,
-                        selectedItems,
-                    },
-                }}
-                canReorderItems
-                canDragAndDrop
-                canDropOnItemWithChildren
-                canDropOnItemWithoutChildren
-                onDrop={(items, target) => console.log(items, target)}
-                onFocusItem={(item: TreeItem<TreeItemData>): void => {
-                    setFocusedItem(item.index);
-                    if (!item.hasChildren) {
-                        onSelectQuery(item.data.queryId as number);
-                        // setSelectedItems([item.index]);
-                    }
-                }}
-                onExpandItem={(item) =>
-                    setExpandedItems([...expandedItems, item.index])
-                }
-                onCollapseItem={(item) =>
-                    setExpandedItems(expandedItems.filter((expandedItemIndex) => expandedItemIndex !== item.index))
-                }
-                onSelectItems={setSelectedItems}
-                {...{ onRenameItem }}
-            >
-                <Tree
-                    treeId="Collections"
-                    rootItem="root"
-                    ref={tree}
-                    renderItemArrow={({
-                        item,
-                        context,
-                    }: {
-                        item: TreeItem<TreeItemData>,
-                        context: TreeItemRenderContext<never>,
-                    }) =>
-                        item.hasChildren ? (
-                            <span
-                                className="blueprint-icons"
-                                onClick={() => tree.current?.toggleItemExpandedState(item.index)}
-                            >
-                                {" "}
-                                {context.isExpanded ? icons["folder-open"].utf : icons["folder-close"].utf}
-                            </span>
-                        ) : null
-                    }
-                    renderItemTitle={({ item }) => {
-                        return (
-                            <div className="itemTitle"
-                                onContextMenuCapture={(e) => { e.preventDefault(); setContextMenuItem(item, e.currentTarget.parentElement); }}>
-                                <div
-                                    className="itemTitleText"
-                                    onDoubleClick={() => tree.current?.startRenamingItem(item.index)}>
-                                    {renderManaTitle(item.data.title)}
-                                </div>
-                                <div
-                                    className="blueprint-icons itemMenuButton"
-                                    onClickCapture={(e) => { e.preventDefault(); setContextMenuItem(item, e.currentTarget.parentElement?.parentElement ?? null); }}>
-                                    {icons["more"].utf}
-                                </div>
-                            </div>
-                        );
+            </span >
+
+            <div id="treeContainer">
+                <ControlledTreeEnvironment
+                    ref={environment}
+                    items={treeData}
+                    getItemTitle={(item: TreeItem<TreeItemData>): string => item.data.title}
+                    defaultInteractionMode={InteractionMode.ClickArrowToExpand}
+                    viewState={{
+                        ["Collections"]: {
+                            focusedItem,
+                            expandedItems,
+                            selectedItems,
+                        },
                     }}
-                    renderRenameInput={({ inputProps, inputRef, submitButtonProps, submitButtonRef, formProps }) => (
-                        <form {...formProps} className="rct-tree-item-renaming-form">
-                            <input {...inputProps} ref={inputRef} className="rct-tree-item-renaming-input" />
-                            <button
-                                {...submitButtonProps}
-                                ref={submitButtonRef}
-                                type="submit"
-                                className="ms ms-artist-nib rct-tree-item-renaming-submit-button-sfm"></button>
-                        </form>
-                    )}
-                />
-            </ControlledTreeEnvironment>
+                    canReorderItems
+                    canDragAndDrop
+                    canDropOnItemWithChildren
+                    canDropOnItemWithoutChildren
+                    onDrop={(items, target) => console.log(items, target)}
+                    onFocusItem={(item: TreeItem<TreeItemData>): void => {
+                        setFocusedItem(item.index);
+                        if (!item.hasChildren) {
+                            onSelectQuery(item.data.queryId as number);
+                            // setSelectedItems([item.index]);
+                        }
+                    }}
+                    onExpandItem={(item) =>
+                        setExpandedItems([...expandedItems, item.index])
+                    }
+                    onCollapseItem={(item) =>
+                        setExpandedItems(expandedItems.filter((expandedItemIndex) => expandedItemIndex !== item.index))
+                    }
+                    onSelectItems={setSelectedItems}
+                    {...{ onRenameItem }}
+                >
+                    <Tree
+                        treeId="Collections"
+                        rootItem="root"
+                        ref={tree}
+                        renderItemArrow={({
+                            item,
+                            context,
+                        }: {
+                            item: TreeItem<TreeItemData>,
+                            context: TreeItemRenderContext<never>,
+                        }) =>
+                            item.hasChildren ? (
+                                <span
+                                    className="blueprint-icons"
+                                    onClick={() => tree.current?.toggleItemExpandedState(item.index)}
+                                >
+                                    {" "}
+                                    {context.isExpanded ? icons["folder-open"].utf : icons["folder-close"].utf}
+                                </span>
+                            ) : null
+                        }
+                        renderItemTitle={({ item }) => {
+                            return (
+                                <div className={`itemTitle ${(item.index === menuItem) && "menuItem"}`}
+                                    onContextMenuCapture={(e) => { e.preventDefault(); setContextMenuItem(item, e.currentTarget.parentElement); }}>
+                                    <div
+                                        className="itemTitleText"
+                                        onDoubleClick={() => tree.current?.startRenamingItem(item.index)}>
+                                        {renderManaTitle(item.data.title)}
+                                    </div>
+                                    <div
+                                        className="blueprint-icons itemMenuButton"
+                                        onClickCapture={(e) => { e.stopPropagation(); setContextMenuItem(item, e.currentTarget.parentElement?.parentElement ?? null); }}>
+                                        {icons["more"].utf}
+                                    </div>
+                                </div>
+                            );
+                        }}
+                        renderRenameInput={({ inputProps, inputRef, submitButtonProps, submitButtonRef, formProps }) => (
+                            <form {...formProps} className="rct-tree-item-renaming-form">
+                                <input {...inputProps} ref={inputRef} className="rct-tree-item-renaming-input" />
+                                <button
+                                    {...submitButtonProps}
+                                    ref={submitButtonRef}
+                                    type="submit"
+                                    className="ms ms-artist-nib rct-tree-item-renaming-submit-button-sfm"></button>
+                            </form>
+                        )}
+                    />
+                </ControlledTreeEnvironment>
+                <div style={{ height: "10ex" }} />
+            </div >
         </>
     );
 };
