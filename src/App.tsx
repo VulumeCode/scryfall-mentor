@@ -7,7 +7,6 @@ import { defaultTemplate, defaultNames, defautlQueries } from "./data";
 import Collections, { TreeData } from "./Collections";
 import { WritableDraft } from "immer/dist/internal";
 import { TreeItemIndex } from "react-complex-tree";
-import ContextMenu from "./ContextMenu";
 
 type QueryPart = {
     enabled: boolean | "locked",
@@ -121,7 +120,7 @@ function App(): JSX.Element {
 
                 <div key="pushDownSpacer" className="pushDownSpacer"></div>
                 <div key="activeQueryName" className="activeQueryName">
-                    Search for Magic cards...
+                    <i className="ms ms-ability-learn"></i> Search for Magic cards...
                 </div>
                 {queryParts.map((queryPart, i) => {
                     const last = i === queryParts.length - 1;
@@ -180,8 +179,11 @@ function App(): JSX.Element {
                     );
                 })}
 
+
+
+
                 <div className="queryEditor" style={{ display: "flex", width: "100%" }}>
-                    <button key={"searh"} className="button-n inverted"
+                    <button key={"search"} className="button-n inverted"
                         onClick={(e) => search(queryParts, e)}>
                         Search
                     </button>
@@ -204,6 +206,70 @@ function App(): JSX.Element {
                         Random card
                     </button>
                 </div>
+
+
+                <div key="activeMaskName" className="activeMaskName">
+                    <i className="ms ms-ability-menace"></i> Mask
+                </div>
+                {queryParts.map((queryPart, i) => {
+                    const last = i === queryParts.length - 1;
+                    return (
+                        <label key={"queryPart" + i} className="advanced-search-checkbox">
+                            <input
+                                key={"queryPartCheckbox" + i}
+                                className={"button-n inverted " + queryPart.enabled}
+                                type="checkbox"
+                                checked={!!queryPart.enabled}
+                                disabled={last}
+                                onChange={(e) =>
+                                    setQueryParts((draft) => {
+                                        draft[i].enabled = e.target.checked;
+                                    })
+                                }
+                                onDoubleClick={() =>
+                                    setQueryParts((draft) => {
+                                        draft[i].enabled = "locked";
+                                    })
+                                }
+                            ></input>
+                            <input
+                                key={"queryPartText" + i}
+                                className="button-n inverted"
+                                type="text"
+                                value={queryPart.query}
+                                placeholder={last ? "Query" : undefined}
+                                onChange={(e) =>
+                                    setQueryParts((draft) => {
+                                        draft[i].query = e.target.value;
+                                        if (last) {
+                                            draft[i].enabled = true;
+                                            draft.push({
+                                                enabled: false,
+                                                query: "",
+                                            });
+                                        }
+                                    })
+                                }
+                            ></input>
+                            {
+                                <button
+                                    className="remove"
+                                    disabled={last}
+                                    onClick={() =>
+                                        setQueryParts((draft) => {
+                                            draft.splice(i, 1);
+                                        })
+                                    }
+                                >
+                                    🞪
+                                </button>
+                            }
+                        </label>
+                    );
+                })}
+
+
+
             </header>
         </div>
     );

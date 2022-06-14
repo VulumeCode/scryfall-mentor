@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { useRef } from "react";
+import React, { useState, useRef } from "react";
 import reactStringReplace from "react-string-replace";
+
+import "./Collections.css";
 
 
 import {
@@ -16,6 +17,7 @@ import {
 import "react-complex-tree/lib/style.css";
 
 import icons from "./icons";
+import ContextMenu from "./ContextMenu";
 
 export type TreeItemData = {
     title: string,
@@ -44,9 +46,11 @@ const Collections: React.FC<{
     const tree = useRef<TreeRef>(null);
     const environment = useRef<TreeEnvironmentRef>(null);
     const [focusedItem, setFocusedItem] = useState<TreeItemIndex>();
-    const [expandedItems, setExpandedItems] = useState<Array<TreeItemIndex>>([]);
+    const [expandedItems, setExpandedItems] = useState<Array<TreeItemIndex>>(["Fruit", "Lemon", "Berries", "Meals", "America", "Europe", "Asia", "Australia", "Desserts", "Drinks"]);
     const [selectedItems, setSelectedItems] = useState<Array<TreeItemIndex>>([]);
 
+    const menuRef = useRef<HTMLDivElement>(null);
+    const [contextMenuItem, setContextMenuItem] = useState<TreeItemIndex>();
 
     window.tree = tree;
     window.environment = environment;
@@ -131,21 +135,32 @@ const Collections: React.FC<{
                             </span>
                         ) : null
                     }
-                    renderItemTitle={({ item }) => (
-                        <div className="itemTitle"
-                            onContextMenuCapture={console.dir}>
-                            <div
-                                className="itemTitleText"
-                                onDoubleClick={() => tree.current?.startRenamingItem(item.index)}>
-                                {renderManaTitle(item.data.title)}
+                    renderItemTitle={({ item }) => {
+                        const isContextMenuItem = item.index === contextMenuItem;
+                        return (
+                            <div className="itemTitle"
+                                ref={menuRef}
+                                onContextMenuCapture={(e) => { e.preventDefault(); setContextMenuItem(item.index); }}>
+                                <div
+                                    className="itemTitleText"
+                                    onDoubleClick={() => tree.current?.startRenamingItem(item.index)}>
+                                    {renderManaTitle(item.data.title)}
+                                </div>
+                                <div
+                                    className="blueprint-icons itemMenuButton"
+                                    onClickCapture={(e) => { e.preventDefault(); setContextMenuItem(item.index); }}>
+                                    {icons["more"].utf}
+                                </div>
+                                {isContextMenuItem
+                                    && <ContextMenu
+                                        menuRef={menuRef.current}
+                                        onClose={() => setContextMenuItem(undefined)}
+                                        onDelete={() => onDeleteItem(item)}
+                                        onRename={() => tree.current?.startRenamingItem(item.index)}
+                                    />}
                             </div>
-                            <div
-                                className="blueprint-icons itemMenuButton"
-                                onClick={() => onDeleteItem(item)}>
-                                {icons["more"].utf}
-                            </div>
-                        </div>
-                    )}
+                        );
+                    }}
                     renderRenameInput={({ inputProps, inputRef, submitButtonProps, submitButtonRef, formProps }) => (
                         <form {...formProps} className="rct-tree-item-renaming-form">
                             <input {...inputProps} ref={inputRef} className="rct-tree-item-renaming-input" />
