@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import "./App.css";
 import { useImmer } from "use-immer";
@@ -88,14 +88,18 @@ function App(): JSX.Element {
     const [modal, setModal] = useState<JSX.Element | undefined>(undefined);
 
 
+    const treeData = useMemo(() => buildCollectionsTree(names, filter, queryCollection)[0], [names, filter, queryCollection]);
+
     console.log("Update", Date.now());
+
+
 
     return (
         <div className="App">
             {modal}
             <header className="App-header inverted">
                 <Collections
-                    treeData={buildCollectionsTree(names, filter, queryCollection)[0]}
+                    treeData={treeData}
                     onSelectQuery={(queryKey): void => {
                         console.log("onSelectQuery", queryKey);
                         setQueryParts(queries[queryKey]);
