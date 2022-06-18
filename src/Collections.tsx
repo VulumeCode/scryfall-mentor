@@ -18,6 +18,7 @@ import "react-complex-tree/lib/style.css";
 
 import icons from "./icons";
 import ContextMenu from "./ContextMenu";
+import { createDefaultRenderers } from "./createDefaultRenderers";
 
 export type TreeItemData = {
     title: string,
@@ -33,6 +34,8 @@ declare global {
         environment: unknown,
     }
 }
+
+const defaultRenderers = createDefaultRenderers(1);
 
 const Collections: React.FC<{
     treeData: TreeData,
@@ -155,7 +158,7 @@ const Collections: React.FC<{
                         }
                         renderItemTitle={({ item }) => {
                             return (
-                                <div className={`itemTitle ${(item.index === menuItem) && "menuItem"}`}
+                                <div className="itemTitle"
                                     onContextMenuCapture={(e) => { e.preventDefault(); setContextMenuItem(item, e.currentTarget.parentElement); }}>
                                     <div
                                         className="itemTitleText"
@@ -180,6 +183,7 @@ const Collections: React.FC<{
                                     className="ms ms-artist-nib rct-tree-item-renaming-submit-button-sfm"></button>
                             </form>
                         )}
+                        renderItem={(props) => defaultRenderers.renderItem(props, menuItem)}
                     />
                 </ControlledTreeEnvironment>
                 <div style={{ height: "10ex" }} />

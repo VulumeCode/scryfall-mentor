@@ -83,8 +83,6 @@ input.collections-filter::placeholder {
 
 
 
-.rct-tree-item-title-container:hover {}
-
 .itemTitle {
     display: flex;
     width: 100%;
@@ -93,10 +91,13 @@ input.collections-filter::placeholder {
     --itemMenuButtonOpacity: 0;
 }
 
+.rct-tree-item-title-container:hover,
+.rct-tree-item-title-container.menuItem {
+    background-color: var(--rct-color-focustree-item-hover-bg);
+}
+
 .itemTitle:hover,
 .itemTitle.menuItem {
-    background-color: var(--rct-color-focustree-item-hover-bg);
-    /* TODO background-color: linear-gradient(270deg, var(--rct-color-focustree-item-hover-bg) 0%, transparent 100%); */
     --itemMenuButtonOpacity: 1;
 }
 
