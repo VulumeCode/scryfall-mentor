@@ -5,7 +5,23 @@ body {
     margin: 0;
     font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
         "Segoe UI Symbol";
+
+    --ms-w-color: #f0f2c0;
+
+    --ms-u-color: #b5cde3;
+
+    --ms-b-color: #aca29a;
+
+    --ms-r-color: #db8664;
+
+    --ms-g-color: #93b483;
+    --ms-c-color: #beb9b2;
+    --ms-m-color: #cca753;
+
 }
+
+
+
 
 body::before {
     background-image: url("scryfall.svg");

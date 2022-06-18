@@ -18,7 +18,7 @@ import "react-complex-tree/lib/style.css";
 
 import icons from "./icons";
 import ContextMenu from "./ContextMenu";
-import { createDefaultRenderers } from "./createDefaultRenderers";
+import { createCustomRenderers } from "./createCustomRenderers";
 
 export type TreeItemData = {
     title: string,
@@ -35,7 +35,7 @@ declare global {
     }
 }
 
-const defaultRenderers = createDefaultRenderers(1);
+const defaultRenderers = createCustomRenderers(1);
 
 const Collections: React.FC<{
     treeData: TreeData,

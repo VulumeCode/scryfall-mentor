@@ -48,7 +48,7 @@ const ContextMenu: React.FC<{
                         Rename
                     </li>
                     <li
-                        style={{ color: "#f64800" }}
+                        style={{ color: "var(--ms-r-color)" }}
                         onClick={doIt(onDelete)}
                     >
                         <i className="ms ms-ability-devotion"></i>

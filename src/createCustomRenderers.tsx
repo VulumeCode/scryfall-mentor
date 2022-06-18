@@ -1,23 +1,88 @@
-import React from "react";
-import { AllTreeRenderProps } from "react-complex-tree";
+import React, { FormHTMLAttributes, HTMLProps, InputHTMLAttributes, Ref } from "react";
+import { DraggingPosition, TreeConfiguration, TreeInformation, TreeItem, TreeItemIndex, TreeItemRenderContext } from "react-complex-tree";
 
 const cx = (...classNames: Array<string | undefined | false>): string => classNames.filter(cn => !!cn).join(" ");
 
-export const createDefaultRenderers = (renderDepthOffset: number): AllTreeRenderProps => {
+
+export interface CustomTreeRenderProps<T = unknown, C extends string = never> {
+    renderItem: (props: {
+        item: TreeItem<T>,
+        depth: number,
+        children: React.ReactNode | null,
+        title: React.ReactNode,
+        arrow: React.ReactNode,
+        context: TreeItemRenderContext<C>,
+        info: TreeInformation,
+    }, menuItem: TreeItemIndex | undefined) => React.ReactElement | null,
+    renderItemTitle: (props: {
+        title: string,
+        item: TreeItem<T>,
+        context: TreeItemRenderContext<C>,
+        info: TreeInformation,
+    }) => React.ReactElement | null | string,
+    renderItemArrow: (props: {
+        item: TreeItem<T>,
+        context: TreeItemRenderContext<C>,
+        info: TreeInformation,
+    }) => React.ReactElement | null,
+    renderRenameInput: (props: {
+        item: TreeItem<T>,
+        inputProps: InputHTMLAttributes<HTMLInputElement>,
+        inputRef: Ref<HTMLInputElement>,
+        submitButtonProps: HTMLProps<unknown>,
+        submitButtonRef: Ref<HTMLInputElement>,
+        formProps: FormHTMLAttributes<HTMLFormElement>,
+    }) => React.ReactElement | null,
+    renderDraggingItem: (props: {
+        items: Array<TreeItem<T>>,
+    }) => React.ReactElement | null,
+    renderDraggingItemTitle: (props: {
+        items: Array<TreeItem<T>>,
+    }) => React.ReactElement | null,
+    renderItemsContainer: (props: {
+        children: React.ReactNode,
+        containerProps: HTMLProps<HTMLUListElement>,
+        info: TreeInformation,
+    }) => React.ReactElement | null,
+    renderTreeContainer: (props: {
+        children: React.ReactNode,
+        containerProps: HTMLProps<HTMLDivElement>,
+        info: TreeInformation,
+    }) => React.ReactElement | null,
+    renderDragBetweenLine: (props: {
+        draggingPosition: DraggingPosition,
+        lineProps: HTMLProps<HTMLDivElement>,
+    }) => React.ReactElement | null,
+    renderSearchInput: (props: {
+        inputProps: HTMLProps<HTMLInputElement>,
+    }) => React.ReactElement | null,
+    renderLiveDescriptorContainer: (props: {
+        children: React.ReactNode,
+        tree: TreeConfiguration,
+    }) => React.ReactElement | null,
+    renderDepthOffset: number,
+}
+
+
+
+
+
+export const createCustomRenderers = (renderDepthOffset: number): CustomTreeRenderProps => {
     return {
         renderItemTitle: ({ title, context, info }) => {
             if (!info.isSearching || !context.isSearchMatching) {
                 return <>{title}</>;
             } else {
-                const startIndex = title.toLowerCase().indexOf(info.search!.toLowerCase());
+                if (!info.search) throw new Error("No search");
+                const startIndex = title.toLowerCase().indexOf(info.search.toLowerCase());
                 return (
                     <React.Fragment>
                         {startIndex > 0 && <span>{title.slice(0, startIndex)}</span>}
                         <span className="rct-tree-item-search-highlight">
-                            {title.slice(startIndex, startIndex + info.search!.length)}
+                            {title.slice(startIndex, startIndex + info.search.length)}
                         </span>
-                        {startIndex + info.search!.length < title.length && (
-                            <span>{title.slice(startIndex + info.search!.length, title.length)}</span>
+                        {startIndex + info.search.length < title.length && (
+                            <span>{title.slice(startIndex + info.search.length, title.length)}</span>
                         )}
                     </React.Fragment>
                 );
@@ -86,7 +151,7 @@ export const createDefaultRenderers = (renderDepthOffset: number): AllTreeRender
         renderItem: ({ item, depth, children, title, context, arrow }, menuItem?) => {
             const InteractiveComponent = context.isRenaming ? "div" : "button";
             const type = context.isRenaming ? undefined : "button";
-            // TODO have only root li component create all the classes
+            // const { type: _, ...interactiveElementProps } = context.interactiveElementProps;
             return (
                 <li
                     {...(context.itemContainerWithChildrenProps)}
@@ -102,7 +167,7 @@ export const createDefaultRenderers = (renderDepthOffset: number): AllTreeRender
                 >
                     <div
                         {...(context.itemContainerWithoutChildrenProps)}
-                        style={{ marginLeft: `${depth * renderDepthOffset}em` }}
+                        // style={{ marginLeft: `${depth * renderDepthOffset}em` }}
                         className={cx(
                             "rct-tree-item-title-container",
                             item.hasChildren && "rct-tree-item-title-container-hasChildren",
@@ -114,10 +179,11 @@ export const createDefaultRenderers = (renderDepthOffset: number): AllTreeRender
                             item.index === menuItem && "menuItem",
                         )}
                     >
+                        {Array(depth).fill(<i className="line"></i>)}
                         {arrow}
                         <InteractiveComponent
-                            type={type as any}
-                            {...(context.interactiveElementProps)}
+                            type={type}
+                            {...(context.interactiveElementProps as Omit<React.HTMLProps<HTMLButtonElement & HTMLDivElement>, "type">)}
                             className={cx(
                                 "rct-tree-item-button",
                                 item.hasChildren && "rct-tree-item-button-hasChildren",

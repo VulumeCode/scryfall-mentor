@@ -81,7 +81,12 @@ input.collections-filter::placeholder {
     color: var(--rct-color-renaming-input-submitbutton-text-active);
 }
 
-
+.line {
+    margin: -1em 0.5em;
+    width: 1px;
+    background: #FFF4;
+    height: 24px;
+}
 
 .itemTitle {
     display: flex;
@@ -108,6 +113,8 @@ input.collections-filter::placeholder {
 
 .itemMenuButton {
     opacity: var(--itemMenuButtonOpacity);
+    padding: 0.4em;
+    margin-bottom: 0;
 }
 
 /* mana symbols */
