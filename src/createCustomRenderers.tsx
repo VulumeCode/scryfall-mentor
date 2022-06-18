@@ -179,7 +179,7 @@ export const createCustomRenderers = (renderDepthOffset: number): CustomTreeRend
                             item.index === menuItem && "menuItem",
                         )}
                     >
-                        {Array(depth).fill(<i className="line"></i>)}
+                        {Array.from({ length: depth }, (_, i) => <i className="line" key={i}></i>)}
                         {arrow}
                         <InteractiveComponent
                             type={type}
