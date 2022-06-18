@@ -41,12 +41,13 @@ const Collections: React.FC<{
     treeData: TreeData,
     onSelectQuery: (queryKey: number) => void,
     onAddCollection: () => string,
+    onDuplicate: (afterIndex: TreeItemIndex) => TreeItemIndex,
     onRenameItem: (item: TreeItem<TreeItemData>, name: string, treeId: string) => void,
     onDeleteItem: (item: TreeItem<TreeItemData>) => void,
     filter: string,
     setFilter: (filter: string) => void,
     setModal: (modal?: JSX.Element) => void,
-}> = ({ treeData, onSelectQuery, onAddCollection, onRenameItem, filter, setFilter, onDeleteItem, setModal }) => {
+}> = ({ treeData, onSelectQuery, onAddCollection, onRenameItem, filter, setFilter, onDeleteItem, onDuplicate, setModal }) => {
     const tree = useRef<TreeRef>(null);
     const environment = useRef<TreeEnvironmentRef>(null);
     const [focusedItem, setFocusedItem] = useState<TreeItemIndex>();
@@ -58,12 +59,18 @@ const Collections: React.FC<{
 
     const setContextMenuItem = (item: TreeItem<TreeItemData>, e: HTMLElement | null,
     ): void => {
+        console.dir(item);
         if (!!e) {
             setMenuItem(item.index);
             setModal(<ContextMenu
                 yPos={e.getBoundingClientRect().bottom}
                 onClose={() => { setModal(); setMenuItem(undefined); }}
                 onDelete={() => onDeleteItem(item)}
+                onDuplicate={() => {
+                    const newIndex = onDuplicate(item.index);
+                    // setSelectedItems([newIndex]);
+                    tree.current?.startRenamingItem(newIndex);
+                }}
                 onRename={() => tree.current?.startRenamingItem(item.index)}
             />);
         } else { throw new Error("Nothing to hang on to!"); }
@@ -106,7 +113,13 @@ const Collections: React.FC<{
                     ref={environment}
                     items={treeData}
                     getItemTitle={(item: TreeItem<TreeItemData>): string => item.data.title}
-                    defaultInteractionMode={InteractionMode.ClickArrowToExpand}
+                    defaultInteractionMode={{
+                        mode: "custom",
+                        extends: InteractionMode.ClickItemToExpand,
+                        createInteractiveElementProps: (_item, _treeId, _actions, _renderFlags) => ({
+                            onFocus: () => {/*NOOP*/ },
+                        }),
+                    }}
                     viewState={{
                         ["Collections"]: {
                             focusedItem,
@@ -120,10 +133,10 @@ const Collections: React.FC<{
                     canDropOnItemWithoutChildren
                     onDrop={(items, target) => console.log(items, target)}
                     onFocusItem={(item: TreeItem<TreeItemData>): void => {
+                        console.log("onFocusItem");
                         setFocusedItem(item.index);
                         if (!item.hasChildren) {
                             onSelectQuery(item.data.queryId as number);
-                            // setSelectedItems([item.index]);
                         }
                     }}
                     onExpandItem={(item) =>
@@ -132,7 +145,11 @@ const Collections: React.FC<{
                     onCollapseItem={(item) =>
                         setExpandedItems(expandedItems.filter((expandedItemIndex) => expandedItemIndex !== item.index))
                     }
-                    onSelectItems={setSelectedItems}
+                    onSelectItems={(items) => {
+                        console.log("onSelectItems");
+                        setSelectedItems(items);
+                    }}
+
                     {...{ onRenameItem }}
                 >
                     <Tree
@@ -159,7 +176,8 @@ const Collections: React.FC<{
                         renderItemTitle={({ item }) => {
                             return (
                                 <div className="itemTitle"
-                                    onContextMenuCapture={(e) => { e.preventDefault(); setContextMenuItem(item, e.currentTarget.parentElement); }}>
+                                    onContextMenuCapture={(e) => { e.preventDefault(); setContextMenuItem(item, e.currentTarget.parentElement); }}
+                                >
                                     <div
                                         className="itemTitleText"
                                         onDoubleClick={() => tree.current?.startRenamingItem(item.index)}>
@@ -167,7 +185,12 @@ const Collections: React.FC<{
                                     </div>
                                     <div
                                         className="blueprint-icons itemMenuButton"
-                                        onClickCapture={(e) => { e.stopPropagation(); setContextMenuItem(item, e.currentTarget.parentElement?.parentElement ?? null); }}>
+                                        onClickCapture={(e) => {
+                                            console.log("onClickCapture");
+                                            e.stopPropagation(); setContextMenuItem(item, e.currentTarget.parentElement?.parentElement ?? null);
+                                        }}
+                                        onFocusCapture={(e) => { console.log("xxxxxx"); e.stopPropagation(); }}
+                                    >
                                         {icons["more"].utf}
                                     </div>
                                 </div>

@@ -56,18 +56,33 @@ const matchFilter = (value: string, filter: string): boolean => {
 
 
 const removeProp = (obj: Template, match: TreeItemIndex): void => {
-    for (const prop in obj) {
-        if (prop === match) {
-            delete obj[prop];
+    for (const key in obj) {
+        if (key === match) {
+            delete obj[key];
             return;
         }
         else {
-            const children = obj[prop];
+            const children = obj[key];
             if (typeof children === "object") {
                 removeProp(children, match);
             }
         }
     }
+};
+
+const duplicate = (obj: Template, match: TreeItemIndex, newIndex: TreeItemIndex, newValue: number): Template => {
+    return Object.keys(obj).reduce((ac: Template, key) => {
+        const value = obj[key];
+        if (typeof value === "object") {
+            ac[key] = duplicate(value, match, newIndex, newValue);
+        } else {
+            ac[key] = value;
+            if (key === match) {
+                ac[newIndex] = newValue;
+            }
+        }
+        return ac;
+    }, {});
 };
 
 function App(): JSX.Element {
@@ -98,7 +113,7 @@ function App(): JSX.Element {
                 <Collections
                     treeData={treeData}
                     onSelectQuery={(queryKey): void => {
-                        console.log("onSelectQuery", queryKey);
+                        console.log("setEditingQuery", queryKey);
                         setEditingQuery(queryKey);
                         setQueryParts(queries[queryKey]);
                     }}
@@ -108,6 +123,16 @@ function App(): JSX.Element {
                             (draft.root as WritableDraft<Template>)[newIndex] = {};
                         });
                         setNames((draft) => { draft[newIndex] = "New collection"; });
+                        return newIndex;
+                    }}
+                    onDuplicate={(afterIndex) => {
+                        const newIndex = crypto.randomUUID();
+                        setNames((draft) => { draft[newIndex] = "New query"; });
+                        const newQueryNumber = Date.now();
+                        setQueries((draft) => {
+                            draft[newQueryNumber] = queryParts;
+                        });
+                        setQueryCollection((draft) => duplicate(draft, afterIndex, newIndex, newQueryNumber));
                         return newIndex;
                     }}
                     onRenameItem={(item, name) => {

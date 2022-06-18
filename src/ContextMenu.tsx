@@ -10,7 +10,8 @@ const ContextMenu: React.FC<{
     onClose: () => void,
     onDelete: () => void,
     onRename: () => void,
-}> = ({ onClose, onDelete, onRename, yPos }) => {
+    onDuplicate: () => void,
+}> = ({ onClose, onDelete, onRename, yPos, onDuplicate }) => {
 
     const doIt = (action: () => void): (() => void) => {
         return () => {
@@ -38,7 +39,8 @@ const ContextMenu: React.FC<{
                         <i className="ms ms-ability-menace"></i>
                         Append to mask
                     </li>
-                    <li>
+                    <li
+                        onClick={doIt(onDuplicate)}>
                         <i className="ms ms-ability-transform"></i>
                         Duplicate
                     </li>
