@@ -1,4 +1,3 @@
-
 import { HTMLProps } from "react";
 import { InteractionManager, TreeEnvironmentContextProps, TreeItem, TreeItemActions, TreeItemRenderFlags } from "react-complex-tree";
 
@@ -10,14 +9,9 @@ export class CustomInteractionManager implements InteractionManager {
         this.environment = environment;
     }
 
-    createInteractiveElementProps(
-        item: TreeItem,
-        treeId: string,
-        actions: TreeItemActions,
-        renderFlags: TreeItemRenderFlags,
-    ): HTMLProps<HTMLElement> {
+    createInteractiveElementProps(item: TreeItem, treeId: string, actions: TreeItemActions, renderFlags: TreeItemRenderFlags): HTMLProps<HTMLElement> {
         return {
-            onClick: e => {
+            onClick: (e) => {
                 actions.focusItem();
                 if (e.shiftKey) {
                     actions.selectUpTo();
@@ -37,12 +31,12 @@ export class CustomInteractionManager implements InteractionManager {
             onFocus: () => {
                 actions.focusItem();
             },
-            onDragStart: e => {
+            onDragStart: (e) => {
                 e.dataTransfer.dropEffect = "move"; // TODO
                 // e.dataTransfer.setDragImage(environment.renderDraggingItem(viewState.selectedItems), 0, 0);
                 actions.startDragging();
             },
-            onDragOver: e => {
+            onDragOver: (e) => {
                 e.preventDefault(); // Allow drop
             },
             draggable: renderFlags.canDrag && !renderFlags.isRenaming,

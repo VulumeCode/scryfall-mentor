@@ -427,8 +427,7 @@ html.modal-dialog-open {
 body {
     color: white;
     font-size: 15px;
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-        "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     background-color: #2b253a;
 }
 
@@ -691,8 +690,7 @@ svg.sprite-set {
     transition: background-color 60ms linear, border-color 60ms linear, -webkit-box-shadow 60ms linear;
     -o-transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear;
     transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear;
-    transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear,
-        -webkit-box-shadow 60ms linear;
+    transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear, -webkit-box-shadow 60ms linear;
 }
 
 .form-input:focus {
@@ -747,8 +745,7 @@ textarea.form-input {
     transition: background-color 60ms linear, border-color 60ms linear, -webkit-box-shadow 60ms linear;
     -o-transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear;
     transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear;
-    transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear,
-        -webkit-box-shadow 60ms linear;
+    transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear, -webkit-box-shadow 60ms linear;
 }
 
 .form-layout .select2.short {
@@ -1267,8 +1264,7 @@ tr:hover .diff li.unchanged {
     transition: background-color 60ms linear, border-color 60ms linear, -webkit-box-shadow 60ms linear;
     -o-transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear;
     transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear;
-    transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear,
-        -webkit-box-shadow 60ms linear;
+    transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear, -webkit-box-shadow 60ms linear;
 }
 
 /* .advanced-search-checkbox input[type=checkbox]:focus,
@@ -1496,8 +1492,7 @@ tr:hover .diff li.unchanged {
     display: block;
     padding: 0 4px 0 4px;
     cursor: help;
-    font-family: "Helvetica Neue", "HelveticaNeueWF", Arial, Helvetica, sans-serif, "Apple Color Emoji",
-        "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: "Helvetica Neue", "HelveticaNeueWF", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     font-size: 10px;
     line-height: 18px;
     height: 18px;
@@ -1998,8 +1993,7 @@ tr:hover .diff li.unchanged {
 
 .button-n,
 .select-n {
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-        "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -4927,8 +4921,7 @@ img.card.ced {
 }
 
 .control-panel {
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-        "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -6069,8 +6062,7 @@ img.card.ced {
 }
 
 .deck-wizard-category {
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-        "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     background-color: #fdfdfd;
     -webkit-border-radius: 4px;
     border-radius: 4px;
@@ -6280,8 +6272,7 @@ img.card.ced {
 }
 
 .deckbuilder-deck-name {
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-        "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     font-size: 18px;
     color: #551a8b;
     padding: 4px 8px 4px 26px;
@@ -6306,8 +6297,7 @@ img.card.ced {
 }
 
 .deckbuilder-deck-description {
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-        "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     font-size: 14px;
     color: #535353;
     width: 100%;
@@ -6491,16 +6481,14 @@ img.card.ced {
 }
 
 .deckbuilder-section-title {
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-        "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     font-size: 12px;
     font-weight: bold;
     color: #5f4f66;
 }
 
 .deckbuilder-section-count {
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-        "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     font-size: 12px;
     color: #535353;
 }
@@ -6537,8 +6525,7 @@ img.card.ced {
     display: -ms-flexbox;
     display: flex;
     border: none !important;
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-        "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     font-size: 15px;
     height: 28px;
     line-height: 24px;
@@ -6724,8 +6711,7 @@ img.card.ced {
 }
 
 .deckbuilder-cmc-stat {
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-        "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     font-size: 12px;
     line-height: 1.33;
     display: -webkit-box;
@@ -7039,8 +7025,7 @@ img.card.ced {
     border-top: 1px solid transparent;
     border-bottom: 1px solid transparent;
     font-weight: bold !important;
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-        "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 .dropdown-menu-item svg {
@@ -7636,8 +7621,7 @@ img.card.ced {
 }
 
 .form-n-input {
-    font-family: "Helvetica Neue", "HelveticaNeueWF", Arial, Helvetica, sans-serif, "Apple Color Emoji",
-        "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: "Helvetica Neue", "HelveticaNeueWF", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     margin: 6px 0 0 0;
     background-color: rgba(0, 0, 0, 0.01);
     -webkit-border-radius: 2px;
@@ -7654,8 +7638,7 @@ img.card.ced {
     transition: background-color 60ms linear, border-color 60ms linear, -webkit-box-shadow 60ms linear;
     -o-transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear;
     transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear;
-    transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear,
-        -webkit-box-shadow 60ms linear;
+    transition: background-color 60ms linear, border-color 60ms linear, box-shadow 60ms linear, -webkit-box-shadow 60ms linear;
 }
 
 .form-n-input:focus {
@@ -8007,8 +7990,7 @@ select.form-n-input optgroup {
     height: 52px;
     line-height: 22px;
     padding: 15px 3px 15px 3px;
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-        "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     color: #fdfdfd;
     font-size: 16px;
     -webkit-box-flex: 1;
@@ -9099,8 +9081,7 @@ select.form-n-input optgroup {
 }
 
 .modal-dialog-dropzone {
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-        "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     width: 100%;
     margin: 0 auto;
     border: 1px dashed #cbaaf5;
@@ -9415,10 +9396,8 @@ select.form-n-input optgroup {
     border-radius: 4px;
     margin-top: 6px;
     width: 100%;
-    -webkit-box-shadow: 0 0 0 0.5px rgba(50, 50, 93, 0.17), 0 2px 5px 0 rgba(50, 50, 93, 0.1),
-        0 1px 1.5px 0 rgba(0, 0, 0, 0.07), 0 1px 2px 0 rgba(0, 0, 0, 0.08), 0 0 0 0 transparent;
-    box-shadow: 0 0 0 0.5px rgba(50, 50, 93, 0.17), 0 2px 5px 0 rgba(50, 50, 93, 0.1), 0 1px 1.5px 0 rgba(0, 0, 0, 0.07),
-        0 1px 2px 0 rgba(0, 0, 0, 0.08), 0 0 0 0 transparent;
+    -webkit-box-shadow: 0 0 0 0.5px rgba(50, 50, 93, 0.17), 0 2px 5px 0 rgba(50, 50, 93, 0.1), 0 1px 1.5px 0 rgba(0, 0, 0, 0.07), 0 1px 2px 0 rgba(0, 0, 0, 0.08), 0 0 0 0 transparent;
+    box-shadow: 0 0 0 0.5px rgba(50, 50, 93, 0.17), 0 2px 5px 0 rgba(50, 50, 93, 0.1), 0 1px 1.5px 0 rgba(0, 0, 0, 0.07), 0 1px 2px 0 rgba(0, 0, 0, 0.08), 0 0 0 0 transparent;
     -webkit-animation: notification-slide-in 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
     -o-animation: notification-slide-in 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
     animation: notification-slide-in 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
@@ -9455,8 +9434,7 @@ select.form-n-input optgroup {
 }
 
 .notification-title {
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-        "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -12089,33 +12067,9 @@ select.form-n-input optgroup {
     background-color: #eff0f7;
     background-color: #2b253a;
     min-height: 80vh;
-    background: -webkit-linear-gradient(top,
-            #5f4f66 0px,
-            #5f4f66 4px,
-            #7a6583 4px,
-            #7a6583 8px,
-            #5f4f66 8px,
-            #5f4f66 12px,
-            #eff0f7 12px,
-            #eff0f7 100%);
-    background: -o-linear-gradient(top,
-            #5f4f66 0px,
-            #5f4f66 4px,
-            #7a6583 4px,
-            #7a6583 8px,
-            #5f4f66 8px,
-            #5f4f66 12px,
-            #eff0f7 12px,
-            #eff0f7 100%);
-    background: linear-gradient(to bottom,
-            #5f4f66 0px,
-            #5f4f66 4px,
-            #7a6583 4px,
-            #7a6583 8px,
-            #5f4f66 8px,
-            #5f4f66 12px,
-            #eff0f7 12px,
-            #eff0f7 100%);
+    background: -webkit-linear-gradient(top, #5f4f66 0px, #5f4f66 4px, #7a6583 4px, #7a6583 8px, #5f4f66 8px, #5f4f66 12px, #eff0f7 12px, #eff0f7 100%);
+    background: -o-linear-gradient(top, #5f4f66 0px, #5f4f66 4px, #7a6583 4px, #7a6583 8px, #5f4f66 8px, #5f4f66 12px, #eff0f7 12px, #eff0f7 100%);
+    background: linear-gradient(to bottom, #5f4f66 0px, #5f4f66 4px, #7a6583 4px, #7a6583 8px, #5f4f66 8px, #5f4f66 12px, #eff0f7 12px, #eff0f7 100%);
 }
 
 .skip-links a {

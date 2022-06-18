@@ -3,8 +3,7 @@ body {
     height: 100vh;
     overflow: hidden;
     margin: 0;
-    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-        "Segoe UI Symbol";
+    font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 
     --ms-w-color: #f0f2c0;
 
@@ -17,11 +16,7 @@ body {
     --ms-g-color: #93b483;
     --ms-c-color: #beb9b2;
     --ms-m-color: #cca753;
-
 }
-
-
-
 
 body::before {
     background-image: url("scryfall.svg");
@@ -121,8 +116,6 @@ body::before {
     font-size: 77%;
     flex-shrink: 0;
 }
-
-
 
 .emojisymbols {
     font-family: "emojisymbols";

@@ -8,9 +8,6 @@ import Collections, { TreeData } from "./Collections";
 import { WritableDraft } from "immer/dist/internal";
 import { TreeItemIndex } from "react-complex-tree";
 
-
-
-
 const buildCollectionsTree = (names: Names, filter: string, collection: Template, data: TreeData = {}): [TreeData, boolean] => {
     let hasMatch = false;
     for (const [key, value] of Object.entries(collection)) {
@@ -20,7 +17,6 @@ const buildCollectionsTree = (names: Names, filter: string, collection: Template
         const title = names[key];
 
         let doesMatchFilter = matchFilter(title, filter);
-
 
         if (isDir) {
             const [_, childMatch] = buildCollectionsTree(names, doesMatchFilter ? "" : filter, value, data);
@@ -50,18 +46,16 @@ const matchFilter = (value: string, filter: string): boolean => {
     } else {
         const filters = filter.toLowerCase().split(" ");
         const testValue = value.toLowerCase();
-        return filters.every(f => testValue.indexOf(f) >= 0);
+        return filters.every((f) => testValue.indexOf(f) >= 0);
     }
 };
-
 
 const removeProp = (obj: Template, match: TreeItemIndex): void => {
     for (const key in obj) {
         if (key === match) {
             delete obj[key];
             return;
-        }
-        else {
+        } else {
             const children = obj[key];
             if (typeof children === "object") {
                 removeProp(children, match);
@@ -99,12 +93,9 @@ function App(): JSX.Element {
 
     const [modal, setModal] = useState<JSX.Element | undefined>(undefined);
 
-
     const treeData = useMemo(() => buildCollectionsTree(names, filter, queryCollection)[0], [names, filter, queryCollection]);
 
     console.log("Update", Date.now());
-
-
 
     return (
         <div className="App">
@@ -122,12 +113,16 @@ function App(): JSX.Element {
                         setQueryCollection((draft) => {
                             (draft.root as WritableDraft<Template>)[newIndex] = {};
                         });
-                        setNames((draft) => { draft[newIndex] = "New collection"; });
+                        setNames((draft) => {
+                            draft[newIndex] = "New collection";
+                        });
                         return newIndex;
                     }}
                     onDuplicate={(afterIndex) => {
                         const newIndex = crypto.randomUUID();
-                        setNames((draft) => { draft[newIndex] = "New query"; });
+                        setNames((draft) => {
+                            draft[newIndex] = "New query";
+                        });
                         const newQueryNumber = Date.now();
                         setQueries((draft) => {
                             draft[newQueryNumber] = queryParts;
@@ -136,9 +131,11 @@ function App(): JSX.Element {
                         return newIndex;
                     }}
                     onRenameItem={(item, name) => {
-                        setNames((draft) => { draft[item.index] = name; });
+                        setNames((draft) => {
+                            draft[item.index] = name;
+                        });
                     }}
-                    onDeleteItem={item => {
+                    onDeleteItem={(item) => {
                         setQueryCollection((draft) => {
                             removeProp(draft, item.index);
                         });
@@ -203,8 +200,7 @@ function App(): JSX.Element {
                 })}
 
                 <div className="queryEditor" style={{ display: "flex", width: "100%" }}>
-                    <button key={"search"} className="button-n inverted"
-                        onClick={(e) => search(queryParts, e)}>
+                    <button key={"search"} className="button-n inverted" onClick={(e) => search(queryParts, e)}>
                         Search
                     </button>
                     <button
@@ -229,15 +225,10 @@ function App(): JSX.Element {
                     >
                         Save as...
                     </button>
-                    <button
-                        key={"random"}
-                        className="button-n inverted"
-                        onClick={(e) => goto("https://scryfall.com/random", e)}
-                    >
+                    <button key={"random"} className="button-n inverted" onClick={(e) => goto("https://scryfall.com/random", e)}>
                         Random card
                     </button>
                 </div>
-
 
                 <div key="activeMaskName" className="activeMaskName">
                     <i className="ms ms-ability-menace"></i> Mask
@@ -293,9 +284,6 @@ function App(): JSX.Element {
                         </label>
                     );
                 })}
-
-
-
             </header>
         </div>
     );
@@ -315,7 +303,7 @@ function search(queryParts: QueryPart[], e?: React.MouseEvent<HTMLButtonElement,
 }
 
 async function goto(url?: string, e?: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> {
-    if ((!!e?.ctrlKey) || (!!e?.metaKey)) {
+    if (!!e?.ctrlKey || !!e?.metaKey) {
         browser.tabs.create({ active: true, url: url });
     } else {
         const activeTab = (await browser.tabs.query({ currentWindow: true, active: true }))[0];
@@ -324,4 +312,3 @@ async function goto(url?: string, e?: React.MouseEvent<HTMLButtonElement, MouseE
 }
 
 export default App;
-

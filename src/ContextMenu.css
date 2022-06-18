@@ -1,5 +1,4 @@
 .modalBackground {
-
     /* display: none; */
     /* Hidden by default */
     position: fixed;
@@ -19,7 +18,6 @@
     background-color: rgba(0, 0, 0, 0.4);
     /* Black w/ opacity */
 }
-
 
 .modalMenu {
     position: absolute;
