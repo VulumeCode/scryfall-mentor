@@ -3,18 +3,13 @@ import React, { useMemo, useState } from "react";
 import "./App.css";
 import { useImmer } from "use-immer";
 
-import { defaultTemplate, defaultNames, defautlQueries } from "./data";
+import { defaultTemplate, defaultNames, defautlQueries, Names, Template, QueryLibrary, QueryPart } from "./data";
 import Collections, { TreeData } from "./Collections";
 import { WritableDraft } from "immer/dist/internal";
 import { TreeItemIndex } from "react-complex-tree";
 
-type QueryPart = {
-    enabled: boolean | "locked",
-    query: string,
-};
 
-type Template = { [index: TreeItemIndex]: number | Template };
-type Names = { [index: string]: string };
+
 
 const buildCollectionsTree = (names: Names, filter: string, collection: Template, data: TreeData = {}): [TreeData, boolean] => {
     let hasMatch = false;
@@ -81,9 +76,11 @@ function App(): JSX.Element {
 
     const [filter, setFilter] = useImmer<string>("");
 
-    const [queries, setQueries] = useImmer<{ [id: number]: Array<QueryPart> }>(defautlQueries);
+    const [queries, setQueries] = useImmer<QueryLibrary>(defautlQueries);
 
-    const [queryParts, setQueryParts] = useImmer<Array<QueryPart>>(Object.values(queries)[0]);
+    const [editingQuery, setEditingQuery] = useState<number>(1);
+
+    const [queryParts, setQueryParts] = useImmer<Array<QueryPart>>(queries[editingQuery]);
 
     const [modal, setModal] = useState<JSX.Element | undefined>(undefined);
 
@@ -102,6 +99,7 @@ function App(): JSX.Element {
                     treeData={treeData}
                     onSelectQuery={(queryKey): void => {
                         console.log("onSelectQuery", queryKey);
+                        setEditingQuery(queryKey);
                         setQueryParts(queries[queryKey]);
                     }}
                     onAddCollection={() => {
@@ -142,11 +140,6 @@ function App(): JSX.Element {
                                         draft[i].enabled = e.target.checked;
                                     })
                                 }
-                                onDoubleClick={() =>
-                                    setQueryParts((draft) => {
-                                        draft[i].enabled = "locked";
-                                    })
-                                }
                             ></input>
                             <input
                                 key={"queryPartText" + i}
@@ -184,9 +177,6 @@ function App(): JSX.Element {
                     );
                 })}
 
-
-
-
                 <div className="queryEditor" style={{ display: "flex", width: "100%" }}>
                     <button key={"search"} className="button-n inverted"
                         onClick={(e) => search(queryParts, e)}>
@@ -197,11 +187,22 @@ function App(): JSX.Element {
                         className="button-n inverted"
                         onClick={() =>
                             setQueries((draft) => {
-                                draft[Date.now()] = queryParts;
+                                draft[editingQuery] = queryParts;
                             })
                         }
                     >
                         Save
+                    </button>
+                    <button
+                        key={"saveas"}
+                        className="button-n inverted"
+                        onClick={() =>
+                            setQueries((draft) => {
+                                draft[Object.keys(draft).length + 1] = queryParts;
+                            })
+                        }
+                    >
+                        Save as...
                     </button>
                     <button
                         key={"random"}
@@ -229,11 +230,6 @@ function App(): JSX.Element {
                                 onChange={(e) =>
                                     setQueryParts((draft) => {
                                         draft[i].enabled = e.target.checked;
-                                    })
-                                }
-                                onDoubleClick={() =>
-                                    setQueryParts((draft) => {
-                                        draft[i].enabled = "locked";
                                     })
                                 }
                             ></input>
