@@ -29,14 +29,15 @@ const defaultRenderers = createCustomRenderers(1);
 const Collections: React.FC<{
     treeData: TreeData,
     onSelectQuery: (queryKey: number) => void,
-    onAddCollection: () => string,
+    onAddRootCollection: () => TreeItemIndex,
+    onAddCollection: (underIndex: TreeItemIndex) => TreeItemIndex,
     onDuplicate: (afterIndex: TreeItemIndex) => TreeItemIndex,
     onRenameItem: (item: TreeItem<TreeItemData>, name: string, treeId: string) => void,
     onDeleteItem: (item: TreeItem<TreeItemData>) => void,
     filter: string,
     setFilter: (filter: string) => void,
     setModal: (modal?: JSX.Element) => void,
-}> = ({ treeData, onSelectQuery, onAddCollection, onRenameItem, filter, setFilter, onDeleteItem, onDuplicate, setModal }) => {
+}> = ({ treeData, onSelectQuery, onAddRootCollection, onAddCollection, onRenameItem, filter, setFilter, onDeleteItem, onDuplicate, setModal }) => {
     const tree = useRef<TreeRef>(null);
     const environment = useRef<TreeEnvironmentRef>(null);
     const [focusedItem, setFocusedItem] = useState<TreeItemIndex>();
@@ -61,8 +62,17 @@ const Collections: React.FC<{
             setMenuItem(item.index);
             setModal(
                 <ContextMenu yPos={e.getBoundingClientRect().bottom} onClose={close}>
-                    {!item.hasChildren && (
-                        <>
+                    {!!item.hasChildren
+                        ? (<>
+                            <li onClick={doIt(() => {
+                                const newIndex = onAddCollection(item.index);
+                                tree.current?.startRenamingItem(newIndex);
+                            })}>
+                                <i className="blueprint-icons-big">{icons["folder-new"].utf}</i>
+                                Add collection
+                            </li>
+                        </>)
+                        : (<>
                             <li>
                                 <i className="ms ms-ability-menace"></i>
                                 Load as mask
@@ -81,8 +91,8 @@ const Collections: React.FC<{
                                 <i className="ms ms-ability-transform"></i>
                                 Duplicate
                             </li>
-                        </>
-                    )}
+                        </>)
+                    }
                     <li onClick={doIt(() => tree.current?.startRenamingItem(item.index))}>
                         <i className="ms ms-artist-nib "></i>
                         Rename
@@ -106,7 +116,7 @@ const Collections: React.FC<{
                 <button
                     className="blueprint-icons-big button-n inverted"
                     onClick={() => {
-                        const newIndex = onAddCollection();
+                        const newIndex = onAddRootCollection();
                         tree.current?.startRenamingItem(newIndex);
                     }}
                 >

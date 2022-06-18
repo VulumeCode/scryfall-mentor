@@ -79,6 +79,23 @@ const duplicate = (obj: Template, match: TreeItemIndex, newIndex: TreeItemIndex,
     }, {});
 };
 
+const addCollection = (obj: Template, match: TreeItemIndex, newIndex: TreeItemIndex): Template => {
+    return Object.keys(obj).reduce((ac: Template, key) => {
+        const value = obj[key];
+        if (typeof value === "object") {
+            const updatedChildren = addCollection(value, match, newIndex);
+            if (key === match) {
+                ac[key] = { [newIndex]: {}, ...updatedChildren };
+            } else {
+                ac[key] = updatedChildren;
+            }
+        } else {
+            ac[key] = value;
+        }
+        return ac;
+    }, {});
+};
+
 function App(): JSX.Element {
     const [queryCollection, setQueryCollection] = useImmer<Template>(defaultTemplate);
     const [names, setNames] = useImmer<Names>(defaultNames);
@@ -108,14 +125,22 @@ function App(): JSX.Element {
                         setEditingQuery(queryKey);
                         setQueryParts(queries[queryKey]);
                     }}
-                    onAddCollection={() => {
+                    onAddRootCollection={() => {
                         const newIndex = crypto.randomUUID();
-                        setQueryCollection((draft) => {
-                            (draft.root as WritableDraft<Template>)[newIndex] = {};
-                        });
                         setNames((draft) => {
                             draft[newIndex] = "New collection";
                         });
+                        setQueryCollection((draft) => {
+                            (draft.root as WritableDraft<Template>)[newIndex] = {};
+                        });
+                        return newIndex;
+                    }}
+                    onAddCollection={(underIndex) => {
+                        const newIndex = crypto.randomUUID();
+                        setNames((draft) => {
+                            draft[newIndex] = "New collection";
+                        });
+                        setQueryCollection((draft) => addCollection(draft, underIndex, newIndex));
                         return newIndex;
                     }}
                     onDuplicate={(afterIndex) => {
