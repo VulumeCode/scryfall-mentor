@@ -3,7 +3,7 @@ import React, { useMemo, useState } from "react";
 import "./App.css";
 import { useImmer } from "use-immer";
 
-import { defaultTemplate, defaultNames, defautlQueries, Names, Template, QueryLibrary, QueryPart } from "./data";
+import { defaultTemplate, defaultNames, defautlQueries, Names, Template, QueryLibrary, QueryPart, newQueryPart } from "./data";
 import Collections, { TreeData } from "./Collections";
 import { WritableDraft } from "immer/dist/internal";
 import { TreeItemIndex } from "react-complex-tree";
@@ -178,8 +178,8 @@ function App(): JSX.Element {
                 <div key="activeQueryName" className="activeQueryName">
                     <i className="ms ms-ability-learn"></i> Search for Magic cards...
                 </div>
-                {queryParts.map((queryPart, i) => {
-                    const last = i === queryParts.length - 1;
+                {[...queryParts, newQueryPart].map((queryPart, i) => {
+                    const last = i === queryParts.length;
                     return (
                         <label key={"queryPart" + i} className="advanced-search-checkbox">
                             <input
@@ -202,14 +202,11 @@ function App(): JSX.Element {
                                 placeholder={last ? "Query" : undefined}
                                 onChange={(e) =>
                                     setQueryParts((draft) => {
-                                        draft[i].query = e.target.value;
                                         if (last) {
+                                            draft[i] = { ...newQueryPart };
                                             draft[i].enabled = true;
-                                            draft.push({
-                                                enabled: false,
-                                                query: "",
-                                            });
                                         }
+                                        draft[i].query = e.target.value;
                                     })
                                 }
                             ></input>
@@ -261,7 +258,7 @@ function App(): JSX.Element {
                     </button>
                 </div>
 
-                <div key="activeMaskName" className="activeMaskName">
+                {/* <div key="activeMaskName" className="activeMaskName">
                     <i className="ms ms-ability-menace"></i> Mask
                 </div>
                 {queryParts.map((queryPart, i) => {
@@ -314,7 +311,7 @@ function App(): JSX.Element {
                             }
                         </label>
                     );
-                })}
+                })} */}
             </header>
         </div>
     );
