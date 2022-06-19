@@ -90,10 +90,22 @@ body::before {
 .advanced-search-checkbox {
     width: 100%;
     margin: 0 16px 8px 0;
+
+    height: unset;
+    align-items: start;
 }
 
-.advanced-search-checkbox input[type="text"] {
+.advanced-search-checkbox input[type="checkbox"] {
+    margin-top: 1px;
+}
+
+.advanced-search-checkbox .textarea {
     flex-grow: 100;
+    width: 100%;
+    resize: none;
+    white-space: pre-wrap;
+    padding-bottom: 4px;
+    padding-top: 4px;
 }
 
 .App button.remove {
@@ -104,17 +116,6 @@ body::before {
 
 .App button.remove:disabled {
     visibility: hidden;
-}
-
-.advanced-search-checkbox input[type="checkbox"].locked:checked::before {
-    /* lock */
-    content: "\F232";
-    font-family: "blueprint-icons-16";
-    font-weight: 100;
-    line-height: 0ex;
-    margin-bottom: 0.4ex;
-    font-size: 77%;
-    flex-shrink: 0;
 }
 
 .emojisymbols {

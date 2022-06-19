@@ -8,6 +8,8 @@ import Collections, { TreeData } from "./Collections";
 import { WritableDraft } from "immer/dist/internal";
 import { TreeItemIndex } from "react-complex-tree";
 
+import Textarea from "react-expanding-textarea";
+
 const buildCollectionsTree = (names: Names, filter: string, collection: Template, data: TreeData = {}): [TreeData, boolean] => {
     let hasMatch = false;
     for (const [key, value] of Object.entries(collection)) {
@@ -194,7 +196,7 @@ function App(): JSX.Element {
                                     })
                                 }
                             ></input>
-                            <input
+                            {/* <input
                                 key={"queryPartText" + i}
                                 className="button-n inverted"
                                 type="text"
@@ -209,7 +211,22 @@ function App(): JSX.Element {
                                         draft[i].query = e.target.value;
                                     })
                                 }
-                            ></input>
+                            ></input> */}
+                            <Textarea
+                                className="textarea button-n inverted"
+                                value={queryPart.query}
+                                key={"queryPartTextArea" + i}
+                                rows={1}
+                                onChange={(e) =>
+                                    setQueryParts((draft) => {
+                                        if (last) {
+                                            draft[i] = { ...newQueryPart };
+                                            draft[i].enabled = true;
+                                        }
+                                        draft[i].query = e.target.value;
+                                    })}
+                                placeholder={last ? "Query" : undefined}
+                            />
                             {
                                 <button
                                     className="remove"
@@ -323,7 +340,8 @@ function search(queryParts: QueryPart[], e?: React.MouseEvent<HTMLButtonElement,
     queryUrl += encodeURIComponent(
         queryParts
             .filter((p) => !!p.enabled)
-            .map((p) => `(${p.query})`)
+            .map((p) => p.query.replace(/\n/g, " "))
+            .map((q) => `(${q})`)
             .join(" "),
     );
 

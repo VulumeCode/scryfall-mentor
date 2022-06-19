@@ -2873,10 +2873,10 @@ tr:hover .diff li.unchanged {
 
 @-moz-document url-prefix() {
 
-    .button-n,
+    /* .button-n,
     .select-n {
         padding-top: 2px !important;
-    }
+    } */
 
     .button-n svg,
     .select-n svg {
