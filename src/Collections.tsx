@@ -67,6 +67,7 @@ const Collections: React.FC<{
                             <li onClick={doIt(() => {
                                 const newIndex = onAddCollection(item.index);
                                 tree.current?.startRenamingItem(newIndex);
+                                setExpandedItems([...expandedItems, newIndex]);
                             })}>
                                 <i className="blueprint-icons-big">{icons["folder-new"].utf}</i>
                                 Add collection

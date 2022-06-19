@@ -1,21 +1,12 @@
 import { TreeItemIndex } from "react-complex-tree";
 
 export type Template = { [index: TreeItemIndex]: number | Template };
-export type Names = { [index: string]: string };
-
-export type QueryPart = {
-    enabled: boolean,
-    query: string,
-};
-
-export type QueryLibrary = { [id: number]: Array<QueryPart> };
 
 export const defaultTemplate: Template = {
     root: {
         Fruit: {
             Hans: 1,
             Gingerbrute: 3,
-            Lemon: {},
             Berries: {
                 Strawberry: 1,
                 Blueberry: 1,
@@ -62,25 +53,34 @@ export const defaultTemplate: Template = {
     },
 };
 
+export type QueryPart = {
+    enabled: boolean,
+    query: string,
+};
+
+export const newQueryPart =
+    { enabled: false, query: "" };
+
+export type QueryLibrary = { [id: number]: Array<QueryPart> };
+
 export const defautlQueries: QueryLibrary = {
     0: [],
     1: [
         { enabled: true, query: "Hans" },
         { enabled: false, query: "Ach" },
-        { enabled: false, query: "" },
     ],
     2: [
         { enabled: true, query: "t:slug" },
         { enabled: true, query: "t:legendary" },
         { enabled: true, query: "c:b" },
-        { enabled: false, query: "" },
     ],
     3: [
         { enabled: true, query: "t:food" },
         { enabled: true, query: "t:creature" },
-        { enabled: false, query: "" },
     ],
 };
+
+export type Names = { [index: string]: string };
 
 export const defaultNames: Names = {
     root: "*",

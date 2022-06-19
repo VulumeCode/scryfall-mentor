@@ -79,13 +79,13 @@ const duplicate = (obj: Template, match: TreeItemIndex, newIndex: TreeItemIndex,
     }, {});
 };
 
-const addCollection = (obj: Template, match: TreeItemIndex, newIndex: TreeItemIndex): Template => {
+const addCollection = (obj: Template, match: TreeItemIndex, newIndex: TreeItemIndex, stub: Template): Template => {
     return Object.keys(obj).reduce((ac: Template, key) => {
         const value = obj[key];
         if (typeof value === "object") {
-            const updatedChildren = addCollection(value, match, newIndex);
+            const updatedChildren = addCollection(value, match, newIndex, stub);
             if (key === match) {
-                ac[key] = { [newIndex]: {}, ...updatedChildren };
+                ac[key] = { [newIndex]: stub, ...updatedChildren };
             } else {
                 ac[key] = updatedChildren;
             }
@@ -136,12 +136,18 @@ function App(): JSX.Element {
                         return newIndex;
                     }}
                     onAddCollection={(underIndex) => {
-                        const newIndex = crypto.randomUUID();
+                        const newQueryIndex = crypto.randomUUID();
+                        const newQueryNumber = Date.now();
+                        const newCollectionIndex = crypto.randomUUID();
                         setNames((draft) => {
-                            draft[newIndex] = "New collection";
+                            draft[newQueryIndex] = "New query";
+                            draft[newCollectionIndex] = "New collection";
                         });
-                        setQueryCollection((draft) => addCollection(draft, underIndex, newIndex));
-                        return newIndex;
+                        setQueries((draft) => {
+                            draft[newQueryNumber] = [];
+                        });
+                        setQueryCollection((draft) => addCollection(draft, underIndex, newCollectionIndex, { [newQueryIndex]: newQueryNumber }));
+                        return newCollectionIndex;
                     }}
                     onDuplicate={(afterIndex) => {
                         const newIndex = crypto.randomUUID();
