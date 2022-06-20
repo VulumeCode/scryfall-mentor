@@ -28,7 +28,7 @@ const defaultRenderers = createCustomRenderers(1);
 
 const Collections: React.FC<{
     treeData: TreeData,
-    onSelectQuery: (queryKey: number) => void,
+    onSelectQuery: (queryKey: TreeItemIndex) => void,
     onAddRootCollection: () => TreeItemIndex,
     onAddCollection: (underIndex: TreeItemIndex) => TreeItemIndex,
     onDuplicate: (afterIndex: TreeItemIndex) => TreeItemIndex,
@@ -37,10 +37,11 @@ const Collections: React.FC<{
     filter: string,
     setFilter: (filter: string) => void,
     setModal: (modal?: JSX.Element) => void,
-}> = ({ treeData, onSelectQuery, onAddRootCollection, onAddCollection, onRenameItem, filter, setFilter, onDeleteItem, onDuplicate, setModal }) => {
+    focusedItem: TreeItemIndex,
+}> = ({ focusedItem, treeData, onSelectQuery, onAddRootCollection, onAddCollection, onRenameItem, filter, setFilter, onDeleteItem, onDuplicate, setModal }) => {
     const tree = useRef<TreeRef>(null);
     const environment = useRef<TreeEnvironmentRef>(null);
-    const [focusedItem, setFocusedItem] = useState<TreeItemIndex>();
+    // const [focusedItem, setFocusedItem] = useState<TreeItemIndex>();
     const [expandedItems, setExpandedItems] = useState<Array<TreeItemIndex>>(["Fruit", "Lemon", "Berries", "Meals", "America", "Europe", "Asia", "Australia", "Desserts", "Drinks"]);
     const [selectedItems, setSelectedItems] = useState<Array<TreeItemIndex>>([]);
 
@@ -157,9 +158,9 @@ const Collections: React.FC<{
                     onDrop={(items, target) => console.log(items, target)}
                     onFocusItem={(item: TreeItem<TreeItemData>): void => {
                         console.log("onFocusItem");
-                        setFocusedItem(item.index);
                         if (!item.hasChildren) {
-                            onSelectQuery(item.data.queryId as number);
+                            // setFocusedItem(item.index);
+                            onSelectQuery(item.index);
                         }
                     }}
                     onExpandItem={(item) => setExpandedItems([...expandedItems, item.index])}

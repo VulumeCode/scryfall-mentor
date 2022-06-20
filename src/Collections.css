@@ -42,6 +42,10 @@ input.collections-filter::placeholder {
 	--rct-color-renaming-input-submitbutton-text-active: #ffffff;
 }
 
+.rct-tree-item-button-focused {
+	text-decoration: underline;
+}
+
 .rct-tree-root {
 	font-family: Lato !important;
 }

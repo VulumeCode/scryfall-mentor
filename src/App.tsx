@@ -1,9 +1,12 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import "./App.css";
 import { useImmer } from "use-immer";
 
-import { defaultTemplate, defaultNames, defautlQueries, Names, Template, QueryLibrary, QueryPart, newQueryPart } from "./data";
+import {
+    defaultTemplate, defaultNames, defautlQueries,
+    Names, Template, QueryLibrary, QueryPart, newQueryPart,
+} from "./data";
 import Collections, { TreeData } from "./Collections";
 import { WritableDraft } from "immer/dist/internal";
 import { TreeItemIndex } from "react-complex-tree";
@@ -101,18 +104,39 @@ const addCollection = (obj: Template, match: TreeItemIndex, newIndex: TreeItemIn
 function App(): JSX.Element {
     const [queryCollection, setQueryCollection] = useImmer<Template>(defaultTemplate);
     const [names, setNames] = useImmer<Names>(defaultNames);
+    const [queries, setQueries] = useImmer<QueryLibrary>(defautlQueries);
+
+
+    useEffect(() => {
+        async function fetchData(): Promise<void> {
+            const stored = await browser.storage.local.get(["queryCollection", "names", "queries"]);
+            stored.queryCollection && setQueryCollection(stored.queryCollection as Template);
+            stored.names && setNames(stored.names as Names);
+            stored.queries && setQueries(stored.queries as QueryLibrary);
+        }
+        fetchData();
+    }, []);
+
+    useEffect(() => { browser.storage.local.set({ queryCollection }); }, [queryCollection]);
+    useEffect(() => { browser.storage.local.set({ names }); }, [names]);
+    useEffect(() => { browser.storage.local.set({ queries }); }, [queries]);
 
     const [filter, setFilter] = useImmer<string>("");
 
-    const [queries, setQueries] = useImmer<QueryLibrary>(defautlQueries);
+    const treeData = useMemo(() => buildCollectionsTree(names, filter, queryCollection)[0], [names, filter, queryCollection]);
 
-    const [editingQuery, setEditingQuery] = useState<number>(1);
+    const defaultEditingQuery = Object.keys(treeData).find((key) => !treeData[key].hasChildren) ?? "root";
 
-    const [queryParts, setQueryParts] = useImmer<Array<QueryPart>>(queries[editingQuery]);
+    const [editingQuery, setEditingQuery] = useState<TreeItemIndex>(defaultEditingQuery);
+
+    const editingQueryId = treeData[editingQuery].data.queryId as number;
+
+    const [queryParts, setQueryParts] = useImmer<Array<QueryPart>>(queries[editingQueryId]);
 
     const [modal, setModal] = useState<JSX.Element | undefined>(undefined);
 
-    const treeData = useMemo(() => buildCollectionsTree(names, filter, queryCollection)[0], [names, filter, queryCollection]);
+
+    treeData;
 
     console.log("Update", Date.now());
 
@@ -121,11 +145,13 @@ function App(): JSX.Element {
             {modal}
             <header className="App-header inverted">
                 <Collections
+                    focusedItem={editingQuery}
                     treeData={treeData}
                     onSelectQuery={(queryKey): void => {
                         console.log("setEditingQuery", queryKey);
                         setEditingQuery(queryKey);
-                        setQueryParts(queries[queryKey]);
+                        const editingQueryId = treeData[editingQuery].data.queryId as number;
+                        setQueryParts(queries[editingQueryId]);
                     }}
                     onAddRootCollection={() => {
                         const newIndex = crypto.randomUUID();
@@ -253,7 +279,7 @@ function App(): JSX.Element {
                         className="button-n inverted"
                         onClick={() =>
                             setQueries((draft) => {
-                                draft[editingQuery] = queryParts;
+                                draft[editingQueryId] = queryParts;
                             })
                         }
                     >
