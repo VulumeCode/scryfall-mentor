@@ -9,6 +9,7 @@ import "react-complex-tree/lib/style.css";
 import icons from "./icons";
 import ContextMenu from "./ContextMenu";
 import { createCustomRenderers } from "./createCustomRenderers";
+import { customInteraction } from "./customInteraction";
 
 export type TreeItemData = {
     title: string,
@@ -138,11 +139,7 @@ const Collections: React.FC<{
                     defaultInteractionMode={{
                         mode: "custom",
                         extends: InteractionMode.ClickItemToExpand,
-                        createInteractiveElementProps: (_item, _treeId, _actions, _renderFlags) => ({
-                            onFocus: () => {
-                                /*NOOP*/
-                            },
-                        }),
+                        createInteractiveElementProps: customInteraction,
                     }}
                     viewState={{
                         ["Collections"]: {
