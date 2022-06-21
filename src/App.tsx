@@ -135,9 +135,6 @@ function App(): JSX.Element {
 
     const [modal, setModal] = useState<JSX.Element | undefined>(undefined);
 
-
-    treeData;
-
     console.log("Update", Date.now());
 
     return (
@@ -184,7 +181,7 @@ function App(): JSX.Element {
                         });
                         const newQueryNumber = Date.now();
                         setQueries((draft) => {
-                            draft[newQueryNumber] = queryParts;
+                            draft[newQueryNumber] = queryParts; // TODO bug
                         });
                         setQueryCollection((draft) => duplicate(draft, afterIndex, newIndex, newQueryNumber));
                         return newIndex;
@@ -206,73 +203,58 @@ function App(): JSX.Element {
                 <div key="activeQueryName" className="activeQueryName">
                     <i className="ms ms-ability-learn"></i> Search for Magic cards...
                 </div>
-                {[...queryParts, newQueryPart].map((queryPart, i) => {
-                    const last = i === queryParts.length;
-                    return (
-                        <label key={"queryPart" + i} className="advanced-search-checkbox">
-                            <input
-                                key={"queryPartCheckbox" + i}
-                                className={"button-n inverted " + queryPart.enabled}
-                                type="checkbox"
-                                checked={!!queryPart.enabled}
-                                disabled={last}
-                                onChange={(e) =>
-                                    setQueryParts((draft) => {
-                                        draft[i].enabled = e.target.checked;
-                                    })
-                                }
-                                tabIndex={-1}
-                            ></input>
-                            {/* <input
-                                key={"queryPartText" + i}
-                                className="button-n inverted"
-                                type="text"
-                                value={queryPart.query}
-                                placeholder={last ? "Query" : undefined}
-                                onChange={(e) =>
-                                    setQueryParts((draft) => {
-                                        if (last) {
-                                            draft[i] = { ...newQueryPart };
-                                            draft[i].enabled = true;
-                                        }
-                                        draft[i].query = e.target.value;
-                                    })
-                                }
-                            ></input> */}
-                            <Textarea
-                                className="textarea button-n inverted"
-                                value={queryPart.query}
-                                key={"queryPartTextArea" + i}
-                                rows={1}
-                                onChange={(e) =>
-                                    setQueryParts((draft) => {
-                                        if (last) {
-                                            draft[i] = { ...newQueryPart };
-                                            draft[i].enabled = true;
-                                        }
-                                        draft[i].query = e.target.value;
-                                    })}
-                                placeholder={last ? "Query" : undefined}
-                                tabIndex={0}
-                            />
-                            {
-                                <button
-                                    className="remove"
+                <div className="queryPartsContainer">
+                    {[...queryParts, newQueryPart].map((queryPart, i) => {
+                        const last = i === queryParts.length;
+                        return (
+                            <label key={"queryPart" + i} className="advanced-search-checkbox">
+                                <input
+                                    key={"queryPartCheckbox" + i}
+                                    className={"button-n inverted " + queryPart.enabled}
+                                    type="checkbox"
+                                    checked={!!queryPart.enabled}
                                     disabled={last}
-                                    onClick={() =>
+                                    onChange={(e) =>
                                         setQueryParts((draft) => {
-                                            draft.splice(i, 1);
+                                            draft[i].enabled = e.target.checked;
                                         })
                                     }
                                     tabIndex={-1}
-                                >
-                                    🞪
-                                </button>
-                            }
-                        </label>
-                    );
-                })}
-
+                                ></input>
+                                <Textarea
+                                    className="textarea button-n inverted"
+                                    value={queryPart.query}
+                                    key={"queryPartTextArea" + i}
+                                    rows={1}
+                                    onChange={(e) =>
+                                        setQueryParts((draft) => {
+                                            if (last) {
+                                                draft[i] = { ...newQueryPart };
+                                                draft[i].enabled = true;
+                                            }
+                                            draft[i].query = e.target.value;
+                                        })}
+                                    placeholder={last ? "Query" : undefined}
+                                    tabIndex={0}
+                                />
+                                {
+                                    <button
+                                        className="remove"
+                                        disabled={last}
+                                        onClick={() =>
+                                            setQueryParts((draft) => {
+                                                draft.splice(i, 1);
+                                            })
+                                        }
+                                        tabIndex={-1}
+                                    >
+                                        🞪
+                                    </button>
+                                }
+                            </label>
+                        );
+                    })}
+                </div>
                 <div className="queryEditor" style={{ display: "flex", width: "100%" }}>
                     <button key={"search"} className="button-n inverted" onClick={(e) => search(queryParts, e)}>
                         Search

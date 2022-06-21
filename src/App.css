@@ -83,6 +83,18 @@ body::before {
     height: 1%;
 }
 
+.App .queryPartsContainer {
+    /* max-height: 80%; */
+    width: calc(100% + 1em);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    /* mask-image: linear-gradient(180deg, #000 90%, transparent 100%); */
+    scrollbar-gutter: stable;
+
+    /*ff thin scrollbar width*/
+    padding-right: calc(1em - 8px);
+}
+
 .App .queryEditor button {
     margin: 0.2em;
 }

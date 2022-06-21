@@ -57,6 +57,7 @@ input.collections-filter::placeholder {
 	overflow-y: auto;
 	scrollbar-width: none;
 	mask-image: linear-gradient(180deg, #000 90%, transparent 100%);
+	min-height: 20%;
 }
 
 .rct-tree-item-renaming-input {
