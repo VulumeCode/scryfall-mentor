@@ -221,6 +221,7 @@ function App(): JSX.Element {
                                         draft[i].enabled = e.target.checked;
                                     })
                                 }
+                                tabIndex={-1}
                             ></input>
                             {/* <input
                                 key={"queryPartText" + i}
@@ -252,6 +253,7 @@ function App(): JSX.Element {
                                         draft[i].query = e.target.value;
                                     })}
                                 placeholder={last ? "Query" : undefined}
+                                tabIndex={0}
                             />
                             {
                                 <button
@@ -262,6 +264,7 @@ function App(): JSX.Element {
                                             draft.splice(i, 1);
                                         })
                                     }
+                                    tabIndex={-1}
                                 >
                                     🞪
                                 </button>
