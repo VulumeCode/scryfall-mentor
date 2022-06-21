@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import "./App.css";
 import { useImmer } from "use-immer";
@@ -9,7 +9,7 @@ import {
 } from "./data";
 import Collections, { TreeData } from "./Collections";
 import { WritableDraft } from "immer/dist/internal";
-import { TreeItemIndex } from "react-complex-tree";
+import { TreeItemIndex, TreeRef } from "react-complex-tree";
 
 import Textarea from "react-expanding-textarea";
 
@@ -107,19 +107,19 @@ function App(): JSX.Element {
     const [queries, setQueries] = useImmer<QueryLibrary>(defautlQueries);
 
 
-    // useEffect(() => {
-    //     async function fetchData(): Promise<void> {
-    //         const stored = await browser.storage.local.get(["queryCollection", "names", "queries"]);
-    //         stored.queryCollection && setQueryCollection(stored.queryCollection as Template);
-    //         stored.names && setNames(stored.names as Names);
-    //         stored.queries && setQueries(stored.queries as QueryLibrary);
-    //     }
-    //     fetchData();
-    // }, []);
+    useEffect(() => {
+        async function fetchData(): Promise<void> {
+            const stored = await browser.storage.local.get(["queryCollection", "names", "queries"]);
+            stored.queryCollection && setQueryCollection(stored.queryCollection as Template);
+            stored.names && setNames(stored.names as Names);
+            stored.queries && setQueries(stored.queries as QueryLibrary);
+        }
+        fetchData();
+    }, []);
 
-    // useEffect(() => { browser.storage.local.set({ queryCollection }); }, [queryCollection]);
-    // useEffect(() => { browser.storage.local.set({ names }); }, [names]);
-    // useEffect(() => { browser.storage.local.set({ queries }); }, [queries]);
+    useEffect(() => { browser.storage.local.set({ queryCollection }); }, [queryCollection]);
+    useEffect(() => { browser.storage.local.set({ names }); }, [names]);
+    useEffect(() => { browser.storage.local.set({ queries }); }, [queries]);
 
     const [filter, setFilter] = useImmer<string>("");
 
@@ -137,11 +137,14 @@ function App(): JSX.Element {
 
     console.log("Update", Date.now());
 
+    const tree = useRef<TreeRef>(null);
+
     return (
         <div className="App">
             {modal}
             <header className="App-header inverted">
                 <Collections
+                    ref={tree}
                     focusedItem={editingQuery}
                     treeData={treeData}
                     onSelectQuery={(queryKey): void => {
@@ -177,11 +180,11 @@ function App(): JSX.Element {
                     onDuplicate={(afterIndex) => {
                         const newIndex = crypto.randomUUID();
                         setNames((draft) => {
-                            draft[newIndex] = names[afterIndex] + " (Copy)";
+                            draft[newIndex] = duplicateName(names[afterIndex]);
                         });
                         const newQueryNumber = Date.now();
                         setQueries((draft) => {
-                            draft[newQueryNumber] = [...draft[treeData[afterIndex].data.queryId as number]]; // TODO bug
+                            draft[newQueryNumber] = draft[treeData[afterIndex].data.queryId as number];
                         });
                         setQueryCollection((draft) => duplicate(draft, afterIndex, newIndex, newQueryNumber));
                         return newIndex;
@@ -276,13 +279,16 @@ function App(): JSX.Element {
                         onClick={() => {
                             const newIndex = crypto.randomUUID();
                             setNames((draft) => {
-                                draft[newIndex] = names[editingQuery] + " (Copy)";
+                                draft[newIndex] = duplicateName(names[editingQuery]);
                             });
                             const newQueryNumber = Date.now();
                             setQueries((draft) => {
                                 draft[newQueryNumber] = queryParts;
                             });
                             setQueryCollection((draft) => duplicate(draft, editingQuery, newIndex, newQueryNumber));
+
+                            setEditingQuery(newIndex);
+                            tree.current?.startRenamingItem(newIndex);
                         }}
                     >
                         Save as...
@@ -372,6 +378,11 @@ async function goto(url?: string, e?: React.MouseEvent<HTMLButtonElement, MouseE
         const activeTab = (await browser.tabs.query({ currentWindow: true, active: true }))[0];
         browser.tabs.update(activeTab.id, { url });
     }
+}
+
+function duplicateName(base: string): string {
+    base = base.replace(/ \(Copy .+\)/, "");
+    return `${base} (Copy ${new Date().toLocaleString("en-GB")})`;
 }
 
 export default App;
