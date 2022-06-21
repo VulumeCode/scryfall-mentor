@@ -107,19 +107,19 @@ function App(): JSX.Element {
     const [queries, setQueries] = useImmer<QueryLibrary>(defautlQueries);
 
 
-    useEffect(() => {
-        async function fetchData(): Promise<void> {
-            const stored = await browser.storage.local.get(["queryCollection", "names", "queries"]);
-            stored.queryCollection && setQueryCollection(stored.queryCollection as Template);
-            stored.names && setNames(stored.names as Names);
-            stored.queries && setQueries(stored.queries as QueryLibrary);
-        }
-        fetchData();
-    }, []);
+    // useEffect(() => {
+    //     async function fetchData(): Promise<void> {
+    //         const stored = await browser.storage.local.get(["queryCollection", "names", "queries"]);
+    //         stored.queryCollection && setQueryCollection(stored.queryCollection as Template);
+    //         stored.names && setNames(stored.names as Names);
+    //         stored.queries && setQueries(stored.queries as QueryLibrary);
+    //     }
+    //     fetchData();
+    // }, []);
 
-    useEffect(() => { browser.storage.local.set({ queryCollection }); }, [queryCollection]);
-    useEffect(() => { browser.storage.local.set({ names }); }, [names]);
-    useEffect(() => { browser.storage.local.set({ queries }); }, [queries]);
+    // useEffect(() => { browser.storage.local.set({ queryCollection }); }, [queryCollection]);
+    // useEffect(() => { browser.storage.local.set({ names }); }, [names]);
+    // useEffect(() => { browser.storage.local.set({ queries }); }, [queries]);
 
     const [filter, setFilter] = useImmer<string>("");
 
@@ -147,7 +147,7 @@ function App(): JSX.Element {
                     onSelectQuery={(queryKey): void => {
                         console.log("setEditingQuery", queryKey);
                         setEditingQuery(queryKey);
-                        const editingQueryId = treeData[editingQuery].data.queryId as number;
+                        const editingQueryId = treeData[queryKey].data.queryId as number;
                         setQueryParts(queries[editingQueryId]);
                     }}
                     onAddRootCollection={() => {
@@ -177,11 +177,11 @@ function App(): JSX.Element {
                     onDuplicate={(afterIndex) => {
                         const newIndex = crypto.randomUUID();
                         setNames((draft) => {
-                            draft[newIndex] = "New query";
+                            draft[newIndex] = names[afterIndex] + " (Copy)";
                         });
                         const newQueryNumber = Date.now();
                         setQueries((draft) => {
-                            draft[newQueryNumber] = queryParts; // TODO bug
+                            draft[newQueryNumber] = [...draft[treeData[afterIndex].data.queryId as number]]; // TODO bug
                         });
                         setQueryCollection((draft) => duplicate(draft, afterIndex, newIndex, newQueryNumber));
                         return newIndex;
@@ -273,11 +273,17 @@ function App(): JSX.Element {
                     <button
                         key={"saveas"}
                         className="button-n inverted"
-                        onClick={() =>
+                        onClick={() => {
+                            const newIndex = crypto.randomUUID();
+                            setNames((draft) => {
+                                draft[newIndex] = names[editingQuery] + " (Copy)";
+                            });
+                            const newQueryNumber = Date.now();
                             setQueries((draft) => {
-                                draft[Object.keys(draft).length + 1] = queryParts;
-                            })
-                        }
+                                draft[newQueryNumber] = queryParts;
+                            });
+                            setQueryCollection((draft) => duplicate(draft, editingQuery, newIndex, newQueryNumber));
+                        }}
                     >
                         Save as...
                     </button>
