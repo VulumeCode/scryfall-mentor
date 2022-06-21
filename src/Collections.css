@@ -42,7 +42,7 @@ input.collections-filter::placeholder {
 	--rct-color-renaming-input-submitbutton-text-active: #ffffff;
 }
 
-.rct-tree-item-button-focused {
+.rct-tree-item-button-focused .itemTitleText {
 	text-decoration: underline;
 }
 
