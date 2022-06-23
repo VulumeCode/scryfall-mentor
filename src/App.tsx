@@ -4,16 +4,16 @@ import "./App.css";
 import { useImmer } from "use-immer";
 
 import {
-    defaultTemplate, defaultNames, defautlQueries,
-    Names, Template, QueryLibrary, QueryPart, newQueryPart,
+    defaultDataTree, defaultNames, defautlQueries,
+    Names, DataNode, DataTree, QueryLibrary, QueryPart, newQueryPart,
 } from "./data";
-import Collections, { TreeData } from "./Collections";
+import Collections, { FlatTreeData } from "./Collections";
 import { WritableDraft } from "immer/dist/internal";
-import { TreeItemIndex, TreeRef } from "react-complex-tree";
+import { DraggingPosition, TreeItemIndex, TreeRef } from "react-complex-tree";
 
 import Textarea from "react-expanding-textarea";
 
-const buildCollectionsTree = (names: Names, filter: string, collection: Template, data: TreeData = {}): [TreeData, boolean] => {
+const buildCollectionsTree = (names: Names, filter: string, collection: DataTree, path: TreeItemIndex[] = [], data: FlatTreeData = {}): [FlatTreeData, boolean] => {
     let hasMatch = false;
     for (const [key, value] of Object.entries(collection)) {
         const isDir = typeof value === "object";
@@ -24,7 +24,7 @@ const buildCollectionsTree = (names: Names, filter: string, collection: Template
         let doesMatchFilter = matchFilter(title, filter);
 
         if (isDir) {
-            const [_, childMatch] = buildCollectionsTree(names, doesMatchFilter ? "" : filter, value, data);
+            const [_, childMatch] = buildCollectionsTree(names, doesMatchFilter ? "" : filter, value, [key, ...path], data);
             doesMatchFilter ||= childMatch;
         }
         if (doesMatchFilter) {
@@ -37,6 +37,7 @@ const buildCollectionsTree = (names: Names, filter: string, collection: Template
                 data: {
                     title: title,
                     queryId: isQueryId ? value : null,
+                    path,
                 },
                 canRename: true,
             };
@@ -55,22 +56,76 @@ const matchFilter = (value: string, filter: string): boolean => {
     }
 };
 
-const removeProp = (obj: Template, match: TreeItemIndex): void => {
+const removeProp = (obj: DataTree, match: TreeItemIndex): DataNode | null => {
     for (const key in obj) {
         if (key === match) {
+            const removed = obj[key];
             delete obj[key];
-            return;
+            return removed;
         } else {
             const children = obj[key];
             if (typeof children === "object") {
-                removeProp(children, match);
+                const removed = removeProp(children, match);
+                if (!!removed) { return removed; }
+            }
+        }
+    }
+    return null;
+};
+
+const dragAndDropProp = (obj: DataTree, match: TreeItemIndex, target: DraggingPosition, treeData: FlatTreeData): void => {
+    const moved = removeProp(obj, match); // updates obj
+    if (moved === null) {
+        throw Error("Nothing to move");
+    }
+
+    switch (target.targetType) {
+        case "item":
+            return placeProp(obj, match, moved, target.targetItem);
+        case "between-items":
+            return placeProp(obj,
+                match,
+                moved,
+                target.parentItem,
+                treeData[target.parentItem].children?.[target.childIndex - 1],
+                treeData[target.parentItem].children?.[target.childIndex]);
+    }
+};
+
+const placeProp = (obj: DataTree, match: TreeItemIndex, moved: DataNode, under: TreeItemIndex, after?: TreeItemIndex, before?: TreeItemIndex): void => {
+    for (const key in obj) {
+        if (key === under) {
+            const children = obj[key];
+            if (typeof children === "object") {
+                if (!!after || !!before) {
+                    obj[under] = Object.keys(children).reduce((ac: DataTree, key) => {
+                        const value = children[key];
+                        if (key === before) {
+                            ac[match] = moved;
+                        }
+                        ac[key] = value;
+                        if (key === after) {
+                            ac[match] = moved;
+                        }
+                        return ac;
+                    }, {});
+                } else {
+                    children[match] = moved;
+                    obj[under] = children;
+                }
+                return;
+            }
+        } else {
+            const children = obj[key];
+            if (typeof children === "object") {
+                placeProp(children, match, moved, under, after, before);
             }
         }
     }
 };
 
-const duplicate = (obj: Template, match: TreeItemIndex, newIndex: TreeItemIndex, newValue: number): Template => {
-    return Object.keys(obj).reduce((ac: Template, key) => {
+const duplicate = (obj: DataTree, match: TreeItemIndex, newIndex: TreeItemIndex, newValue: number): DataTree => {
+    return Object.keys(obj).reduce((ac: DataTree, key) => {
         const value = obj[key];
         if (typeof value === "object") {
             ac[key] = duplicate(value, match, newIndex, newValue);
@@ -84,8 +139,8 @@ const duplicate = (obj: Template, match: TreeItemIndex, newIndex: TreeItemIndex,
     }, {});
 };
 
-const addCollection = (obj: Template, match: TreeItemIndex, newIndex: TreeItemIndex, stub: Template): Template => {
-    return Object.keys(obj).reduce((ac: Template, key) => {
+const addCollection = (obj: DataTree, match: TreeItemIndex, newIndex: TreeItemIndex, stub: DataTree): DataTree => {
+    return Object.keys(obj).reduce((ac: DataTree, key) => {
         const value = obj[key];
         if (typeof value === "object") {
             const updatedChildren = addCollection(value, match, newIndex, stub);
@@ -102,7 +157,7 @@ const addCollection = (obj: Template, match: TreeItemIndex, newIndex: TreeItemIn
 };
 
 function App(): JSX.Element {
-    const [queryCollection, setQueryCollection] = useImmer<Template>(defaultTemplate);
+    const [queryCollection, setQueryCollection] = useImmer<DataTree>(defaultDataTree);
     const [names, setNames] = useImmer<Names>(defaultNames);
     const [queries, setQueries] = useImmer<QueryLibrary>(defautlQueries);
 
@@ -110,7 +165,7 @@ function App(): JSX.Element {
     useEffect(() => {
         async function fetchData(): Promise<void> {
             const stored = await browser.storage.local.get(["queryCollection", "names", "queries"]);
-            stored.queryCollection && setQueryCollection(stored.queryCollection as Template);
+            stored.queryCollection && setQueryCollection(stored.queryCollection as DataTree);
             stored.names && setNames(stored.names as Names);
             stored.queries && setQueries(stored.queries as QueryLibrary);
         }
@@ -159,7 +214,7 @@ function App(): JSX.Element {
                             draft[newIndex] = "New collection";
                         });
                         setQueryCollection((draft) => {
-                            (draft.root as WritableDraft<Template>)[newIndex] = {};
+                            (draft.root as WritableDraft<DataTree>)[newIndex] = {};
                         });
                         return newIndex;
                     }}
@@ -187,6 +242,7 @@ function App(): JSX.Element {
                             draft[newQueryNumber] = draft[treeData[afterIndex].data.queryId as number];
                         });
                         setQueryCollection((draft) => duplicate(draft, afterIndex, newIndex, newQueryNumber));
+                        setEditingQuery(newIndex);
                         return newIndex;
                     }}
                     onRenameItem={(item, name) => {
@@ -196,8 +252,15 @@ function App(): JSX.Element {
                     }}
                     onDeleteItem={(item) => {
                         setQueryCollection((draft) => {
-                            removeProp(draft, item.index);
+                            const removed = removeProp(draft, item.index);
+                            console.log(removed);
                         });
+                    }}
+                    onDrop={(item, target) => {
+                        setQueryCollection((draft) => {
+                            dragAndDropProp(draft, item.index, target, treeData);
+                        });
+                        console.log(item, target);
                     }}
                     {...{ filter, setFilter, setModal }}
                 />
@@ -286,7 +349,6 @@ function App(): JSX.Element {
                                 draft[newQueryNumber] = queryParts;
                             });
                             setQueryCollection((draft) => duplicate(draft, editingQuery, newIndex, newQueryNumber));
-
                             setEditingQuery(newIndex);
                             tree.current?.startRenamingItem(newIndex);
                         }}

@@ -1,27 +1,20 @@
 import { TreeItem, TreeItemActions, TreeItemRenderFlags } from "react-complex-tree";
 import { HTMLProps } from "react";
 
-export const customInteraction = (item: TreeItem, treeId: string, actions: TreeItemActions, renderFlags: TreeItemRenderFlags): HTMLProps<HTMLElement> => ({
-    onClick: (e) => {
-        if (e.shiftKey) {
-            actions.selectUpTo();
-        } else if (e.ctrlKey) {
-            if (renderFlags.isSelected) {
-                actions.unselectItem();
-            } else {
-                actions.addToSelectedItems();
-            }
-        } else {
-            actions.focusItem();
-            actions.selectItem();
-            // if (!item.hasChildren || .canInvokePrimaryActionOnItemContainer) {
-            //     actions.primaryAction();
-            // }
-        }
+// https://github.com/lukasbach/react-complex-tree/tree/main/packages/core/src/interactionMode
+
+export const customInteraction = (item: TreeItem, treeId: string, actions: TreeItemActions, _renderFlags: TreeItemRenderFlags): HTMLProps<HTMLElement> => ({
+    onClick: (_e) => {
+        actions.focusItem();
+        actions.selectItem();
     },
     onFocus: () => {
         /*NOOP*/
     },
+    // onDoubleClick: () => {
+    //     console.log("actions.startRenamingItem");
+    //     actions.startRenamingItem();
+    // },
 });
 
 // import { HTMLProps } from "react";

@@ -1,8 +1,9 @@
 import { TreeItemIndex } from "react-complex-tree";
 
-export type Template = { [index: TreeItemIndex]: number | Template };
+export type DataTree = { [index: TreeItemIndex]: DataNode };
+export type DataNode = number | DataTree;
 
-export const defaultTemplate: Template = {
+export const defaultDataTree: DataTree = {
     root: {
         Fruit: {
             Hans: 1,

@@ -84,9 +84,10 @@ input.collections-filter::placeholder {
 
 .line {
 	margin: -1em 0.5em;
-	width: 1px;
+	width: 0;
 	background: #fff4;
 	height: 24px;
+	padding: 0px 0px 0px 1px;
 }
 
 .itemTitle {

@@ -3,7 +3,7 @@ import reactStringReplace from "react-string-replace";
 
 import "./Collections.css";
 
-import { ControlledTreeEnvironment, Tree, TreeRef, TreeItemIndex, TreeItem, TreeEnvironmentRef, TreeItemRenderContext, InteractionMode } from "react-complex-tree";
+import { ControlledTreeEnvironment, Tree, TreeRef, TreeItemIndex, TreeItem, TreeEnvironmentRef, TreeItemRenderContext, InteractionMode, DraggingPosition } from "react-complex-tree";
 import "react-complex-tree/lib/style.css";
 
 import icons from "./icons";
@@ -14,9 +14,10 @@ import { customInteraction } from "./customInteraction";
 export type TreeItemData = {
     title: string,
     queryId: number | null,
+    path: TreeItemIndex[],
 };
 
-export type TreeData = Record<TreeItemIndex, TreeItem<TreeItemData>>;
+export type FlatTreeData = Record<TreeItemIndex, TreeItem<TreeItemData>>;
 
 declare global {
     interface Window {
@@ -28,13 +29,14 @@ declare global {
 const defaultRenderers = createCustomRenderers(1);
 
 type Props = {
-    treeData: TreeData,
+    treeData: FlatTreeData,
     onSelectQuery: (queryKey: TreeItemIndex) => void,
     onAddRootCollection: () => TreeItemIndex,
     onAddCollection: (underIndex: TreeItemIndex) => TreeItemIndex,
     onDuplicate: (afterIndex: TreeItemIndex) => TreeItemIndex,
     onRenameItem: (item: TreeItem<TreeItemData>, name: string, treeId: string) => void,
     onDeleteItem: (item: TreeItem<TreeItemData>) => void,
+    onDrop: (item: TreeItem<TreeItemData>, target: DraggingPosition) => void,
     filter: string,
     setFilter: (filter: string) => void,
     setModal: (modal?: JSX.Element) => void,
@@ -42,12 +44,12 @@ type Props = {
 };
 
 const Collections = forwardRef<TreeRef, Props>(
-    function Collections({ focusedItem, treeData, onSelectQuery, onAddRootCollection, onAddCollection, onRenameItem, filter, setFilter, onDeleteItem, onDuplicate, setModal }, fwdTree) {
+    function Collections({ onDrop, focusedItem, treeData, onSelectQuery, onAddRootCollection, onAddCollection, onRenameItem, filter, setFilter, onDeleteItem, onDuplicate, setModal }, fwdTree) {
         // const _oldTree = useRef<TreeRef>(null);
         const environment = useRef<TreeEnvironmentRef>(null);
         // const [focusedItem, setFocusedItem] = useState<TreeItemIndex>();
         const [expandedItems, setExpandedItems] = useState<Array<TreeItemIndex>>(["Fruit", "Lemon", "Berries", "Meals", "America", "Europe", "Asia", "Australia", "Desserts", "Drinks"]);
-        const [selectedItems, setSelectedItems] = useState<Array<TreeItemIndex>>([]);
+        const [selectedItem, setSelectedItem] = useState<TreeItemIndex | null>(null);
 
         const [menuItem, setMenuItem] = useState<TreeItemIndex | undefined>();
 
@@ -93,7 +95,7 @@ const Collections = forwardRef<TreeRef, Props>(
                                 <li
                                     onClick={doIt(() => {
                                         const newIndex = onDuplicate(item.index);
-                                        // setSelectedItems([newIndex]);
+                                        setSelectedItem(newIndex);
                                         tree.current?.startRenamingItem(newIndex);
                                     })}
                                 >
@@ -138,7 +140,7 @@ const Collections = forwardRef<TreeRef, Props>(
                 </span>
 
                 <div id="treeContainer">
-                    <ControlledTreeEnvironment
+                    <ControlledTreeEnvironment<TreeItemData>
                         ref={environment}
                         items={treeData}
                         getItemTitle={(item: TreeItem<TreeItemData>): string => item.data.title}
@@ -151,30 +153,36 @@ const Collections = forwardRef<TreeRef, Props>(
                             ["Collections"]: {
                                 focusedItem,
                                 expandedItems,
-                                selectedItems,
+                                selectedItems: (!!selectedItem ? [selectedItem] : []),
                             },
                         }}
                         canReorderItems
                         canDragAndDrop
                         canDropOnItemWithChildren
-                        canDropOnItemWithoutChildren
-                        onDrop={(items, target) => console.log(items, target)}
+                        onDrop={([item], target) => onDrop(item, target)}
+                        canDropAt={([item], target) => {
+                            // console.log(item, target);
+                            const ancestors = [target.parentItem, ...treeData[target.parentItem].data.path];
+                            // console.log(ancestors);
+                            return ancestors.indexOf(item.index) === -1;
+                        }}
+
                         onFocusItem={(item: TreeItem<TreeItemData>): void => {
                             console.log("onFocusItem");
                             if (!item.hasChildren) {
-                                // setFocusedItem(item.index);
                                 onSelectQuery(item.index);
                             }
+                            setSelectedItem(item.index);
                         }}
                         onExpandItem={(item) => setExpandedItems([...expandedItems, item.index])}
                         onCollapseItem={(item) => setExpandedItems(expandedItems.filter((expandedItemIndex) => expandedItemIndex !== item.index))}
                         onSelectItems={(items) => {
                             console.log("onSelectItems");
-                            setSelectedItems(items);
+                            setSelectedItem(items.at(-1) ?? null);
                         }}
                         {...{ onRenameItem }}
                     >
-                        <Tree
+                        <Tree<TreeItemData>
                             treeId="Collections"
                             rootItem="root"
                             ref={tree}
@@ -204,10 +212,6 @@ const Collections = forwardRef<TreeRef, Props>(
                                                 console.log("onClickCapture");
                                                 e.stopPropagation();
                                                 setContextMenuItem(item, e.currentTarget.parentElement?.parentElement ?? null);
-                                            }}
-                                            onFocusCapture={(e) => {
-                                                console.log("xxxxxx");
-                                                e.stopPropagation();
                                             }}
                                         >
                                             {icons["more"].utf}
