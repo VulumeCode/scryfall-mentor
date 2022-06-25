@@ -31,6 +31,8 @@ const defaultRenderers = createCustomRenderers(1);
 type Props = {
     treeData: FlatTreeData,
     onSelectQuery: (queryKey: TreeItemIndex) => void,
+    onLoadAsMask: (queryKey: TreeItemIndex) => void,
+    onAppendToMask: (queryKey: TreeItemIndex) => void,
     onAddRootCollection: () => TreeItemIndex,
     onAddCollection: (underIndex: TreeItemIndex) => TreeItemIndex,
     onDuplicate: (afterIndex: TreeItemIndex) => TreeItemIndex,
@@ -44,7 +46,7 @@ type Props = {
 };
 
 const Collections = forwardRef<TreeRef, Props>(
-    function Collections({ onDrop, focusedItem, treeData, onSelectQuery, onAddRootCollection, onAddCollection, onRenameItem, filter, setFilter, onDeleteItem, onDuplicate, setModal }, fwdTree) {
+    function Collections({ onDrop, onLoadAsMask, onAppendToMask, focusedItem, treeData, onSelectQuery, onAddRootCollection, onAddCollection, onRenameItem, filter, setFilter, onDeleteItem, onDuplicate, setModal }, fwdTree) {
         // const _oldTree = useRef<TreeRef>(null);
         const environment = useRef<TreeEnvironmentRef>(null);
         // const [focusedItem, setFocusedItem] = useState<TreeItemIndex>();
@@ -84,11 +86,17 @@ const Collections = forwardRef<TreeRef, Props>(
                                 </li>
                             </>)
                             : (<>
-                                <li>
+                                <li
+                                    onClick={doIt(() => {
+                                        onLoadAsMask(item.index);
+                                    })}>
                                     <i className="ms ms-ability-menace"></i>
                                     Load as mask
                                 </li>
-                                <li>
+                                <li
+                                    onClick={doIt(() => {
+                                        onAppendToMask(item.index);
+                                    })}>
                                     <i className="ms ms-ability-menace"></i>
                                     Append to mask
                                 </li>
@@ -108,7 +116,7 @@ const Collections = forwardRef<TreeRef, Props>(
                             <i className="ms ms-artist-nib "></i>
                             Rename
                         </li>
-                        <li style={{ color: "var(--ms-r-color)" }} onClick={doIt(() => onDeleteItem(item))}>
+                        <li style={{ color: "var(--ms-r-color)" }} onClick={doIt(() => confirm("Delete forever?") && onDeleteItem(item))}>
                             <i className="ms ms-ability-devotion"></i>
                             Delete
                         </li>

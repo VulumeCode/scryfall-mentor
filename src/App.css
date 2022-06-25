@@ -95,8 +95,13 @@ body::before {
     padding-right: calc(1em - 8px);
 }
 
-.App .queryEditor button {
-    margin: 0.2em;
+
+.queryEditor {
+    display: flex;
+    width: 100%;
+    justify-content: end;
+    gap: 0.4em;
+    margin-bottom: 0.4em;
 }
 
 .advanced-search-checkbox {

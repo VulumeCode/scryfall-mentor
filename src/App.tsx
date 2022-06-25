@@ -188,6 +188,8 @@ function App(): JSX.Element {
 
     const [queryParts, setQueryParts] = useImmer<Array<QueryPart>>(queries[editingQueryId]);
 
+    const [maskQueryParts, setMaskQueryParts] = useImmer<Array<QueryPart>>([]);
+
     const [modal, setModal] = useState<JSX.Element | undefined>(undefined);
 
     console.log("Update", Date.now());
@@ -262,10 +264,29 @@ function App(): JSX.Element {
                         });
                         console.log(item, target);
                     }}
+                    onLoadAsMask={(queryKey) => {
+                        const queryId = treeData[queryKey].data.queryId as number;
+                        setMaskQueryParts(queries[queryId]);
+                    }}
+                    onAppendToMask={(queryKey) => {
+                        const queryId = treeData[queryKey].data.queryId as number;
+                        setMaskQueryParts((draft) => [...draft, ...queries[queryId]]);
+                    }}
+
                     {...{ filter, setFilter, setModal }}
                 />
 
-                <div key="pushDownSpacer" className="pushDownSpacer"></div>
+                {/* <div key="pushDownSpacer" className="pushDownSpacer"></div> */}
+
+                <div className="queryEditor">
+                    <button key={"search"} className="button-n inverted" onClick={(e) => search([...queryParts, ...maskQueryParts], e)}>
+                        Search
+                    </button>
+                    {/* <button key={"random"} className="button-n inverted" onClick={(e) => goto("https://scryfall.com/random", e)}>
+                        Random card
+                    </button> */}
+                </div>
+
                 <div key="activeQueryName" className="activeQueryName">
                     <i className="ms ms-ability-learn"></i> Search for Magic cards...
                 </div>
@@ -320,100 +341,128 @@ function App(): JSX.Element {
                             </label>
                         );
                     })}
-                </div>
-                <div className="queryEditor" style={{ display: "flex", width: "100%" }}>
-                    <button key={"search"} className="button-n inverted" onClick={(e) => search(queryParts, e)}>
-                        Search
-                    </button>
-                    <button
-                        key={"save"}
-                        className="button-n inverted"
-                        onClick={() =>
-                            setQueries((draft) => {
-                                draft[editingQueryId] = queryParts;
-                            })
-                        }
-                    >
-                        Save
-                    </button>
-                    <button
-                        key={"saveas"}
-                        className="button-n inverted"
-                        onClick={() => {
-                            const newIndex = crypto.randomUUID();
-                            setNames((draft) => {
-                                draft[newIndex] = duplicateName(names[editingQuery]);
-                            });
-                            const newQueryNumber = Date.now();
-                            setQueries((draft) => {
-                                draft[newQueryNumber] = queryParts;
-                            });
-                            setQueryCollection((draft) => duplicate(draft, editingQuery, newIndex, newQueryNumber));
-                            setEditingQuery(newIndex);
-                            tree.current?.startRenamingItem(newIndex);
-                        }}
-                    >
-                        Save as...
-                    </button>
-                    <button key={"random"} className="button-n inverted" onClick={(e) => goto("https://scryfall.com/random", e)}>
-                        Random card
-                    </button>
+
+                    <div className="queryEditor">
+                        <button
+                            key={"save"}
+                            className="button-n inverted"
+                            onClick={() =>
+                                setQueries((draft) => {
+                                    draft[editingQueryId] = queryParts;
+                                })
+                            }
+                        >
+                            Save
+                        </button>
+                        <button
+                            key={"saveas"}
+                            className="button-n inverted"
+                            onClick={() => {
+                                const newIndex = crypto.randomUUID();
+                                setNames((draft) => {
+                                    draft[newIndex] = duplicateName(names[editingQuery]);
+                                });
+                                const newQueryNumber = Date.now();
+                                setQueries((draft) => {
+                                    draft[newQueryNumber] = queryParts;
+                                });
+                                setQueryCollection((draft) => duplicate(draft, editingQuery, newIndex, newQueryNumber));
+                                setEditingQuery(newIndex);
+                                tree.current?.startRenamingItem(newIndex);
+                            }}
+                        >
+                            Save as...
+                        </button>
+                    </div>
                 </div>
 
-                {/* <div key="activeMaskName" className="activeMaskName">
+                <div key="activeMaskName" className="activeMaskName">
                     <i className="ms ms-ability-menace"></i> Mask
                 </div>
-                {queryParts.map((queryPart, i) => {
-                    const last = i === queryParts.length - 1;
-                    return (
-                        <label key={"queryPart" + i} className="advanced-search-checkbox">
-                            <input
-                                key={"queryPartCheckbox" + i}
-                                className={"button-n inverted " + queryPart.enabled}
-                                type="checkbox"
-                                checked={!!queryPart.enabled}
-                                disabled={last}
-                                onChange={(e) =>
-                                    setQueryParts((draft) => {
-                                        draft[i].enabled = e.target.checked;
-                                    })
-                                }
-                            ></input>
-                            <input
-                                key={"queryPartText" + i}
-                                className="button-n inverted"
-                                type="text"
-                                value={queryPart.query}
-                                placeholder={last ? "Query" : undefined}
-                                onChange={(e) =>
-                                    setQueryParts((draft) => {
-                                        draft[i].query = e.target.value;
-                                        if (last) {
-                                            draft[i].enabled = true;
-                                            draft.push({
-                                                enabled: false,
-                                                query: "",
-                                            });
-                                        }
-                                    })
-                                }
-                            ></input>
-                            {
-                                <button
-                                    className="remove"
+                <div className="queryPartsContainer">
+                    {[...maskQueryParts, newQueryPart].map((queryPart, i) => {
+                        const last = i === maskQueryParts.length;
+                        return (
+                            <label key={"queryPart" + i} className="advanced-search-checkbox">
+                                <input
+                                    key={"queryPartCheckbox" + i}
+                                    className={"button-n inverted " + queryPart.enabled}
+                                    type="checkbox"
+                                    checked={!!queryPart.enabled}
                                     disabled={last}
-                                    onClick={() =>
-                                        setQueryParts((draft) => {
-                                            draft.splice(i, 1);
+                                    onChange={(e) =>
+                                        setMaskQueryParts((draft) => {
+                                            draft[i].enabled = e.target.checked;
                                         })
                                     }
-                                >
-                                    🞪
-                                </button>
+                                    tabIndex={-1}
+                                ></input>
+                                <Textarea
+                                    className="textarea button-n inverted"
+                                    value={queryPart.query}
+                                    key={"queryPartTextArea" + i}
+                                    rows={1}
+                                    onChange={(e) =>
+                                        setMaskQueryParts((draft) => {
+                                            if (last) {
+                                                draft[i] = { ...newQueryPart };
+                                                draft[i].enabled = true;
+                                            }
+                                            draft[i].query = e.target.value;
+                                        })}
+                                    placeholder={last ? "Query" : undefined}
+                                    tabIndex={0}
+                                />
+                                {
+                                    <button
+                                        className="remove"
+                                        disabled={last}
+                                        onClick={() =>
+                                            setMaskQueryParts((draft) => {
+                                                draft.splice(i, 1);
+                                            })
+                                        }
+                                        tabIndex={-1}
+                                    >
+                                        🞪
+                                    </button>
+                                }
+                            </label>
+                        );
+                    })}
+                    <div className="queryEditor">
+                        <button
+                            key={"clear"}
+                            className="button-n inverted"
+                            onClick={() =>
+                                setMaskQueryParts([])
                             }
-                        </label>
-                    );
-                })} */}
+                        >
+                            Clear mask
+                        </button>
+                        <button
+                            key={"saveas"}
+                            className="button-n inverted"
+                            onClick={() => {
+                                const newIndex = crypto.randomUUID();
+                                setNames((draft) => {
+                                    draft[newIndex] = duplicateName(names[editingQuery]) + " Mask";
+                                });
+                                const newQueryNumber = Date.now();
+                                setQueries((draft) => {
+                                    draft[newQueryNumber] = maskQueryParts;
+                                });
+                                setQueryCollection((draft) => duplicate(draft, editingQuery, newIndex, newQueryNumber));
+                                tree.current?.startRenamingItem(newIndex);
+                            }}
+                        >
+                            Save mask as...
+                        </button>
+                    </div>
+                </div>
+
+
+
             </header>
         </div>
     );
