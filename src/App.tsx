@@ -194,9 +194,15 @@ function App(): JSX.Element {
         () => buildCollectionsTree(names, filter, editingQuery, queryCollection)[0],
         [names, filter, editingQuery, queryCollection]);
 
-    const editingQueryId = treeData[editingQuery].data.queryId as number;
+    const editingQueryId = useMemo(
+        () => treeData[editingQuery].data.queryId as number,
+        [treeData, editingQuery]);
 
     const [queryParts, setQueryParts] = useImmer<Array<QueryPart>>(queries[editingQueryId]);
+
+    const dirty = useMemo(
+        () => JSON.stringify(queries[editingQueryId]) !== JSON.stringify(queryParts),
+        [queries, queryParts, editingQueryId]);
 
     const [maskQueryParts, setMaskQueryParts] = useImmer<Array<QueryPart>>([]);
 
@@ -216,9 +222,11 @@ function App(): JSX.Element {
                     treeData={treeData}
                     onSelectQuery={(queryKey): void => {
                         console.log("setEditingQuery", queryKey);
-                        setEditingQuery(queryKey);
-                        const editingQueryId = treeData[queryKey].data.queryId as number;
-                        setQueryParts(queries[editingQueryId]);
+                        if (!dirty || confirm("Unsaved changes. Load anyways?")) {
+                            setEditingQuery(queryKey);
+                            const editingQueryId = treeData[queryKey].data.queryId as number;
+                            setQueryParts(queries[editingQueryId]);
+                        }
                     }}
                     onAddRootCollection={() => {
                         const newIndex = crypto.randomUUID();
@@ -356,6 +364,7 @@ function App(): JSX.Element {
                         <button
                             key={"save"}
                             className="button-n inverted"
+                            disabled={!dirty}
                             onClick={() =>
                                 setQueries((draft) => {
                                     draft[editingQueryId] = queryParts;
