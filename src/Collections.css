@@ -19,7 +19,7 @@ input.collections-filter::placeholder {
 	--rct-color-focustree-item-selected-text: inherit;
 	/* --rct-color-focustree-item-focused-border: rgba(255, 255, 255, 0.6); */
 	--rct-color-focustree-item-focused-border: #0000;
-	--rct-color-focustree-item-draggingover-bg: #ebf0f4;
+	--rct-color-focustree-item-draggingover-bg: #ebf0f444;
 	--rct-color-focustree-item-draggingover-color: inherit;
 
 	--rct-color-nonfocustree-item-selected-bg: #786076bb;
