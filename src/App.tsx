@@ -210,7 +210,7 @@ function App(): JSX.Element {
 
     const [modal, setModal] = useState<JSX.Element | undefined>(undefined);
 
-    console.log("Update", Date.now(), dirty);
+    // console.log("Update", Date.now(), dirty);
 
     const tree = useRef<TreeRef>(null);
 
@@ -307,10 +307,10 @@ function App(): JSX.Element {
                 {/* <div key="pushDownSpacer" className="pushDownSpacer"></div> */}
 
                 <div className="queryEditor">
-                    <button key={"search"} className="button-n inverted" onClick={(e) => search([...queryParts, ...maskQueryParts], e)}>
+                    <button key={"search"} className="button-n inverted" onMouseUp={(e) => search([...queryParts, ...maskQueryParts], e)}>
                         <i className="blueprint-icons-big">{icons["search"].utf}</i> Search
                     </button>
-                    {/* <button key={"random"} className="button-n inverted" onClick={(e) => goto("https://scryfall.com/random", e)}>
+                    {/* <button key={"random"} className="button-n inverted" onMouseUp={(e) => goto("https://scryfall.com/random", e)}>
                         Random card
                     </button> */}
                 </div>
@@ -516,7 +516,7 @@ function search(queryParts: QueryPart[], e?: React.MouseEvent<HTMLButtonElement,
 }
 
 async function goto(url?: string, e?: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> {
-    if (!!e?.ctrlKey || !!e?.metaKey) {
+    if (!!e?.ctrlKey || !!e?.metaKey || e?.button === 1) {
         browser.tabs.create({ active: true, url: url });
     } else {
         const activeTab = (await browser.tabs.query({ currentWindow: true, active: true }))[0];
