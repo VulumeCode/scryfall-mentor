@@ -12,6 +12,7 @@ import { WritableDraft } from "immer/dist/internal";
 import { DraggingPosition, TreeItemIndex, TreeRef } from "react-complex-tree";
 
 import Textarea from "react-expanding-textarea";
+import icons from "./icons";
 
 const buildCollectionsTree = (names: Names, filter: string, collection: DataTree, path: TreeItemIndex[] = [], data: FlatTreeData = {}): [FlatTreeData, boolean] => {
     let hasMatch = false;
@@ -280,7 +281,7 @@ function App(): JSX.Element {
 
                 <div className="queryEditor">
                     <button key={"search"} className="button-n inverted" onClick={(e) => search([...queryParts, ...maskQueryParts], e)}>
-                        Search
+                        <i className="blueprint-icons-big">{icons["search"].utf}</i> Search
                     </button>
                     {/* <button key={"random"} className="button-n inverted" onClick={(e) => goto("https://scryfall.com/random", e)}>
                         Random card

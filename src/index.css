@@ -39,15 +39,6 @@
 
 @font-face {
     /*
-    EmojiSymbols Font (c)blockworks - Kenichi Kaneko
-    http://emojisymbols.com/
-  */
-    font-family: "emojisymbols";
-    src: url("fonts/EmojiSymbols-Regular.woff") format("woff");
-}
-
-@font-face {
-    /*
     https://blueprintjs.com/docs/#icons
   */
     font-family: "blueprint-icons-16";

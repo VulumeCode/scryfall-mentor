@@ -135,18 +135,16 @@ body::before {
     visibility: hidden;
 }
 
-.emojisymbols {
-    font-family: "emojisymbols";
-}
-
 .blueprint-icons {
     font-family: "blueprint-icons-16";
     margin-bottom: 0.2ex;
     margin-right: 0.2em;
+    font-weight: normal !important;
 }
 
 .blueprint-icons-big {
     font-family: "blueprint-icons-20";
     margin-bottom: 0.2ex;
     margin-right: 0.2em;
+    font-weight: normal !important;
 }
