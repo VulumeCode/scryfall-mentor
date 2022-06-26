@@ -246,12 +246,66 @@ const renderManaTitle = (title: string): React.ReactElement => {
     return (
         <>
             {reactStringReplace(title, /{(.+)}/g, (match, i) => {
-                return costs.indexOf(match) >= 0 ? <i key={match + i} className={`ms ms-${match} ms-cost ms-shadow`}></i> : <i key={match + i} className={`ms ms-${match}`}></i>;
+                const key = match + i;
+                return costs.indexOf(match) >= 0
+                    ? <i key={key} className={`ms ms-${match} ms-cost ms-shadow`}></i>
+                    : match === "m"
+                        ? <i key={key} className={"ms ms-ability-menace"}></i>
+                        : abilities.indexOf(match) >= 0
+                            ? <i key={key} className={`ms ms-ability-${match}`}></i>
+                            : guilds.indexOf(match) >= 0
+                                ? <i key={key} className={`ms ms-guild-${match}`}></i>
+                                : clans.indexOf(match) >= 0
+                                    ? <i key={key} className={`ms ms-clans-${match}`}></i>
+                                    : schools.indexOf(match) >= 0
+                                        ? <i key={key} className={`ms ms-school-${match}`}></i>
+                                        : dfcs.indexOf(match) >= 0
+                                            ? <i key={key} className={`ms ms-dfc-${match}`}></i>
+                                            : types.indexOf(match) >= 0
+                                                ? <i key={key} className={`ms ms-${match}`}></i>
+                                                : match.indexOf("ss") === 0
+                                                    ? <i key={key} className={`ss ${match}`}></i>
+                                                    : <i key={key} className={`ms ms-${match}`}></i>;
             })}
         </>
     );
 };
 
-const costs = ["2b", "2g", "2r", "2u", "2w", "b", "bg", "bp", "br", "e", "g", "gp", "gu", "gw", "p", "r", "rg", "rp", "rw", "s", "s-mtga", "tap-alt", "u", "ub", "untap", "up", "ur", "w", "wb", "wp", "wu", "x", "y", "z"];
+const costs = ["2b", "2g", "2r", "2u", "2w", "b", "bg", "bp", "br", "e", "g", "gp", "gu", "gw", "p", "r", "rg", "rp", "rw", "s", "s-mtga", "tap", "tap-alt", "u", "ub", "untap", "up", "ur", "w", "wb", "wp", "wu", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "1-2", "infinity", "100", "1000000"];
+
+const dfcs = ["day", "night", "spark", "ignite", "moon", "emrakul", "enchantment", "lesson", "modal-face", "modal-back"];
+
+const types = ["artifact", "creature", "enchantment", "instant", "land", "planeswalker", "sorcery", "tribal", "plane", "phenomenon", "scheme", "conspiracy", "vanguard", "token", "chaos", "flashback", "power", "toughness", "artist-brush", "artist-nib", "saga", "acorn", "rarity", "multicolor"];
+
+const abilities = ["activated", "adamant", "adapt", "addendum", "adventure", "afflict", "afterlife", "aftermath", "amass", "ascend", "boast", "companion", "constellation", "convoke", "d20", "deathtouch", "defender", "devotion", "double", "dungeon", "embalm", "enrage", "escape", "eternalize", "explore", "first", "flash", "flying", "foretell", "haste", "hexproof", "hexproof-red", "hexproof-white", "hexproof-green", "hexproof-blue", "hexproof-black", "indestructible", "jumpstart", "kicker", "landfall", "learn", "lifelink", "magecraft", "menace", "mutate", "party", "proliferate", "prowess", "raid", "reach", "revolt", "riot", "spectacle", "static", "summoning", "surveil", "trample", "transform", "triggered", "undergrowth", "vigilance", "ward"];
+
+const guilds = ["azorius",
+    "boros",
+    "dimir",
+    "golgari",
+    "gruul",
+    "izzet",
+    "orzhov",
+    "rakdos",
+    "selesnya",
+    "simic"];
+const clans = [
+    "abzan",
+    "jeskai",
+    "mardu",
+    "sultai",
+    "temur",
+    "atarka",
+    "dromoka",
+    "kolaghan",
+    "ojutai",
+    "silumgar"];
+const schools = [
+    "lorehold",
+    "prismari",
+    "quandrix",
+    "silverquill",
+    "witherbloom"];
+
 
 export default Collections;
