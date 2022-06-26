@@ -14,7 +14,9 @@ import { DraggingPosition, TreeItemIndex, TreeRef } from "react-complex-tree";
 import Textarea from "react-expanding-textarea";
 import icons from "./icons";
 
-const buildCollectionsTree = (names: Names, filter: string, editingQuery: TreeItemIndex, collection: DataTree, path: TreeItemIndex[] = [], data: FlatTreeData = {}): [FlatTreeData, boolean] => {
+
+const buildCollectionsTree = (names: Names, filter: string, editingQuery: TreeItemIndex, collection: DataTree, path: TreeItemIndex[] = []): [FlatTreeData, boolean] => {
+    let data: FlatTreeData = {};
     let hasMatch = false;
     for (const [key, value] of Object.entries(collection)) {
         const isDir = typeof value === "object";
@@ -24,17 +26,22 @@ const buildCollectionsTree = (names: Names, filter: string, editingQuery: TreeIt
 
         let doesMatchFilter = matchFilter(title, filter) || editingQuery === key;
 
+        let childData: FlatTreeData = {};
         if (isDir) {
-            const [_, childMatch] = buildCollectionsTree(names, doesMatchFilter ? "" : filter, editingQuery, value, [key, ...path], data);
+            let childMatch: boolean;
+            [childData, childMatch] = buildCollectionsTree(names, doesMatchFilter ? "" : filter, editingQuery, value, [key, ...path]);
             doesMatchFilter ||= childMatch;
         }
         if (doesMatchFilter) {
             hasMatch ||= doesMatchFilter;
+
+            const childKeys = Object.keys(childData);
+
             data[key] = {
                 index: key,
                 canMove: true,
                 hasChildren: isDir,
-                children: isDir ? Object.keys(value) : undefined,
+                children: isDir ? Object.keys(value).filter(v => childKeys.includes(v)) : undefined,
                 data: {
                     title: title,
                     queryId: isQueryId ? value : null,
@@ -43,6 +50,7 @@ const buildCollectionsTree = (names: Names, filter: string, editingQuery: TreeIt
                 canRename: true,
             };
         }
+        data = { ...data, ...childData };
     }
     return [data, hasMatch];
 };

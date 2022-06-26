@@ -12,7 +12,7 @@
         "@types/react-dom": "^18.0.4",
         "immer": "^9.0.14",
         "react": "^18.1.0",
-        "react-complex-tree": "^1.1.8",
+        "react-complex-tree": "^1.1.9",
         "react-dom": "^18.1.0",
         "react-expanding-textarea": "^2.3.6",
         "react-string-replace": "^1.1.0",

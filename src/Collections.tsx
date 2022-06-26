@@ -250,21 +250,21 @@ const renderManaTitle = (title: string): React.ReactElement => {
         <>
             {reactStringReplace(title, /{(.+)}/g, (match, i) => {
                 const key = match + i;
-                return costs.indexOf(match) >= 0
+                return costs.includes(match)
                     ? <i key={key} className={`ms ms-${match} ms-cost ms-shadow`}></i>
                     : match === "m"
                         ? <i key={key} className={"ms ms-ability-menace"}></i>
-                        : abilities.indexOf(match) >= 0
+                        : abilities.includes(match)
                             ? <i key={key} className={`ms ms-ability-${match}`}></i>
-                            : guilds.indexOf(match) >= 0
+                            : guilds.includes(match)
                                 ? <i key={key} className={`ms ms-guild-${match}`}></i>
-                                : clans.indexOf(match) >= 0
+                                : clans.includes(match)
                                     ? <i key={key} className={`ms ms-clans-${match}`}></i>
-                                    : schools.indexOf(match) >= 0
+                                    : schools.includes(match)
                                         ? <i key={key} className={`ms ms-school-${match}`}></i>
-                                        : dfcs.indexOf(match) >= 0
+                                        : dfcs.includes(match)
                                             ? <i key={key} className={`ms ms-dfc-${match}`}></i>
-                                            : types.indexOf(match) >= 0
+                                            : types.includes(match)
                                                 ? <i key={key} className={`ms ms-${match}`}></i>
                                                 : match.indexOf("ss") === 0
                                                     ? <i key={key} className={`ss ${match}`}></i>
