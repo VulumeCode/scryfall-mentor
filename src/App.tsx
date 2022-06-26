@@ -200,6 +200,8 @@ function App(): JSX.Element {
 
     const [queryParts, setQueryParts] = useImmer<Array<QueryPart>>(queries[editingQueryId]);
 
+    const [autoSave, setAutoSave] = useState<boolean>(false);
+
     const dirty = useMemo(
         () => JSON.stringify(queries[editingQueryId]) !== JSON.stringify(queryParts),
         [queries, queryParts, editingQueryId]);
@@ -208,9 +210,17 @@ function App(): JSX.Element {
 
     const [modal, setModal] = useState<JSX.Element | undefined>(undefined);
 
-    console.log("Update", Date.now());
+    console.log("Update", Date.now(), dirty);
 
     const tree = useRef<TreeRef>(null);
+
+    const saveEditingQueries = (): void => {
+        setQueries((draft) => {
+            draft[editingQueryId] = queryParts;
+        });
+    };
+
+    useEffect(() => { if (autoSave) { saveEditingQueries(); } }, [queryParts, autoSave]);
 
     return (
         <div className="App">
@@ -362,17 +372,24 @@ function App(): JSX.Element {
 
                     <div className="queryEditor">
                         <button
+                            key={"autosave"}
+                            className="button-n inverted"
+                            onClick={() => {
+                                setAutoSave(!autoSave);
+                            }}
+                        >
+                            Autosave {autoSave ? "✓" : "✗"}
+                        </button>
+                        {!autoSave && <button
                             key={"save"}
                             className="button-n inverted"
                             disabled={!dirty}
-                            onClick={() =>
-                                setQueries((draft) => {
-                                    draft[editingQueryId] = queryParts;
-                                })
-                            }
+                            onClick={() => {
+                                saveEditingQueries();
+                            }}
                         >
                             Save
-                        </button>
+                        </button>}
                         <button
                             key={"saveas"}
                             className="button-n inverted"
@@ -465,7 +482,7 @@ function App(): JSX.Element {
                             onClick={() => {
                                 const newIndex = crypto.randomUUID();
                                 setNames((draft) => {
-                                    draft[newIndex] = duplicateName(names[editingQuery]) + " Mask";
+                                    draft[newIndex] = duplicateName(names[editingQuery]) + " {m}";
                                 });
                                 const newQueryNumber = Date.now();
                                 setQueries((draft) => {
@@ -479,9 +496,6 @@ function App(): JSX.Element {
                         </button>
                     </div>
                 </div>
-
-
-
             </header>
         </div>
     );
