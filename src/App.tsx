@@ -14,7 +14,7 @@ import { DraggingPosition, TreeItemIndex, TreeRef } from "react-complex-tree";
 import Textarea from "react-expanding-textarea";
 import icons from "./icons";
 
-const buildCollectionsTree = (names: Names, filter: string, collection: DataTree, path: TreeItemIndex[] = [], data: FlatTreeData = {}): [FlatTreeData, boolean] => {
+const buildCollectionsTree = (names: Names, filter: string, editingQuery: TreeItemIndex, collection: DataTree, path: TreeItemIndex[] = [], data: FlatTreeData = {}): [FlatTreeData, boolean] => {
     let hasMatch = false;
     for (const [key, value] of Object.entries(collection)) {
         const isDir = typeof value === "object";
@@ -22,10 +22,10 @@ const buildCollectionsTree = (names: Names, filter: string, collection: DataTree
 
         const title = names[key];
 
-        let doesMatchFilter = matchFilter(title, filter);
+        let doesMatchFilter = matchFilter(title, filter) || editingQuery === key;
 
         if (isDir) {
-            const [_, childMatch] = buildCollectionsTree(names, doesMatchFilter ? "" : filter, value, [key, ...path], data);
+            const [_, childMatch] = buildCollectionsTree(names, doesMatchFilter ? "" : filter, editingQuery, value, [key, ...path], data);
             doesMatchFilter ||= childMatch;
         }
         if (doesMatchFilter) {
@@ -161,14 +161,16 @@ function App(): JSX.Element {
     const [queryCollection, setQueryCollection] = useImmer<DataTree>(defaultDataTree);
     const [names, setNames] = useImmer<Names>(defaultNames);
     const [queries, setQueries] = useImmer<QueryLibrary>(defautlQueries);
+    const [editingQuery, setEditingQuery] = useState<TreeItemIndex>("Hans");
 
 
     useEffect(() => {
         async function fetchData(): Promise<void> {
-            const stored = await browser.storage.local.get(["queryCollection", "names", "queries"]);
+            const stored = await browser.storage.local.get();
             stored.queryCollection && setQueryCollection(stored.queryCollection as DataTree);
             stored.names && setNames(stored.names as Names);
             stored.queries && setQueries(stored.queries as QueryLibrary);
+            stored.editingQuery && setEditingQuery(stored.editingQuery as TreeItemIndex);
         }
         fetchData();
     }, []);
@@ -176,14 +178,13 @@ function App(): JSX.Element {
     useEffect(() => { browser.storage.local.set({ queryCollection }); }, [queryCollection]);
     useEffect(() => { browser.storage.local.set({ names }); }, [names]);
     useEffect(() => { browser.storage.local.set({ queries }); }, [queries]);
+    useEffect(() => { browser.storage.local.set({ editingQuery }); }, [editingQuery]);
 
     const [filter, setFilter] = useImmer<string>("");
 
-    const treeData = useMemo(() => buildCollectionsTree(names, filter, queryCollection)[0], [names, filter, queryCollection]);
-
-    const defaultEditingQuery = Object.keys(treeData).find((key) => !treeData[key].hasChildren) ?? "root";
-
-    const [editingQuery, setEditingQuery] = useState<TreeItemIndex>(defaultEditingQuery);
+    const treeData = useMemo(
+        () => buildCollectionsTree(names, filter, editingQuery, queryCollection)[0],
+        [names, filter, editingQuery, queryCollection]);
 
     const editingQueryId = treeData[editingQuery].data.queryId as number;
 

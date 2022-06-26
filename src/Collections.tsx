@@ -141,7 +141,10 @@ const Collections = forwardRef<TreeRef, Props>(
                     >
                         {icons["folder-new"].utf}
                     </button>
-                    <input className="button-n inverted collections-filter" style={{ width: "100%" }} type={"text"} value={filter} placeholder={icons["filter"].utf} onChange={(e) => setFilter(e.target.value)} />
+                    <input className="button-n inverted collections-filter" style={{ width: "100%" }} type={"text"} value={filter} placeholder={icons["filter"].utf}
+                        onChange={(e) => {
+                            setFilter(e.target.value);
+                        }} />
                     <button id="clear-filter" className="button-n inverted" onClick={() => setFilter("")}>
                         🞪
                     </button>
