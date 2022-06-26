@@ -85,10 +85,32 @@ input.collections-filter::placeholder {
 .line {
 	margin: -1em 0.5em;
 	width: 0;
-	background: #fff4;
+	opacity: 0.5;
 	height: 24px;
 	padding: 0px 0px 0px 1px;
 }
+
+.line.depth0 {
+	background: var(--ms-w-color);
+}
+
+.line.depth1 {
+	background: var(--ms-u-color);
+}
+
+.line.depth2 {
+	background: var(--ms-b-color);
+}
+
+.line.depth3 {
+	background: var(--ms-r-color);
+}
+
+.line.depth4 {
+	background: var(--ms-g-color);
+}
+
+
 
 .itemTitle {
 	display: flex;

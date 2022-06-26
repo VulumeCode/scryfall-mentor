@@ -97,7 +97,7 @@ export const createCustomRenderers = (renderDepthOffset: number): CustomTreeRend
                         className={cx("rct-tree-item-title-container", item.hasChildren && "rct-tree-item-title-container-hasChildren", context.isSelected && "rct-tree-item-title-container-selected", context.isExpanded && "rct-tree-item-title-container-expanded", context.isFocused && "rct-tree-item-title-container-focused", context.isDraggingOver && "rct-tree-item-title-container-dragging-over", context.isSearchMatching && "rct-tree-item-title-container-search-match", item.index === menuItem && "menuItem")}
                     >
                         {Array.from({ length: depth }, (_, i) => (
-                            <i className="line" key={i}></i>
+                            <i className={`line depth${i % 5}`} key={i}></i>
                         ))}
                         {arrow}
                         <InteractiveComponent type={type} {...(context.interactiveElementProps as Omit<React.HTMLProps<HTMLButtonElement & HTMLDivElement>, "type">)} className={cx("rct-tree-item-button", item.hasChildren && "rct-tree-item-button-hasChildren", context.isSelected && "rct-tree-item-button-selected", context.isExpanded && "rct-tree-item-button-expanded", context.isFocused && "rct-tree-item-button-focused", context.isDraggingOver && "rct-tree-item-button-dragging-over", context.isSearchMatching && "rct-tree-item-button-search-match")}>
