@@ -14,8 +14,6 @@ import { DraggingPosition, TreeItemIndex, TreeRef } from "react-complex-tree";
 import Textarea from "react-expanding-textarea";
 import icons from "./icons";
 
-import manifest from "../public/manifest.json";
-
 const buildCollectionsTree = (names: Names, filter: string, editingQuery: TreeItemIndex, collection: DataTree, path: TreeItemIndex[] = []): [FlatTreeData, boolean] => {
     let data: FlatTreeData = {};
     let hasMatch = false;
@@ -189,6 +187,9 @@ function App(): JSX.Element {
     useEffect(() => { browser.storage.local.set({ queries }); }, [queries]);
     useEffect(() => { browser.storage.local.set({ editingQuery }); }, [editingQuery]);
 
+
+    useEffect(() => { browser.storage.onChanged.addListener(console.log); }, []);
+
     const [filter, setFilter] = useImmer<string>("");
 
     const treeData = useMemo(
@@ -222,6 +223,8 @@ function App(): JSX.Element {
     };
 
     useEffect(() => { if (autoSave) { saveEditingQueries(); } }, [queryParts, autoSave]);
+
+    const version = useMemo(() => browser.runtime.getManifest().version, []);
 
     return (
         <div className="App">
@@ -497,7 +500,9 @@ function App(): JSX.Element {
                         </button>
                     </div>
                 </div>
-                <div>{manifest.version}</div>
+                <div style={{ opacity: 0.5, fontSize: "50%" }}>Version {version}</div>
+                <a style={{ opacity: 0.5, fontSize: "50%", position: "relative" }}
+                    href="about:devtools-toolbox?id=scryfall-mentor%40VulumeCode&type=extension">Debug</a>
             </header>
         </div>
     );
