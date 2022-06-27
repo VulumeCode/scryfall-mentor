@@ -14,6 +14,7 @@ import { DraggingPosition, TreeItemIndex, TreeRef } from "react-complex-tree";
 import Textarea from "react-expanding-textarea";
 import icons from "./icons";
 
+import manifest from "../public/manifest.json";
 
 const buildCollectionsTree = (names: Names, filter: string, editingQuery: TreeItemIndex, collection: DataTree, path: TreeItemIndex[] = []): [FlatTreeData, boolean] => {
     let data: FlatTreeData = {};
@@ -496,6 +497,7 @@ function App(): JSX.Element {
                         </button>
                     </div>
                 </div>
+                <div>{manifest.version}</div>
             </header>
         </div>
     );

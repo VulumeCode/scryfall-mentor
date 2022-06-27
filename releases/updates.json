@@ -1,0 +1,12 @@
+{
+    "addons": {
+        "{scryfall-mentor@VulumeCode}": {
+            "updates": [
+                {
+                    "version": "0.1.1",
+                    "update_link": "https://github.com/VulumeCode/scryfall-mentor/blob/master/releases/362c776156d5441d9513-0.1.1.xpi"
+                }
+            ]
+        }
+    }
+}
