@@ -3,10 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import "./App.css";
 import { useImmer } from "use-immer";
 
-import {
-    defaultDataTree, defaultNames, defautlQueries,
-    Names, DataNode, DataTree, QueryLibrary, QueryPart, newQueryPart,
-} from "./data";
+import { defaultDataTree, defaultNames, defautlQueries, Names, DataNode, DataTree, QueryLibrary, QueryPart, newQueryPart } from "./data";
 import Collections, { FlatTreeData } from "./Collections";
 import { WritableDraft } from "immer/dist/internal";
 import { DraggingPosition, TreeItemIndex, TreeRef } from "react-complex-tree";
@@ -40,7 +37,7 @@ const buildCollectionsTree = (names: Names, filter: string, editingQuery: TreeIt
                 index: key,
                 canMove: true,
                 hasChildren: isDir,
-                children: isDir ? Object.keys(value).filter(v => childKeys.includes(v)) : undefined,
+                children: isDir ? Object.keys(value).filter((v) => childKeys.includes(v)) : undefined,
                 data: {
                     title: title,
                     queryId: isQueryId ? value : null,
@@ -74,7 +71,9 @@ const removeProp = (obj: DataTree, match: TreeItemIndex): DataNode | null => {
             const children = obj[key];
             if (typeof children === "object") {
                 const removed = removeProp(children, match);
-                if (!!removed) { return removed; }
+                if (!!removed) {
+                    return removed;
+                }
             }
         }
     }
@@ -91,12 +90,7 @@ const dragAndDropProp = (obj: DataTree, match: TreeItemIndex, target: DraggingPo
         case "item":
             return placeProp(obj, match, moved, target.targetItem);
         case "between-items":
-            return placeProp(obj,
-                match,
-                moved,
-                target.parentItem,
-                treeData[target.parentItem].children?.[target.childIndex - 1],
-                treeData[target.parentItem].children?.[target.childIndex]);
+            return placeProp(obj, match, moved, target.parentItem, treeData[target.parentItem].children?.[target.childIndex - 1], treeData[target.parentItem].children?.[target.childIndex]);
     }
 };
 
@@ -170,7 +164,6 @@ function App(): JSX.Element {
     const [queries, setQueries] = useImmer<QueryLibrary>(defautlQueries);
     const [editingQuery, setEditingQuery] = useState<TreeItemIndex>("Hans");
 
-
     useEffect(() => {
         async function fetchData(): Promise<void> {
             const stored = await browser.storage.local.get();
@@ -182,31 +175,34 @@ function App(): JSX.Element {
         fetchData();
     }, []);
 
-    useEffect(() => { browser.storage.local.set({ queryCollection }); }, [queryCollection]);
-    useEffect(() => { browser.storage.local.set({ names }); }, [names]);
-    useEffect(() => { browser.storage.local.set({ queries }); }, [queries]);
-    useEffect(() => { browser.storage.local.set({ editingQuery }); }, [editingQuery]);
+    useEffect(() => {
+        browser.storage.local.set({ queryCollection });
+    }, [queryCollection]);
+    useEffect(() => {
+        browser.storage.local.set({ names });
+    }, [names]);
+    useEffect(() => {
+        browser.storage.local.set({ queries });
+    }, [queries]);
+    useEffect(() => {
+        browser.storage.local.set({ editingQuery });
+    }, [editingQuery]);
 
-
-    useEffect(() => { browser.storage.onChanged.addListener(console.log); }, []);
+    useEffect(() => {
+        browser.storage.onChanged.addListener(console.log);
+    }, []);
 
     const [filter, setFilter] = useImmer<string>("");
 
-    const treeData = useMemo(
-        () => buildCollectionsTree(names, filter, editingQuery, queryCollection)[0],
-        [names, filter, editingQuery, queryCollection]);
+    const treeData = useMemo(() => buildCollectionsTree(names, filter, editingQuery, queryCollection)[0], [names, filter, editingQuery, queryCollection]);
 
-    const editingQueryId = useMemo(
-        () => treeData[editingQuery].data.queryId as number,
-        [treeData, editingQuery]);
+    const editingQueryId = useMemo(() => treeData[editingQuery].data.queryId as number, [treeData, editingQuery]);
 
     const [queryParts, setQueryParts] = useImmer<Array<QueryPart>>(queries[editingQueryId]);
 
     const [autoSave, setAutoSave] = useState<boolean>(false);
 
-    const dirty = useMemo(
-        () => JSON.stringify(queries[editingQueryId]) !== JSON.stringify(queryParts),
-        [queries, queryParts, editingQueryId]);
+    const dirty = useMemo(() => JSON.stringify(queries[editingQueryId]) !== JSON.stringify(queryParts), [queries, queryParts, editingQueryId]);
 
     const [maskQueryParts, setMaskQueryParts] = useImmer<Array<QueryPart>>([]);
 
@@ -222,7 +218,11 @@ function App(): JSX.Element {
         });
     };
 
-    useEffect(() => { if (autoSave) { saveEditingQueries(); } }, [queryParts, autoSave]);
+    useEffect(() => {
+        if (autoSave) {
+            saveEditingQueries();
+        }
+    }, [queryParts, autoSave]);
 
     const version = useMemo(() => browser.runtime.getManifest().version, []);
 
@@ -304,7 +304,6 @@ function App(): JSX.Element {
                         const queryId = treeData[queryKey].data.queryId as number;
                         setMaskQueryParts((draft) => [...draft, ...queries[queryId]]);
                     }}
-
                     {...{ filter, setFilter, setModal }}
                 />
 
@@ -352,7 +351,8 @@ function App(): JSX.Element {
                                                 draft[i].enabled = true;
                                             }
                                             draft[i].query = e.target.value;
-                                        })}
+                                        })
+                                    }
                                     placeholder={last ? "Query" : undefined}
                                     tabIndex={0}
                                 />
@@ -384,16 +384,18 @@ function App(): JSX.Element {
                         >
                             Autosave {autoSave ? "✓" : "✗"}
                         </button>
-                        {!autoSave && <button
-                            key={"save"}
-                            className="button-n inverted"
-                            disabled={!dirty}
-                            onClick={() => {
-                                saveEditingQueries();
-                            }}
-                        >
-                            Save
-                        </button>}
+                        {!autoSave && (
+                            <button
+                                key={"save"}
+                                className="button-n inverted"
+                                disabled={!dirty}
+                                onClick={() => {
+                                    saveEditingQueries();
+                                }}
+                            >
+                                Save
+                            </button>
+                        )}
                         <button
                             key={"saveas"}
                             className="button-n inverted"
@@ -449,7 +451,8 @@ function App(): JSX.Element {
                                                 draft[i].enabled = true;
                                             }
                                             draft[i].query = e.target.value;
-                                        })}
+                                        })
+                                    }
                                     placeholder={last ? "Query" : undefined}
                                     tabIndex={0}
                                 />
@@ -471,13 +474,7 @@ function App(): JSX.Element {
                         );
                     })}
                     <div className="queryEditor">
-                        <button
-                            key={"clear"}
-                            className="button-n inverted"
-                            onClick={() =>
-                                setMaskQueryParts([])
-                            }
-                        >
+                        <button key={"clear"} className="button-n inverted" onClick={() => setMaskQueryParts([])}>
                             Clear mask
                         </button>
                         <button
@@ -501,8 +498,9 @@ function App(): JSX.Element {
                     </div>
                 </div>
                 <div style={{ opacity: 0.5, fontSize: "50%" }}>Version {version}</div>
-                <a style={{ opacity: 0.5, fontSize: "50%", position: "relative" }}
-                    href="about:devtools-toolbox?id=scryfall-mentor%40VulumeCode&type=extension">Debug</a>
+                <a style={{ opacity: 0.5, fontSize: "50%", position: "relative" }} href="about:devtools-toolbox?id=scryfall-mentor%40VulumeCode&type=extension">
+                    Debug
+                </a>
             </header>
         </div>
     );
