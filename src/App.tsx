@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import "./App.css";
 import { useImmer } from "use-immer";
+import { produce } from "immer";
 
 import { defaultDataTree, defaultNames, defautlQueries, Names, DataNode, DataTree, QueryLibrary, QueryPart, newQueryPart } from "./data";
 import Collections, { FlatTreeData } from "./Collections";
@@ -159,37 +160,27 @@ const addCollection = (obj: DataTree, match: TreeItemIndex, newIndex: TreeItemIn
 };
 
 function App(): JSX.Element {
-    const [queryCollection, setQueryCollection] = useImmer<DataTree>(defaultDataTree);
-    const [names, setNames] = useImmer<Names>(defaultNames);
-    const [queries, setQueries] = useImmer<QueryLibrary>(defautlQueries);
+    const [queryCollection, syncQueryCollection] = useState<DataTree>(defaultDataTree);
+    const [names, syncNames] = useState<Names>(defaultNames);
+    const [queries, syncQueries] = useState<QueryLibrary>(defautlQueries);
     const [editingQuery, setEditingQuery] = useState<TreeItemIndex>("Hans");
 
-    useEffect(() => {
-        async function fetchData(): Promise<void> {
-            const stored = await browser.storage.local.get();
-            stored.queryCollection && setQueryCollection(stored.queryCollection as DataTree);
-            stored.names && setNames(stored.names as Names);
-            stored.queries && setQueries(stored.queries as QueryLibrary);
-            stored.editingQuery && setEditingQuery(stored.editingQuery as TreeItemIndex);
-        }
-        fetchData();
-    }, []);
+
+    const setNames = (p: (draft: WritableDraft<Names>) => void): Promise<void> => browser.storage.sync.set({ names: produce(names, p) });
+    const setQueries = (p: (draft: WritableDraft<QueryLibrary>) => void): Promise<void> => browser.storage.sync.set({ queries: produce(queries, p) });
+    const setQueryCollection = (p: (draft: WritableDraft<DataTree>) => void): Promise<void> => browser.storage.sync.set({ queryCollection: produce(queryCollection, p) });
 
     useEffect(() => {
-        browser.storage.local.set({ queryCollection });
-    }, [queryCollection]);
-    useEffect(() => {
-        browser.storage.local.set({ names });
-    }, [names]);
-    useEffect(() => {
-        browser.storage.local.set({ queries });
-    }, [queries]);
-    useEffect(() => {
-        browser.storage.local.set({ editingQuery });
-    }, [editingQuery]);
-
-    useEffect(() => {
-        browser.storage.onChanged.addListener(console.log);
+        browser.storage.onChanged.addListener((changes) => {
+            console.log(changes);
+            for (const change in changes) {
+                switch (change) {
+                    case "queries": { syncQueries(changes[change].newValue); break; }
+                    case "names": { syncNames(changes[change].newValue); break; }
+                    case "queryCollection": { syncQueryCollection(changes[change].newValue); break; }
+                }
+            }
+        });
     }, []);
 
     const [filter, setFilter] = useImmer<string>("");
@@ -202,13 +193,36 @@ function App(): JSX.Element {
 
     const [autoSave, setAutoSave] = useState<boolean>(false);
 
-    const dirty = useMemo(() => JSON.stringify(queries[editingQueryId]) !== JSON.stringify(queryParts), [queries, queryParts, editingQueryId]);
+
+
+    useEffect(() => {
+        async function fetchData(): Promise<void> {
+            const stored = await browser.storage.sync.get();
+            stored.queryCollection && syncQueryCollection(stored.queryCollection as DataTree);
+            stored.names && syncNames(stored.names as Names);
+            stored.queries && syncQueries(stored.queries as QueryLibrary);
+            if (!!stored.editingQuery) {
+                setEditingQuery(stored.editingQuery as TreeItemIndex);
+                const editingQueryId = treeData[stored.editingQuery as TreeItemIndex].data.queryId as number;
+                setQueryParts(queries[editingQueryId]);
+            }
+        }
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        browser.storage.sync.set({ editingQuery });
+    }, [editingQuery]);
+
+    const dirty = useMemo(() => {
+        // console.log(editingQueryId, editingQuery);
+        // console.log(JSON.stringify(queries[editingQueryId]), JSON.stringify(queryParts));
+        return JSON.stringify(queries[editingQueryId]) !== JSON.stringify(queryParts);
+    }, [queries, queryParts, editingQueryId]);
 
     const [maskQueryParts, setMaskQueryParts] = useImmer<Array<QueryPart>>([]);
 
     const [modal, setModal] = useState<JSX.Element | undefined>(undefined);
-
-    // console.log("Update", Date.now(), dirty);
 
     const tree = useRef<TreeRef>(null);
 
