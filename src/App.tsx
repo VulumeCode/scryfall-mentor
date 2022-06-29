@@ -193,8 +193,6 @@ function App(): JSX.Element {
 
     const [autoSave, setAutoSave] = useState<boolean>(false);
 
-
-
     useEffect(() => {
         async function fetchData(): Promise<void> {
             const stored = await browser.storage.sync.get();
@@ -215,8 +213,6 @@ function App(): JSX.Element {
     }, [editingQuery]);
 
     const dirty = useMemo(() => {
-        // console.log(editingQueryId, editingQuery);
-        // console.log(JSON.stringify(queries[editingQueryId]), JSON.stringify(queryParts));
         return JSON.stringify(queries[editingQueryId]) !== JSON.stringify(queryParts);
     }, [queries, queryParts, editingQueryId]);
 

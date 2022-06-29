@@ -46,10 +46,9 @@ type Props = {
 };
 
 const Collections = forwardRef<TreeRef, Props>(function Collections({ onDrop, onLoadAsMask, onAppendToMask, focusedItem, treeData, onSelectQuery, onAddRootCollection, onAddCollection, onRenameItem, filter, setFilter, onDeleteItem, onDuplicate, setModal }, fwdTree) {
-    // const _oldTree = useRef<TreeRef>(null);
     const environment = useRef<TreeEnvironmentRef>(null);
     // const [focusedItem, setFocusedItem] = useState<TreeItemIndex>();
-    const [expandedItems, setExpandedItems] = useState<Array<TreeItemIndex>>(["Fruit", "Lemon", "Berries", "Meals", "America", "Europe", "Asia", "Australia", "Desserts", "Drinks"]);
+    const [expandedItems, setExpandedItems] = useState<Array<TreeItemIndex>>([]);
     const [selectedItem, setSelectedItem] = useState<TreeItemIndex | null>(null);
 
     const [menuItem, setMenuItem] = useState<TreeItemIndex | undefined>();
@@ -172,8 +171,11 @@ const Collections = forwardRef<TreeRef, Props>(function Collections({ onDrop, on
                     viewState={{
                         ["Collections"]: {
                             focusedItem,
-                            expandedItems,
-                            selectedItems: !!selectedItem ? [selectedItem] : [],
+                            expandedItems: [...expandedItems, ...(!!focusedItem ? treeData[focusedItem].data.path : [])],
+                            selectedItems: !!selectedItem
+                                ? [selectedItem]
+                                : !!focusedItem
+                                    ? [focusedItem] : [],
                         },
                     }}
                     canReorderItems
