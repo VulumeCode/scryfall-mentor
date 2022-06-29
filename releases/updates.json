@@ -1,6 +1,6 @@
 {
     "addons": {
-        "{scryfall-mentor@VulumeCode}": {
+        "scryfall-mentor@VulumeCode": {
             "updates": [
                 {
                     "version": "0.1.1",
