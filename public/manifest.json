@@ -1,11 +1,11 @@
 {
     "manifest_version": 2,
     "name": "Scryfall Mentor",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "browser_specific_settings": {
         "gecko": {
             "id": "scryfall-mentor@VulumeCode",
-            "update_url": "https://github.com/VulumeCode/scryfall-mentor/blob/master/releases/updates.json"
+            "update_url": "https://raw.githubusercontent.com/VulumeCode/scryfall-mentor/master/package.json"
         }
     },
     "description": "Scryfall query builder.",
