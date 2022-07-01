@@ -18,12 +18,7 @@
         "default_title": "Scryfall Mentor",
         "default_panel": "index.html"
     },
-    "permissions": [
-        "history",
-        "tabs",
-        "storage",
-        "webNavigation"
-    ],
+    "permissions": ["history", "tabs", "storage", "webNavigation"],
     "commands": {
         "_execute_sidebar_action": {
             "suggested_key": {

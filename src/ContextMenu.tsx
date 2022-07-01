@@ -3,9 +3,9 @@ import React from "react";
 import "./ContextMenu.css";
 
 const ContextMenu: React.FC<{
-    yPos: number,
-    onClose: () => void,
-    children: React.ReactNode,
+    yPos: number;
+    onClose: () => void;
+    children: React.ReactNode;
 }> = ({ onClose, yPos, children }) => {
     return (
         <>

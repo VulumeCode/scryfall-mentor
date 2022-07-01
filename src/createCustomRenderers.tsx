@@ -6,27 +6,43 @@ const cx = (...classNames: Array<string | undefined | false>): string => classNa
 export interface CustomTreeRenderProps<T = unknown, C extends string = never> {
     renderItem: (
         props: {
-            item: TreeItem<T>,
-            depth: number,
-            children: React.ReactNode | null,
-            title: React.ReactNode,
-            arrow: React.ReactNode,
-            context: TreeItemRenderContext<C>,
-            info: TreeInformation,
+            item: TreeItem<T>;
+            depth: number;
+            children: React.ReactNode | null;
+            title: React.ReactNode;
+            arrow: React.ReactNode;
+            context: TreeItemRenderContext<C>;
+            info: TreeInformation;
         },
         menuItem: TreeItemIndex | undefined,
-    ) => React.ReactElement | null,
-    renderItemTitle: (props: { title: string, item: TreeItem<T>, context: TreeItemRenderContext<C>, info: TreeInformation }) => React.ReactElement | null | string,
-    renderItemArrow: (props: { item: TreeItem<T>, context: TreeItemRenderContext<C>, info: TreeInformation }) => React.ReactElement | null,
-    renderRenameInput: (props: { item: TreeItem<T>, inputProps: InputHTMLAttributes<HTMLInputElement>, inputRef: Ref<HTMLInputElement>, submitButtonProps: HTMLProps<unknown>, submitButtonRef: Ref<HTMLInputElement>, formProps: FormHTMLAttributes<HTMLFormElement> }) => React.ReactElement | null,
-    renderDraggingItem: (props: { items: Array<TreeItem<T>> }) => React.ReactElement | null,
-    renderDraggingItemTitle: (props: { items: Array<TreeItem<T>> }) => React.ReactElement | null,
-    renderItemsContainer: (props: { children: React.ReactNode, containerProps: HTMLProps<HTMLUListElement>, info: TreeInformation }) => React.ReactElement | null,
-    renderTreeContainer: (props: { children: React.ReactNode, containerProps: HTMLProps<HTMLDivElement>, info: TreeInformation }) => React.ReactElement | null,
-    renderDragBetweenLine: (props: { draggingPosition: DraggingPosition, lineProps: HTMLProps<HTMLDivElement> }) => React.ReactElement | null,
-    renderSearchInput: (props: { inputProps: HTMLProps<HTMLInputElement> }) => React.ReactElement | null,
-    renderLiveDescriptorContainer: (props: { children: React.ReactNode, tree: TreeConfiguration }) => React.ReactElement | null,
-    renderDepthOffset: number,
+    ) => React.ReactElement | null;
+    renderItemTitle: (props: {
+        title: string;
+        item: TreeItem<T>;
+        context: TreeItemRenderContext<C>;
+        info: TreeInformation;
+    }) => React.ReactElement | null | string;
+    renderItemArrow: (props: { item: TreeItem<T>, context: TreeItemRenderContext<C>, info: TreeInformation }) => React.ReactElement | null;
+    renderRenameInput: (props: {
+        item: TreeItem<T>;
+        inputProps: InputHTMLAttributes<HTMLInputElement>;
+        inputRef: Ref<HTMLInputElement>;
+        submitButtonProps: HTMLProps<unknown>;
+        submitButtonRef: Ref<HTMLInputElement>;
+        formProps: FormHTMLAttributes<HTMLFormElement>;
+    }) => React.ReactElement | null;
+    renderDraggingItem: (props: { items: Array<TreeItem<T>> }) => React.ReactElement | null;
+    renderDraggingItemTitle: (props: { items: Array<TreeItem<T>> }) => React.ReactElement | null;
+    renderItemsContainer: (props: {
+        children: React.ReactNode;
+        containerProps: HTMLProps<HTMLUListElement>;
+        info: TreeInformation;
+    }) => React.ReactElement | null;
+    renderTreeContainer: (props: { children: React.ReactNode, containerProps: HTMLProps<HTMLDivElement>, info: TreeInformation }) => React.ReactElement | null;
+    renderDragBetweenLine: (props: { draggingPosition: DraggingPosition, lineProps: HTMLProps<HTMLDivElement> }) => React.ReactElement | null;
+    renderSearchInput: (props: { inputProps: HTMLProps<HTMLInputElement> }) => React.ReactElement | null;
+    renderLiveDescriptorContainer: (props: { children: React.ReactNode, tree: TreeConfiguration }) => React.ReactElement | null;
+    renderDepthOffset: number;
 }
 
 export const createCustomRenderers = (renderDepthOffset: number): CustomTreeRenderProps => {
@@ -52,7 +68,16 @@ export const createCustomRenderers = (renderDepthOffset: number): CustomTreeRend
                 <div className={cx(item.hasChildren && "rct-tree-item-arrow-hasChildren", "rct-tree-item-arrow")} {...context.arrowProps}>
                     {item.hasChildren &&
                         (context.isExpanded ? (
-                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16" enableBackground="new 0 0 16 16" xmlSpace="preserve">
+                            <svg
+                                version="1.1"
+                                xmlns="http://www.w3.org/2000/svg"
+                                xmlnsXlink="http://www.w3.org/1999/xlink"
+                                x="0px"
+                                y="0px"
+                                viewBox="0 0 16 16"
+                                enableBackground="new 0 0 16 16"
+                                xmlSpace="preserve"
+                            >
                                 <g>
                                     <g>
                                         <path
@@ -67,7 +92,16 @@ export const createCustomRenderers = (renderDepthOffset: number): CustomTreeRend
                                 </g>
                             </svg>
                         ) : (
-                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16" enableBackground="new 0 0 16 16" xmlSpace="preserve">
+                            <svg
+                                version="1.1"
+                                xmlns="http://www.w3.org/2000/svg"
+                                xmlnsXlink="http://www.w3.org/1999/xlink"
+                                x="0px"
+                                y="0px"
+                                viewBox="0 0 16 16"
+                                enableBackground="new 0 0 16 16"
+                                xmlSpace="preserve"
+                            >
                                 <g>
                                     <g>
                                         <path
@@ -90,17 +124,49 @@ export const createCustomRenderers = (renderDepthOffset: number): CustomTreeRend
             const type = context.isRenaming ? undefined : "button";
             // const { type: _, ...interactiveElementProps } = context.interactiveElementProps;
             return (
-                <li {...context.itemContainerWithChildrenProps} className={cx("rct-tree-item-li", item.hasChildren && "rct-tree-item-li-hasChildren", context.isSelected && "rct-tree-item-li-selected", context.isExpanded && "rct-tree-item-li-expanded", context.isFocused && "rct-tree-item-li-focused", context.isDraggingOver && "rct-tree-item-li-dragging-over", context.isSearchMatching && "rct-tree-item-li-search-match")}>
+                <li
+                    {...context.itemContainerWithChildrenProps}
+                    className={cx(
+                        "rct-tree-item-li",
+                        item.hasChildren && "rct-tree-item-li-hasChildren",
+                        context.isSelected && "rct-tree-item-li-selected",
+                        context.isExpanded && "rct-tree-item-li-expanded",
+                        context.isFocused && "rct-tree-item-li-focused",
+                        context.isDraggingOver && "rct-tree-item-li-dragging-over",
+                        context.isSearchMatching && "rct-tree-item-li-search-match",
+                    )}
+                >
                     <div
                         {...context.itemContainerWithoutChildrenProps}
                         // style={{ marginLeft: `${depth * renderDepthOffset}em` }}
-                        className={cx("rct-tree-item-title-container", item.hasChildren && "rct-tree-item-title-container-hasChildren", context.isSelected && "rct-tree-item-title-container-selected", context.isExpanded && "rct-tree-item-title-container-expanded", context.isFocused && "rct-tree-item-title-container-focused", context.isDraggingOver && "rct-tree-item-title-container-dragging-over", context.isSearchMatching && "rct-tree-item-title-container-search-match", item.index === menuItem && "menuItem")}
+                        className={cx(
+                            "rct-tree-item-title-container",
+                            item.hasChildren && "rct-tree-item-title-container-hasChildren",
+                            context.isSelected && "rct-tree-item-title-container-selected",
+                            context.isExpanded && "rct-tree-item-title-container-expanded",
+                            context.isFocused && "rct-tree-item-title-container-focused",
+                            context.isDraggingOver && "rct-tree-item-title-container-dragging-over",
+                            context.isSearchMatching && "rct-tree-item-title-container-search-match",
+                            item.index === menuItem && "menuItem",
+                        )}
                     >
                         {Array.from({ length: depth }, (_, i) => (
                             <i className={`line depth${i % 5}`} key={i}></i>
                         ))}
                         {arrow}
-                        <InteractiveComponent type={type} {...(context.interactiveElementProps as Omit<React.HTMLProps<HTMLButtonElement & HTMLDivElement>, "type">)} className={cx("rct-tree-item-button", item.hasChildren && "rct-tree-item-button-hasChildren", context.isSelected && "rct-tree-item-button-selected", context.isExpanded && "rct-tree-item-button-expanded", context.isFocused && "rct-tree-item-button-focused", context.isDraggingOver && "rct-tree-item-button-dragging-over", context.isSearchMatching && "rct-tree-item-button-search-match")}>
+                        <InteractiveComponent
+                            type={type}
+                            {...(context.interactiveElementProps as Omit<React.HTMLProps<HTMLButtonElement & HTMLDivElement>, "type">)}
+                            className={cx(
+                                "rct-tree-item-button",
+                                item.hasChildren && "rct-tree-item-button-hasChildren",
+                                context.isSelected && "rct-tree-item-button-selected",
+                                context.isExpanded && "rct-tree-item-button-expanded",
+                                context.isFocused && "rct-tree-item-button-focused",
+                                context.isDraggingOver && "rct-tree-item-button-dragging-over",
+                                context.isSearchMatching && "rct-tree-item-button-search-match",
+                            )}
+                        >
                             {title}
                         </InteractiveComponent>
                     </div>
@@ -124,7 +190,14 @@ export const createCustomRenderers = (renderDepthOffset: number): CustomTreeRend
         },
         renderTreeContainer: ({ children, containerProps, info }) => {
             return (
-                <div className={cx("rct-tree-root", info.isFocused && "rct-tree-root-focus", info.isRenaming && "rct-tree-root-renaming", info.areItemsSelected && "rct-tree-root-itemsselected")}>
+                <div
+                    className={cx(
+                        "rct-tree-root",
+                        info.isFocused && "rct-tree-root-focus",
+                        info.isRenaming && "rct-tree-root-renaming",
+                        info.areItemsSelected && "rct-tree-root-itemsselected",
+                    )}
+                >
                     <div {...containerProps}>{children}</div>
                 </div>
             );
@@ -137,7 +210,17 @@ export const createCustomRenderers = (renderDepthOffset: number): CustomTreeRend
             );
         },
         renderDragBetweenLine: ({ draggingPosition, lineProps }) => {
-            return <div {...lineProps} style={{ left: `${draggingPosition.depth * renderDepthOffset}em` }} className={cx("rct-tree-drag-between-line", draggingPosition.targetType === "between-items" && draggingPosition.linePosition === "top" && "rct-tree-drag-between-line-top", draggingPosition.targetType === "between-items" && draggingPosition.linePosition === "bottom" && "rct-tree-drag-between-line-bottom")} />;
+            return (
+                <div
+                    {...lineProps}
+                    style={{ left: `${draggingPosition.depth * renderDepthOffset}em` }}
+                    className={cx(
+                        "rct-tree-drag-between-line",
+                        draggingPosition.targetType === "between-items" && draggingPosition.linePosition === "top" && "rct-tree-drag-between-line-top",
+                        draggingPosition.targetType === "between-items" && draggingPosition.linePosition === "bottom" && "rct-tree-drag-between-line-bottom",
+                    )}
+                />
+            );
         },
         renderSearchInput: ({ inputProps }) => {
             return (

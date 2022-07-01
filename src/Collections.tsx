@@ -1,9 +1,9 @@
-import React, { useState, useRef, forwardRef, MutableRefObject } from "react";
+import React, { useState, useRef, forwardRef, MutableRefObject, useMemo } from "react";
 import reactStringReplace from "react-string-replace";
 
 import "./Collections.css";
 
-import { ControlledTreeEnvironment, Tree, TreeRef, TreeItemIndex, TreeItem, TreeEnvironmentRef, TreeItemRenderContext, InteractionMode, DraggingPosition } from "react-complex-tree";
+import { ControlledTreeEnvironment, Tree, TreeRef, TreeItemIndex, TreeItem, TreeEnvironmentRef, InteractionMode, DraggingPosition } from "react-complex-tree";
 import "react-complex-tree/lib/style.css";
 
 import icons from "./icons";
@@ -12,40 +12,59 @@ import { createCustomRenderers } from "./createCustomRenderers";
 import { customInteraction } from "./customInteraction";
 
 export type TreeItemData = {
-    title: string,
-    queryId: number | null,
-    path: TreeItemIndex[],
+    title: string;
+    queryId: number | null;
+    path: TreeItemIndex[];
 };
 
 export type FlatTreeData = Record<TreeItemIndex, TreeItem<TreeItemData>>;
 
 declare global {
     interface Window {
-        tree: unknown,
-        environment: unknown,
+        tree: unknown;
+        environment: unknown;
     }
 }
 
 const defaultRenderers = createCustomRenderers(1);
 
 type Props = {
-    treeData: FlatTreeData,
-    onSelectQuery: (queryKey: TreeItemIndex) => void,
-    onLoadAsMask: (queryKey: TreeItemIndex) => void,
-    onAppendToMask: (queryKey: TreeItemIndex) => void,
-    onAddRootCollection: () => TreeItemIndex,
-    onAddCollection: (underIndex: TreeItemIndex) => TreeItemIndex,
-    onDuplicate: (afterIndex: TreeItemIndex) => TreeItemIndex,
-    onRenameItem: (item: TreeItem<TreeItemData>, name: string, treeId: string) => void,
-    onDeleteItem: (item: TreeItem<TreeItemData>) => void,
-    onDrop: (item: TreeItem<TreeItemData>, target: DraggingPosition) => void,
-    filter: string,
-    set_filter: (filter: string) => void,
-    set_modal: (modal?: JSX.Element) => void,
-    focusedItem: TreeItemIndex,
+    treeData: FlatTreeData;
+    onSelectQuery: (queryKey: TreeItemIndex) => void;
+    onLoadAsMask: (queryKey: TreeItemIndex) => void;
+    onAppendToMask: (queryKey: TreeItemIndex) => void;
+    onAddRootCollection: () => TreeItemIndex;
+    onAddCollection: (underIndex: TreeItemIndex) => TreeItemIndex;
+    onDuplicate: (afterIndex: TreeItemIndex) => TreeItemIndex;
+    onRenameItem: (item: TreeItem<TreeItemData>, name: string, treeId: string) => void;
+    onDeleteItem: (item: TreeItem<TreeItemData>) => void;
+    onDrop: (item: TreeItem<TreeItemData>, target: DraggingPosition) => void;
+    filter: string;
+    set_filter: (filter: string) => void;
+    set_modal: (modal?: JSX.Element) => void;
+    focusedItem: TreeItemIndex;
 };
 
-const Collections = forwardRef<TreeRef, Props>(function Collections({ onDrop, onLoadAsMask, onAppendToMask, focusedItem, treeData, onSelectQuery, onAddRootCollection, onAddCollection, onRenameItem, filter, set_filter, onDeleteItem, onDuplicate, set_modal }, fwdTree) {
+const Collections = forwardRef<TreeRef, Props>(function Collections(
+    {
+        onDrop,
+        onLoadAsMask,
+        onAppendToMask,
+        focusedItem,
+        treeData,
+        onSelectQuery,
+        onAddRootCollection,
+        onAddCollection,
+        onRenameItem,
+        filter,
+        set_filter,
+        onDeleteItem,
+        onDuplicate,
+        set_modal,
+    },
+    fwdTree,
+) {
+
     const environment = useRef<TreeEnvironmentRef>(null);
     // const [focusedItem, setFocusedItem] = useState<TreeItemIndex>();
     const [expandedItems, set_expandedItems] = useState<Array<TreeItemIndex>>(["Fruit", "Lemon", "Berries", "Meals", "America", "Europe", "Asia", "Australia", "Desserts", "Drinks"]);
@@ -129,6 +148,8 @@ const Collections = forwardRef<TreeRef, Props>(function Collections({ onDrop, on
         }
     };
 
+    const filterRegExp = useMemo(() => filter === "" ? undefined : new RegExp(`(${filter.split(" ").filter(e => e).join("|")})`, "gi"), [filter]);
+
     window.tree = tree;
     window.environment = environment;
     return (
@@ -172,10 +193,7 @@ const Collections = forwardRef<TreeRef, Props>(function Collections({ onDrop, on
                         ["Collections"]: {
                             focusedItem,
                             expandedItems: [...expandedItems, ...(!!focusedItem ? treeData[focusedItem].data.path : [])],
-                            selectedItems: !!selectedItem
-                                ? [selectedItem]
-                                : !!focusedItem
-                                    ? [focusedItem] : [],
+                            selectedItems: !!selectedItem ? [selectedItem] : !!focusedItem ? [focusedItem] : [],
                         },
                     }}
                     canReorderItems
@@ -207,7 +225,7 @@ const Collections = forwardRef<TreeRef, Props>(function Collections({ onDrop, on
                         treeId="Collections"
                         rootItem="root"
                         ref={tree}
-                        renderItemArrow={({ item, context }: { item: TreeItem<TreeItemData>, context: TreeItemRenderContext<never> }) =>
+                        renderItemArrow={({ item, context }) =>
                             item.hasChildren ? (
                                 <span className="blueprint-icons" onClick={() => tree.current?.toggleItemExpandedState(item.index)}>
                                     {" "}
@@ -225,7 +243,7 @@ const Collections = forwardRef<TreeRef, Props>(function Collections({ onDrop, on
                                     }}
                                 >
                                     <div className="itemTitleText" onDoubleClick={() => tree.current?.startRenamingItem(item.index)}>
-                                        {renderManaTitle(item.data.title)}
+                                        {renderManaTitle(item.data.title, filterRegExp)}
                                     </div>
                                     <div
                                         className="blueprint-icons itemMenuButton"
@@ -243,7 +261,12 @@ const Collections = forwardRef<TreeRef, Props>(function Collections({ onDrop, on
                         renderRenameInput={({ inputProps, inputRef, submitButtonProps, submitButtonRef, formProps }) => (
                             <form {...formProps} className="rct-tree-item-renaming-form">
                                 <input {...inputProps} ref={inputRef} className="rct-tree-item-renaming-input" />
-                                <button {...submitButtonProps} ref={submitButtonRef} type="submit" className="ms ms-artist-nib rct-tree-item-renaming-submit-button-sfm"></button>
+                                <button
+                                    {...submitButtonProps}
+                                    ref={submitButtonRef}
+                                    type="submit"
+                                    className="ms ms-artist-nib rct-tree-item-renaming-submit-button-sfm"
+                                ></button>
                             </form>
                         )}
                         renderItem={(props) => defaultRenderers.renderItem(props, menuItem)}
@@ -255,24 +278,200 @@ const Collections = forwardRef<TreeRef, Props>(function Collections({ onDrop, on
     );
 });
 
-const renderManaTitle = (title: string): React.ReactElement => {
-    return (
-        <>
-            {reactStringReplace(title, /{(.+?)}/g, (match, i) => {
-                const key = match + i;
-                return costs.includes(match) ? <i key={key} className={`ms ms-${match} ms-cost ms-shadow`}></i> : match === "m" ? <i key={key} className={"ms ms-ability-menace"}></i> : abilities.includes(match) ? <i key={key} className={`ms ms-ability-${match}`}></i> : guilds.includes(match) ? <i key={key} className={`ms ms-guild-${match}`}></i> : clans.includes(match) ? <i key={key} className={`ms ms-clans-${match}`}></i> : schools.includes(match) ? <i key={key} className={`ms ms-school-${match}`}></i> : dfcs.includes(match) ? <i key={key} className={`ms ms-dfc-${match}`}></i> : types.includes(match) ? <i key={key} className={`ms ms-${match}`}></i> : match.indexOf("ss") === 0 ? <i key={key} className={`ss ${match}`}></i> : <i key={key} className={`ms ms-${match}`}></i>;
-            })}
-        </>
-    );
+const renderManaTitle = (title: string, filterRegExp?: RegExp): React.ReactElement => {
+    let renderedTitle: React.ReactNodeArray | string = title;
+
+    if (!!filterRegExp) {
+        renderedTitle = reactStringReplace(title, filterRegExp, (match, i) => {
+            const key = match + i;
+            return <span  {...{ key, style: { color: "var(--ms-m-color)" } }}>{match}</span>;
+        });
+    }
+
+    renderedTitle = reactStringReplace(renderedTitle, /{(.+?)}/g, (match, i) => {
+        const key = match + i;
+        return costs.includes(match) ? (
+            <i key={key} className={`ms ms-${match} ms-cost ms-shadow`}></i>
+        ) : match === "m" ? (
+            <i key={key} className={"ms ms-ability-menace"}></i>
+        ) : abilities.includes(match) ? (
+            <i key={key} className={`ms ms-ability-${match}`}></i>
+        ) : guilds.includes(match) ? (
+            <i key={key} className={`ms ms-guild-${match}`}></i>
+        ) : clans.includes(match) ? (
+            <i key={key} className={`ms ms-clans-${match}`}></i>
+        ) : schools.includes(match) ? (
+            <i key={key} className={`ms ms-school-${match}`}></i>
+        ) : dfcs.includes(match) ? (
+            <i key={key} className={`ms ms-dfc-${match}`}></i>
+        ) : types.includes(match) ? (
+            <i key={key} className={`ms ms-${match}`}></i>
+        ) : match.indexOf("ss") === 0 ? (
+            <i key={key} className={`ss ${match}`}></i>
+        ) : (
+            <i key={key} className={`ms ms-${match}`}></i>
+        );
+    });
+    return <>{renderedTitle}</>;
 };
 
-const costs = ["c", "2b", "2g", "2r", "2u", "2w", "b", "bg", "bp", "br", "e", "g", "gp", "gu", "gw", "p", "r", "rg", "rp", "rw", "s", "s-mtga", "tap", "tap-alt", "u", "ub", "untap", "up", "ur", "w", "wb", "wp", "wu", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "1-2", "infinity", "100", "1000000"];
+const costs = [
+    "c",
+    "2b",
+    "2g",
+    "2r",
+    "2u",
+    "2w",
+    "b",
+    "bg",
+    "bp",
+    "br",
+    "e",
+    "g",
+    "gp",
+    "gu",
+    "gw",
+    "p",
+    "r",
+    "rg",
+    "rp",
+    "rw",
+    "s",
+    "s-mtga",
+    "tap",
+    "tap-alt",
+    "u",
+    "ub",
+    "untap",
+    "up",
+    "ur",
+    "w",
+    "wb",
+    "wp",
+    "wu",
+    "x",
+    "y",
+    "z",
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "20",
+    "1-2",
+    "infinity",
+    "100",
+    "1000000",
+];
 
 const dfcs = ["day", "night", "spark", "ignite", "moon", "emrakul", "enchantment", "lesson", "modal-face", "modal-back"];
 
-const types = ["artifact", "creature", "enchantment", "instant", "land", "planeswalker", "sorcery", "tribal", "plane", "phenomenon", "scheme", "conspiracy", "vanguard", "token", "chaos", "flashback", "power", "toughness", "artist-brush", "artist-nib", "saga", "acorn", "rarity", "multicolor"];
+const types = [
+    "artifact",
+    "creature",
+    "enchantment",
+    "instant",
+    "land",
+    "planeswalker",
+    "sorcery",
+    "tribal",
+    "plane",
+    "phenomenon",
+    "scheme",
+    "conspiracy",
+    "vanguard",
+    "token",
+    "chaos",
+    "flashback",
+    "power",
+    "toughness",
+    "artist-brush",
+    "artist-nib",
+    "saga",
+    "acorn",
+    "rarity",
+    "multicolor",
+];
 
-const abilities = ["activated", "adamant", "adapt", "addendum", "adventure", "afflict", "afterlife", "aftermath", "amass", "ascend", "boast", "companion", "constellation", "convoke", "d20", "deathtouch", "defender", "devotion", "double", "dungeon", "embalm", "enrage", "escape", "eternalize", "explore", "first", "flash", "flying", "foretell", "haste", "hexproof", "hexproof-red", "hexproof-white", "hexproof-green", "hexproof-blue", "hexproof-black", "indestructible", "jumpstart", "kicker", "landfall", "learn", "lifelink", "magecraft", "menace", "mutate", "party", "proliferate", "prowess", "raid", "reach", "revolt", "riot", "spectacle", "static", "summoning", "surveil", "trample", "transform", "triggered", "undergrowth", "vigilance", "ward"];
+const abilities = [
+    "activated",
+    "adamant",
+    "adapt",
+    "addendum",
+    "adventure",
+    "afflict",
+    "afterlife",
+    "aftermath",
+    "amass",
+    "ascend",
+    "boast",
+    "companion",
+    "constellation",
+    "convoke",
+    "d20",
+    "deathtouch",
+    "defender",
+    "devotion",
+    "double",
+    "dungeon",
+    "embalm",
+    "enrage",
+    "escape",
+    "eternalize",
+    "explore",
+    "first",
+    "flash",
+    "flying",
+    "foretell",
+    "haste",
+    "hexproof",
+    "hexproof-red",
+    "hexproof-white",
+    "hexproof-green",
+    "hexproof-blue",
+    "hexproof-black",
+    "indestructible",
+    "jumpstart",
+    "kicker",
+    "landfall",
+    "learn",
+    "lifelink",
+    "magecraft",
+    "menace",
+    "mutate",
+    "party",
+    "proliferate",
+    "prowess",
+    "raid",
+    "reach",
+    "revolt",
+    "riot",
+    "spectacle",
+    "static",
+    "summoning",
+    "surveil",
+    "trample",
+    "transform",
+    "triggered",
+    "undergrowth",
+    "vigilance",
+    "ward",
+];
 
 const guilds = ["azorius", "boros", "dimir", "golgari", "gruul", "izzet", "orzhov", "rakdos", "selesnya", "simic"];
 const clans = ["abzan", "jeskai", "mardu", "sultai", "temur", "atarka", "dromoka", "kolaghan", "ojutai", "silumgar"];

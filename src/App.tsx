@@ -12,7 +12,13 @@ import { DraggingPosition, TreeItemIndex, TreeRef } from "react-complex-tree";
 import Textarea from "react-expanding-textarea";
 import icons from "./icons";
 
-const buildCollectionsTree = (names: Names, filter: string, editingQuery: TreeItemIndex, collection: DataTree, path: TreeItemIndex[] = []): [FlatTreeData, boolean] => {
+const buildCollectionsTree = (
+    names: Names,
+    filter: string,
+    editingQuery: TreeItemIndex,
+    collection: DataTree,
+    path: TreeItemIndex[] = [],
+): [FlatTreeData, boolean] => {
     let data: FlatTreeData = {};
     let hasMatch = false;
     for (const [key, value] of Object.entries(collection)) {
@@ -91,7 +97,14 @@ const dragAndDropProp = (obj: DataTree, match: TreeItemIndex, target: DraggingPo
         case "item":
             return placeProp(obj, match, moved, target.targetItem);
         case "between-items":
-            return placeProp(obj, match, moved, target.parentItem, treeData[target.parentItem].children?.[target.childIndex - 1], treeData[target.parentItem].children?.[target.childIndex]);
+            return placeProp(
+                obj,
+                match,
+                moved,
+                target.parentItem,
+                treeData[target.parentItem].children?.[target.childIndex - 1],
+                treeData[target.parentItem].children?.[target.childIndex],
+            );
     }
 };
 
@@ -169,9 +182,9 @@ const addCollection = (obj: DataTree, match: TreeItemIndex, newIndex: TreeItemIn
 };
 
 function App(): JSX.Element {
-    const [queryCollection, sync_queryCollection] = useImmer<DataTree>(defaultDataTree);
-    const [names, sync_names] = useImmer<Names>(defaultNames);
-    const [queries, sync_queries] = useImmer<QueryLibrary>(defautlQueries);
+    const [queryCollection, sync_queryCollection] = useState<DataTree>(defaultDataTree);
+    const [names, sync_names] = useState<Names>(defaultNames);
+    const [queries, sync_queries] = useState<QueryLibrary>(defautlQueries);
     const [editingQuery, set_editingQuery] = useState<TreeItemIndex>("Hans");
 
     const set_names = (p: (draft: WritableDraft<Names>) => void): Promise<void> => browser.storage.sync.set({ names: produce(names, p) });
@@ -532,7 +545,8 @@ function App(): JSX.Element {
                 <a style={{ opacity: 0.5, fontSize: "50%", position: "relative" }} href="about:devtools-toolbox?id=scryfall-mentor%40VulumeCode&type=extension">
                     Debug
                 </a>
-                <a style={{ opacity: 0.5, fontSize: "50%", position: "relative" }}
+                <a
+                    style={{ opacity: 0.5, fontSize: "50%", position: "relative" }}
                     href={"data:text/json," + JSON.stringify({ queryCollection, queries, names }, undefined, 1)}
                     download="export.json"
                 >

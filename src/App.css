@@ -95,7 +95,6 @@ body::before {
     padding-right: calc(1em - 8px);
 }
 
-
 .queryEditor {
     display: flex;
     width: 100%;
