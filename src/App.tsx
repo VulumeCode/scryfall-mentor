@@ -191,9 +191,9 @@ function App(): JSX.Element {
     const [queries, sync_queries] = useState<QueryLibrary>(defautlQueries);
     const [editingQuery, set_editingQuery] = useState<TreeItemIndex>("Hans");
 
-    const set_names = (p: (draft: WritableDraft<Names>) => void): Promise<void> => browser.storage.sync.set({ names: produce(names, p) });
-    const set_queries = (p: (draft: WritableDraft<QueryLibrary>) => void): Promise<void> => browser.storage.sync.set({ queries: produce(queries, p) });
-    const set_queryCollection = (p: (draft: WritableDraft<DataTree>) => void): Promise<void> => browser.storage.sync.set({ queryCollection: produce(queryCollection, p) });
+    const set_names_async = (p: (draft: WritableDraft<Names>) => void): Promise<void> => browser.storage.sync.set({ names: produce(names, p) });
+    const set_queries_async = (p: (draft: WritableDraft<QueryLibrary>) => void): Promise<void> => browser.storage.sync.set({ queries: produce(queries, p) });
+    const set_queryCollection_async = (p: (draft: WritableDraft<DataTree>) => void): Promise<void> => browser.storage.sync.set({ queryCollection: produce(queryCollection, p) });
 
     useEffect(() => {
         browser.storage.onChanged.addListener((changes) => {
@@ -257,16 +257,16 @@ function App(): JSX.Element {
 
     const tree = useRef<TreeRef>(null);
 
-    const saveEditingQueries = (): void => {
+    const save_editingQueries_async = async (): Promise<void> => {
         !!editingQueryId &&
-            set_queries((draft) => {
+            await set_queries_async((draft) => {
                 draft[editingQueryId] = queryParts;
             });
     };
 
     useEffect(() => {
         if (autoSave) {
-            saveEditingQueries();
+            save_editingQueries_async();
         }
     }, [queryParts, autoSave]);
 
@@ -288,56 +288,56 @@ function App(): JSX.Element {
                             set_queryParts(queries[editingQueryId]);
                         }
                     }}
-                    onAddRootCollection={() => {
+                    onAddRootCollection={async () => {
                         const newIndex = crypto.randomUUID();
-                        set_names((draft) => {
+                        await set_names_async((draft) => {
                             draft[newIndex] = "New collection";
                         });
-                        set_queryCollection((draft) => {
+                        await set_queryCollection_async((draft) => {
                             (draft.root as WritableDraft<DataTree>)[newIndex] = {};
                         });
                         return newIndex;
                     }}
-                    onAddCollection={(underIndex) => {
+                    onAddCollection={async (underIndex) => {
                         const newQueryIndex = crypto.randomUUID();
                         const newQueryNumber = Date.now();
                         const newCollectionIndex = crypto.randomUUID();
-                        set_names((draft) => {
+                        await set_names_async((draft) => {
                             draft[newQueryIndex] = "New query";
                             draft[newCollectionIndex] = "New collection";
                         });
-                        set_queries((draft) => {
+                        await set_queries_async((draft) => {
                             draft[newQueryNumber] = [];
                         });
-                        set_queryCollection((draft) => addCollection(draft, underIndex, newCollectionIndex, { [newQueryIndex]: newQueryNumber }));
+                        await set_queryCollection_async((draft) => addCollection(draft, underIndex, newCollectionIndex, { [newQueryIndex]: newQueryNumber }));
                         return newCollectionIndex;
                     }}
-                    onDuplicate={(afterIndex) => {
+                    onDuplicate={async (afterIndex) => {
                         const newIndex = crypto.randomUUID();
-                        set_names((draft) => {
+                        await set_names_async((draft) => {
                             draft[newIndex] = duplicateName(names[afterIndex]);
                         });
                         const newQueryNumber = Date.now();
-                        set_queries((draft) => {
+                        await set_queries_async((draft) => {
                             draft[newQueryNumber] = draft[treeData[afterIndex].data.queryId as number];
                         });
-                        set_queryCollection((draft) => duplicate(draft, afterIndex, newIndex, newQueryNumber));
+                        await set_queryCollection_async((draft) => duplicate(draft, afterIndex, newIndex, newQueryNumber));
                         set_editingQuery(newIndex);
                         return newIndex;
                     }}
-                    onRenameItem={(item, name) => {
-                        set_names((draft) => {
+                    onRenameItem={async (item, name) => {
+                        await set_names_async((draft) => {
                             draft[item.index] = name;
                         });
                     }}
-                    onDeleteItem={(item) => {
-                        set_queryCollection((draft) => {
+                    onDeleteItem={async (item) => {
+                        await set_queryCollection_async((draft) => {
                             const removed = removeProp(draft, item.index);
                             console.log(removed);
                         });
                     }}
-                    onDrop={(item, target) => {
-                        set_queryCollection((draft) => {
+                    onDrop={async (item, target) => {
+                        await set_queryCollection_async((draft) => {
                             dragAndDropProp(draft, item.index, target, treeData);
                         });
                         console.log(item, target);
@@ -436,7 +436,7 @@ function App(): JSX.Element {
                                 className="button-n inverted"
                                 disabled={!dirty}
                                 onClick={() => {
-                                    saveEditingQueries();
+                                    save_editingQueries_async();
                                 }}
                             >
                                 Save
@@ -445,17 +445,16 @@ function App(): JSX.Element {
                         <button
                             key={"saveas"}
                             className="button-n inverted"
-                            onClick={() => {
+                            onClick={async () => {
                                 const newIndex = crypto.randomUUID();
-                                set_names((draft) => {
+                                await set_names_async((draft) => {
                                     draft[newIndex] = duplicateName(names[editingQuery]);
                                 });
                                 const newQueryNumber = Date.now();
-                                set_queries((draft) => {
+                                await set_queries_async((draft) => {
                                     draft[newQueryNumber] = queryParts;
                                 });
-                                // set_queryCollection((draft) => duplicate(draft, editingQuery, newIndex, newQueryNumber));
-                                set_queryCollection((draft) => saveUnder(draft, editingQueryPath, newIndex, newQueryNumber));
+                                await set_queryCollection_async((draft) => saveUnder(draft, editingQueryPath, newIndex, newQueryNumber));
                                 set_editingQuery(newIndex);
                                 tree.current?.startRenamingItem(newIndex);
                             }}
@@ -527,17 +526,16 @@ function App(): JSX.Element {
                         <button
                             key={"saveas"}
                             className="button-n inverted"
-                            onClick={() => {
+                            onClick={async () => {
                                 const newIndex = crypto.randomUUID();
-                                set_names((draft) => {
+                                await set_names_async((draft) => {
                                     draft[newIndex] = duplicateName(names[editingQuery]) + " {m}";
                                 });
                                 const newQueryNumber = Date.now();
-                                set_queries((draft) => {
+                                await set_queries_async((draft) => {
                                     draft[newQueryNumber] = maskQueryParts;
                                 });
-                                // set_queryCollection((draft) => duplicate(draft, editingQuery, newIndex, newQueryNumber));
-                                set_queryCollection((draft) => saveUnder(draft, editingQueryPath, newIndex, newQueryNumber));
+                                await set_queryCollection_async((draft) => saveUnder(draft, editingQueryPath, newIndex, newQueryNumber));
                                 tree.current?.startRenamingItem(newIndex);
                             }}
                         >

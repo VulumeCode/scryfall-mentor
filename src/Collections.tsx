@@ -33,9 +33,9 @@ type Props = {
     onSelectQuery: (queryKey: TreeItemIndex) => void;
     onLoadAsMask: (queryKey: TreeItemIndex) => void;
     onAppendToMask: (queryKey: TreeItemIndex) => void;
-    onAddRootCollection: () => TreeItemIndex;
-    onAddCollection: (underIndex: TreeItemIndex) => TreeItemIndex;
-    onDuplicate: (afterIndex: TreeItemIndex) => TreeItemIndex;
+    onAddRootCollection: () => Promise<TreeItemIndex>;
+    onAddCollection: (underIndex: TreeItemIndex) => Promise<TreeItemIndex>;
+    onDuplicate: (afterIndex: TreeItemIndex) => Promise<TreeItemIndex>;
     onRenameItem: (item: TreeItem<TreeItemData>, name: string, treeId: string) => void;
     onDeleteItem: (item: TreeItem<TreeItemData>) => void;
     onDrop: (item: TreeItem<TreeItemData>, target: DraggingPosition) => void;
@@ -93,8 +93,8 @@ const Collections = forwardRef<TreeRef, Props>(function Collections(
                     {!!item.hasChildren ? (
                         <>
                             <li
-                                onClick={doIt(() => {
-                                    const newIndex = onAddCollection(item.index);
+                                onClick={doIt(async () => {
+                                    const newIndex = await onAddCollection(item.index);
                                     tree.current?.startRenamingItem(newIndex);
                                     set_expandedItems([...expandedItems, newIndex]);
                                 })}
@@ -122,8 +122,8 @@ const Collections = forwardRef<TreeRef, Props>(function Collections(
                                 Append to mask
                             </li>
                             <li
-                                onClick={doIt(() => {
-                                    const newIndex = onDuplicate(item.index);
+                                onClick={doIt(async () => {
+                                    const newIndex = await onDuplicate(item.index);
                                     set_selectedItem(newIndex);
                                     tree.current?.startRenamingItem(newIndex);
                                 })}
@@ -157,8 +157,8 @@ const Collections = forwardRef<TreeRef, Props>(function Collections(
             <span style={{ display: "flex", width: "100%" }}>
                 <button
                     className="blueprint-icons-big button-n inverted"
-                    onClick={() => {
-                        const newIndex = onAddRootCollection();
+                    onClick={async () => {
+                        const newIndex = await onAddRootCollection();
                         tree.current?.startRenamingItem(newIndex);
                     }}
                 >
