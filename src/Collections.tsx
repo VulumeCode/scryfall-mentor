@@ -40,27 +40,27 @@ type Props = {
     onDeleteItem: (item: TreeItem<TreeItemData>) => void,
     onDrop: (item: TreeItem<TreeItemData>, target: DraggingPosition) => void,
     filter: string,
-    setFilter: (filter: string) => void,
-    setModal: (modal?: JSX.Element) => void,
+    set_filter: (filter: string) => void,
+    set_modal: (modal?: JSX.Element) => void,
     focusedItem: TreeItemIndex,
 };
 
-const Collections = forwardRef<TreeRef, Props>(function Collections({ onDrop, onLoadAsMask, onAppendToMask, focusedItem, treeData, onSelectQuery, onAddRootCollection, onAddCollection, onRenameItem, filter, setFilter, onDeleteItem, onDuplicate, setModal }, fwdTree) {
+const Collections = forwardRef<TreeRef, Props>(function Collections({ onDrop, onLoadAsMask, onAppendToMask, focusedItem, treeData, onSelectQuery, onAddRootCollection, onAddCollection, onRenameItem, filter, set_filter, onDeleteItem, onDuplicate, set_modal }, fwdTree) {
     // const _oldTree = useRef<TreeRef>(null);
     const environment = useRef<TreeEnvironmentRef>(null);
     // const [focusedItem, setFocusedItem] = useState<TreeItemIndex>();
-    const [expandedItems, setExpandedItems] = useState<Array<TreeItemIndex>>(["Fruit", "Lemon", "Berries", "Meals", "America", "Europe", "Asia", "Australia", "Desserts", "Drinks"]);
-    const [selectedItem, setSelectedItem] = useState<TreeItemIndex | null>(null);
+    const [expandedItems, set_expandedItems] = useState<Array<TreeItemIndex>>(["Fruit", "Lemon", "Berries", "Meals", "America", "Europe", "Asia", "Australia", "Desserts", "Drinks"]);
+    const [selectedItem, set_selectedItem] = useState<TreeItemIndex | null>(null);
 
-    const [menuItem, setMenuItem] = useState<TreeItemIndex | undefined>();
+    const [menuItem, set_menuItem] = useState<TreeItemIndex | undefined>();
 
     const tree = fwdTree as MutableRefObject<TreeRef>;
 
     const setContextMenuItem = (item: TreeItem<TreeItemData>, e: HTMLElement | null): void => {
         console.dir(item);
         const close = (): void => {
-            setModal();
-            setMenuItem(undefined);
+            set_modal();
+            set_menuItem(undefined);
         };
         const doIt = (action: () => void): (() => void) => {
             return () => {
@@ -69,8 +69,8 @@ const Collections = forwardRef<TreeRef, Props>(function Collections({ onDrop, on
             };
         };
         if (!!e) {
-            setMenuItem(item.index);
-            setModal(
+            set_menuItem(item.index);
+            set_modal(
                 <ContextMenu yPos={e.getBoundingClientRect().bottom} onClose={close}>
                     {!!item.hasChildren ? (
                         <>
@@ -78,7 +78,7 @@ const Collections = forwardRef<TreeRef, Props>(function Collections({ onDrop, on
                                 onClick={doIt(() => {
                                     const newIndex = onAddCollection(item.index);
                                     tree.current?.startRenamingItem(newIndex);
-                                    setExpandedItems([...expandedItems, newIndex]);
+                                    set_expandedItems([...expandedItems, newIndex]);
                                 })}
                             >
                                 <i className="blueprint-icons-big">{icons["folder-new"].utf}</i>
@@ -106,7 +106,7 @@ const Collections = forwardRef<TreeRef, Props>(function Collections({ onDrop, on
                             <li
                                 onClick={doIt(() => {
                                     const newIndex = onDuplicate(item.index);
-                                    setSelectedItem(newIndex);
+                                    set_selectedItem(newIndex);
                                     tree.current?.startRenamingItem(newIndex);
                                 })}
                             >
@@ -151,10 +151,10 @@ const Collections = forwardRef<TreeRef, Props>(function Collections({ onDrop, on
                     value={filter}
                     placeholder={icons["filter"].utf}
                     onChange={(e) => {
-                        setFilter(e.target.value);
+                        set_filter(e.target.value);
                     }}
                 />
-                <button id="clear-filter" className="button-n inverted" onClick={() => setFilter("")}>
+                <button id="clear-filter" className="button-n inverted" onClick={() => set_filter("")}>
                     🞪
                 </button>
             </span>
@@ -191,13 +191,13 @@ const Collections = forwardRef<TreeRef, Props>(function Collections({ onDrop, on
                         if (!item.hasChildren) {
                             onSelectQuery(item.index);
                         }
-                        setSelectedItem(item.index);
+                        set_selectedItem(item.index);
                     }}
-                    onExpandItem={(item) => setExpandedItems([...expandedItems, item.index])}
-                    onCollapseItem={(item) => setExpandedItems(expandedItems.filter((expandedItemIndex) => expandedItemIndex !== item.index))}
+                    onExpandItem={(item) => set_expandedItems([...expandedItems, item.index])}
+                    onCollapseItem={(item) => set_expandedItems(expandedItems.filter((expandedItemIndex) => expandedItemIndex !== item.index))}
                     onSelectItems={(items) => {
                         console.log("onSelectItems");
-                        setSelectedItem(items.at(-1) ?? null);
+                        set_selectedItem(items.at(-1) ?? null);
                     }}
                     {...{ onRenameItem }}
                 >

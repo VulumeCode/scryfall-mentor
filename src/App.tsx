@@ -25,7 +25,7 @@ const buildCollectionsTree = (names: Names, filter: string, editingQuery: TreeIt
         let childData: FlatTreeData = {};
         if (isDir) {
             let childMatch: boolean;
-            [childData, childMatch] = buildCollectionsTree(names, doesMatchFilter ? "" : filter, editingQuery, value, [key, ...path]);
+            [childData, childMatch] = buildCollectionsTree(names, doesMatchFilter ? "" : filter, editingQuery, value, [...path, key]);
             doesMatchFilter ||= childMatch;
         }
         if (doesMatchFilter) {
@@ -141,6 +141,15 @@ const duplicate = (obj: DataTree, match: TreeItemIndex, newIndex: TreeItemIndex,
     }, {});
 };
 
+const saveUnder = (obj: DataTree, path: TreeItemIndex[], newIndex: TreeItemIndex, newValue: number): void => {
+    if (path.length == 0) {
+        obj[newIndex] = newValue;
+    } else {
+        const [head, ...rest] = path;
+        saveUnder(obj[head] as DataTree, rest, newIndex, newValue);
+    }
+};
+
 const addCollection = (obj: DataTree, match: TreeItemIndex, newIndex: TreeItemIndex, stub: DataTree): DataTree => {
     return Object.keys(obj).reduce((ac: DataTree, key) => {
         const value = obj[key];
@@ -159,18 +168,18 @@ const addCollection = (obj: DataTree, match: TreeItemIndex, newIndex: TreeItemIn
 };
 
 function App(): JSX.Element {
-    const [queryCollection, setQueryCollection] = useImmer<DataTree>(defaultDataTree);
-    const [names, setNames] = useImmer<Names>(defaultNames);
-    const [queries, setQueries] = useImmer<QueryLibrary>(defautlQueries);
-    const [editingQuery, setEditingQuery] = useState<TreeItemIndex>("Hans");
+    const [queryCollection, set_queryCollection] = useImmer<DataTree>(defaultDataTree);
+    const [names, set_names] = useImmer<Names>(defaultNames);
+    const [queries, set_queries] = useImmer<QueryLibrary>(defautlQueries);
+    const [editingQuery, set_editingQuery] = useState<TreeItemIndex>("Hans");
 
     useEffect(() => {
         async function fetchData(): Promise<void> {
             const stored = await browser.storage.local.get();
-            stored.queryCollection && setQueryCollection(stored.queryCollection as DataTree);
-            stored.names && setNames(stored.names as Names);
-            stored.queries && setQueries(stored.queries as QueryLibrary);
-            stored.editingQuery && setEditingQuery(stored.editingQuery as TreeItemIndex);
+            stored.queryCollection && set_queryCollection(stored.queryCollection as DataTree);
+            stored.names && set_names(stored.names as Names);
+            stored.queries && set_queries(stored.queries as QueryLibrary);
+            stored.editingQuery && set_editingQuery(stored.editingQuery as TreeItemIndex);
         }
         fetchData();
     }, []);
@@ -192,30 +201,39 @@ function App(): JSX.Element {
         browser.storage.onChanged.addListener(console.log);
     }, []);
 
-    const [filter, setFilter] = useImmer<string>("");
+    const [filter, set_filter] = useImmer<string>("");
 
     const treeData = useMemo(() => buildCollectionsTree(names, filter, editingQuery, queryCollection)[0], [names, filter, editingQuery, queryCollection]);
 
-    const editingQueryId = useMemo(() => treeData[editingQuery].data.queryId as number, [treeData, editingQuery]);
+    const [editingQueryPath, set_editingQueryPath] = useState(() => treeData[editingQuery]?.data.path);
+    useEffect(() => {
+        const editingQueryNode = treeData[editingQuery];
+        if (!!editingQueryNode) {
+            set_editingQueryPath(treeData[editingQuery]?.data.path);
+        }
+    }, [treeData, editingQuery]);
 
-    const [queryParts, setQueryParts] = useImmer<Array<QueryPart>>(queries[editingQueryId]);
+    const editingQueryId = useMemo(() => treeData[editingQuery]?.data.queryId, [treeData, editingQuery]);
 
-    const [autoSave, setAutoSave] = useState<boolean>(false);
+    const [queryParts, set_queryParts] = useImmer<Array<QueryPart>>(!!editingQueryId ? queries[editingQueryId] : []);
 
-    const dirty = useMemo(() => JSON.stringify(queries[editingQueryId]) !== JSON.stringify(queryParts), [queries, queryParts, editingQueryId]);
+    const [autoSave, set_autoSave] = useState<boolean>(false);
 
-    const [maskQueryParts, setMaskQueryParts] = useImmer<Array<QueryPart>>([]);
+    const dirty = useMemo(() => !!editingQueryId ? JSON.stringify(queries[editingQueryId]) !== JSON.stringify(queryParts) : false, [queries, queryParts, editingQueryId]);
 
-    const [modal, setModal] = useState<JSX.Element | undefined>(undefined);
+    const [maskQueryParts, set_maskQueryParts] = useImmer<Array<QueryPart>>([]);
 
-    // console.log("Update", Date.now(), dirty);
+    const [modal, set_modal] = useState<JSX.Element | undefined>(undefined);
+
+    console.log("Update", Date.now());
 
     const tree = useRef<TreeRef>(null);
 
     const saveEditingQueries = (): void => {
-        setQueries((draft) => {
-            draft[editingQueryId] = queryParts;
-        });
+        !!editingQueryId &&
+            set_queries((draft) => {
+                draft[editingQueryId] = queryParts;
+            });
     };
 
     useEffect(() => {
@@ -235,19 +253,19 @@ function App(): JSX.Element {
                     focusedItem={editingQuery}
                     treeData={treeData}
                     onSelectQuery={(queryKey): void => {
-                        console.log("setEditingQuery", queryKey);
+                        console.log("set_editingQuery", queryKey);
                         if (!dirty || confirm("Unsaved changes. Load anyways?")) {
-                            setEditingQuery(queryKey);
+                            set_editingQuery(queryKey);
                             const editingQueryId = treeData[queryKey].data.queryId as number;
-                            setQueryParts(queries[editingQueryId]);
+                            set_queryParts(queries[editingQueryId]);
                         }
                     }}
                     onAddRootCollection={() => {
                         const newIndex = crypto.randomUUID();
-                        setNames((draft) => {
+                        set_names((draft) => {
                             draft[newIndex] = "New collection";
                         });
-                        setQueryCollection((draft) => {
+                        set_queryCollection((draft) => {
                             (draft.root as WritableDraft<DataTree>)[newIndex] = {};
                         });
                         return newIndex;
@@ -256,55 +274,55 @@ function App(): JSX.Element {
                         const newQueryIndex = crypto.randomUUID();
                         const newQueryNumber = Date.now();
                         const newCollectionIndex = crypto.randomUUID();
-                        setNames((draft) => {
+                        set_names((draft) => {
                             draft[newQueryIndex] = "New query";
                             draft[newCollectionIndex] = "New collection";
                         });
-                        setQueries((draft) => {
+                        set_queries((draft) => {
                             draft[newQueryNumber] = [];
                         });
-                        setQueryCollection((draft) => addCollection(draft, underIndex, newCollectionIndex, { [newQueryIndex]: newQueryNumber }));
+                        set_queryCollection((draft) => addCollection(draft, underIndex, newCollectionIndex, { [newQueryIndex]: newQueryNumber }));
                         return newCollectionIndex;
                     }}
                     onDuplicate={(afterIndex) => {
                         const newIndex = crypto.randomUUID();
-                        setNames((draft) => {
+                        set_names((draft) => {
                             draft[newIndex] = duplicateName(names[afterIndex]);
                         });
                         const newQueryNumber = Date.now();
-                        setQueries((draft) => {
+                        set_queries((draft) => {
                             draft[newQueryNumber] = draft[treeData[afterIndex].data.queryId as number];
                         });
-                        setQueryCollection((draft) => duplicate(draft, afterIndex, newIndex, newQueryNumber));
-                        setEditingQuery(newIndex);
+                        set_queryCollection((draft) => duplicate(draft, afterIndex, newIndex, newQueryNumber));
+                        set_editingQuery(newIndex);
                         return newIndex;
                     }}
                     onRenameItem={(item, name) => {
-                        setNames((draft) => {
+                        set_names((draft) => {
                             draft[item.index] = name;
                         });
                     }}
                     onDeleteItem={(item) => {
-                        setQueryCollection((draft) => {
+                        set_queryCollection((draft) => {
                             const removed = removeProp(draft, item.index);
                             console.log(removed);
                         });
                     }}
                     onDrop={(item, target) => {
-                        setQueryCollection((draft) => {
+                        set_queryCollection((draft) => {
                             dragAndDropProp(draft, item.index, target, treeData);
                         });
                         console.log(item, target);
                     }}
                     onLoadAsMask={(queryKey) => {
                         const queryId = treeData[queryKey].data.queryId as number;
-                        setMaskQueryParts(queries[queryId]);
+                        set_maskQueryParts(queries[queryId]);
                     }}
                     onAppendToMask={(queryKey) => {
                         const queryId = treeData[queryKey].data.queryId as number;
-                        setMaskQueryParts((draft) => [...draft, ...queries[queryId]]);
+                        set_maskQueryParts((draft) => [...draft, ...queries[queryId]]);
                     }}
-                    {...{ filter, setFilter, setModal }}
+                    {...{ filter, set_filter, set_modal }}
                 />
 
                 {/* <div key="pushDownSpacer" className="pushDownSpacer"></div> */}
@@ -333,7 +351,7 @@ function App(): JSX.Element {
                                     checked={!!queryPart.enabled}
                                     disabled={last}
                                     onChange={(e) =>
-                                        setQueryParts((draft) => {
+                                        set_queryParts((draft) => {
                                             draft[i].enabled = e.target.checked;
                                         })
                                     }
@@ -345,7 +363,7 @@ function App(): JSX.Element {
                                     key={"queryPartTextArea" + i}
                                     rows={1}
                                     onChange={(e) =>
-                                        setQueryParts((draft) => {
+                                        set_queryParts((draft) => {
                                             if (last) {
                                                 draft[i] = { ...newQueryPart };
                                                 draft[i].enabled = true;
@@ -361,7 +379,7 @@ function App(): JSX.Element {
                                         className="remove"
                                         disabled={last}
                                         onClick={() =>
-                                            setQueryParts((draft) => {
+                                            set_queryParts((draft) => {
                                                 draft.splice(i, 1);
                                             })
                                         }
@@ -379,7 +397,7 @@ function App(): JSX.Element {
                             key={"autosave"}
                             className="button-n inverted"
                             onClick={() => {
-                                setAutoSave(!autoSave);
+                                set_autoSave(!autoSave);
                             }}
                         >
                             Autosave {autoSave ? "✓" : "✗"}
@@ -401,15 +419,16 @@ function App(): JSX.Element {
                             className="button-n inverted"
                             onClick={() => {
                                 const newIndex = crypto.randomUUID();
-                                setNames((draft) => {
+                                set_names((draft) => {
                                     draft[newIndex] = duplicateName(names[editingQuery]);
                                 });
                                 const newQueryNumber = Date.now();
-                                setQueries((draft) => {
+                                set_queries((draft) => {
                                     draft[newQueryNumber] = queryParts;
                                 });
-                                setQueryCollection((draft) => duplicate(draft, editingQuery, newIndex, newQueryNumber));
-                                setEditingQuery(newIndex);
+                                // set_queryCollection((draft) => duplicate(draft, editingQuery, newIndex, newQueryNumber));
+                                set_queryCollection((draft) => saveUnder(draft, editingQueryPath, newIndex, newQueryNumber));
+                                set_editingQuery(newIndex);
                                 tree.current?.startRenamingItem(newIndex);
                             }}
                         >
@@ -433,7 +452,7 @@ function App(): JSX.Element {
                                     checked={!!queryPart.enabled}
                                     disabled={last}
                                     onChange={(e) =>
-                                        setMaskQueryParts((draft) => {
+                                        set_maskQueryParts((draft) => {
                                             draft[i].enabled = e.target.checked;
                                         })
                                     }
@@ -445,7 +464,7 @@ function App(): JSX.Element {
                                     key={"queryPartTextArea" + i}
                                     rows={1}
                                     onChange={(e) =>
-                                        setMaskQueryParts((draft) => {
+                                        set_maskQueryParts((draft) => {
                                             if (last) {
                                                 draft[i] = { ...newQueryPart };
                                                 draft[i].enabled = true;
@@ -461,7 +480,7 @@ function App(): JSX.Element {
                                         className="remove"
                                         disabled={last}
                                         onClick={() =>
-                                            setMaskQueryParts((draft) => {
+                                            set_maskQueryParts((draft) => {
                                                 draft.splice(i, 1);
                                             })
                                         }
@@ -474,7 +493,7 @@ function App(): JSX.Element {
                         );
                     })}
                     <div className="queryEditor">
-                        <button key={"clear"} className="button-n inverted" onClick={() => setMaskQueryParts([])}>
+                        <button key={"clear"} className="button-n inverted" onClick={() => set_maskQueryParts([])}>
                             Clear mask
                         </button>
                         <button
@@ -482,14 +501,15 @@ function App(): JSX.Element {
                             className="button-n inverted"
                             onClick={() => {
                                 const newIndex = crypto.randomUUID();
-                                setNames((draft) => {
+                                set_names((draft) => {
                                     draft[newIndex] = duplicateName(names[editingQuery]) + " {m}";
                                 });
                                 const newQueryNumber = Date.now();
-                                setQueries((draft) => {
+                                set_queries((draft) => {
                                     draft[newQueryNumber] = maskQueryParts;
                                 });
-                                setQueryCollection((draft) => duplicate(draft, editingQuery, newIndex, newQueryNumber));
+                                // set_queryCollection((draft) => duplicate(draft, editingQuery, newIndex, newQueryNumber));
+                                set_queryCollection((draft) => saveUnder(draft, editingQueryPath, newIndex, newQueryNumber));
                                 tree.current?.startRenamingItem(newIndex);
                             }}
                         >
