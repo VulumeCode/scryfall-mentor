@@ -160,7 +160,11 @@ const saveUnder = (obj: DataTree, path: TreeItemIndex[], newIndex: TreeItemIndex
         obj[newIndex] = newValue;
     } else {
         const [head, ...rest] = path;
-        saveUnder(obj[head] as DataTree, rest, newIndex, newValue);
+        if (head in obj) {
+            saveUnder(obj[head] as DataTree, rest, newIndex, newValue);
+        } else {
+            obj[newIndex] = newValue;
+        }
     }
 };
 

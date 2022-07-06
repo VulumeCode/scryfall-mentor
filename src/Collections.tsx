@@ -192,7 +192,7 @@ const Collections = forwardRef<TreeRef, Props>(function Collections(
                     viewState={{
                         ["Collections"]: {
                             focusedItem,
-                            expandedItems: [...expandedItems, ...(!!focusedItem ? treeData[focusedItem].data.path : [])],
+                            expandedItems: [...expandedItems, ...(!!focusedItem ? treeData[focusedItem]?.data?.path ?? [] : [])],
                             selectedItems: !!selectedItem ? [selectedItem] : !!focusedItem ? [focusedItem] : [],
                         },
                     }}
