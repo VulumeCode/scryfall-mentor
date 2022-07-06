@@ -43,6 +43,7 @@ type Props = {
     set_filter: (filter: string) => void;
     set_modal: (modal?: JSX.Element) => void;
     focusedItem: TreeItemIndex;
+    editingQueryPath: TreeItemIndex[];
 };
 
 const Collections = forwardRef<TreeRef, Props>(function Collections(
@@ -61,6 +62,7 @@ const Collections = forwardRef<TreeRef, Props>(function Collections(
         onDeleteItem,
         onDuplicate,
         set_modal,
+        editingQueryPath,
     },
     fwdTree,
 ) {
@@ -192,7 +194,7 @@ const Collections = forwardRef<TreeRef, Props>(function Collections(
                     viewState={{
                         ["Collections"]: {
                             focusedItem,
-                            expandedItems: [...expandedItems, ...(!!focusedItem ? treeData[focusedItem]?.data?.path ?? [] : [])],
+                            expandedItems: [...expandedItems, ...editingQueryPath],
                             selectedItems: !!selectedItem ? [selectedItem] : !!focusedItem ? [focusedItem] : [],
                         },
                     }}

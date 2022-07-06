@@ -212,7 +212,7 @@ function App(): JSX.Element {
 
     const treeData = useMemo(() => buildCollectionsTree(names, filter, editingQuery, queryCollection)[0], [names, filter, editingQuery, queryCollection]);
 
-    const [editingQueryPath, set_editingQueryPath] = useState(() => treeData[editingQuery]?.data.path);
+    const [editingQueryPath, set_editingQueryPath] = useState(() => treeData[editingQuery]?.data?.path ?? []);
     useEffect(() => {
         const editingQueryNode = treeData[editingQuery];
         if (!!editingQueryNode) {
@@ -278,8 +278,9 @@ function App(): JSX.Element {
             <header className="App-header inverted">
                 <Collections
                     ref={tree}
-                    focusedItem={editingQuery}
                     treeData={treeData}
+                    focusedItem={editingQuery}
+                    editingQueryPath={editingQueryPath}
                     onSelectQuery={(queryKey): void => {
                         console.log("set_editingQuery", queryKey);
                         if (!dirty || confirm("Unsaved changes. Load anyways?")) {
