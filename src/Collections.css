@@ -130,6 +130,9 @@ input.collections-filter::placeholder {
 
 .itemTitleText {
     width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .itemMenuButton {

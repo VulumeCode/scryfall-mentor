@@ -62,7 +62,10 @@ body::before {
     padding: 0 0 6px 0;
 
     width: 100%;
-    text-align: end;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .activeMaskName {

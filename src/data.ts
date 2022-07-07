@@ -105,7 +105,7 @@ export const defautlQueries: QueryLibrary = {
     ],
 };
 
-export type Names = { [index: string]: string };
+export type Names = { [index: TreeItemIndex]: string };
 
 export const defaultNames: Names = {
     "root": "*",

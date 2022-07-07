@@ -12,6 +12,9 @@ import { DraggingPosition, TreeItemIndex, TreeRef } from "react-complex-tree";
 import Textarea from "react-expanding-textarea";
 import icons from "./icons";
 
+import { renderManaTitle } from "./renderManaTitle";
+
+
 const buildCollectionsTree = (
     names: Names,
     filter: string,
@@ -366,7 +369,12 @@ function App(): JSX.Element {
                 </div>
 
                 <div key="activeQueryName" className="activeQueryName">
-                    <i className="ms ms-ability-learn"></i> Search for Magic cards...
+                    <span style={{ flexShrink: 1, textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
+                        {/* {[...(editingQueryPath.slice(1).map(i => names[i] + "/")), names[editingQuery]].map(n => renderManaTitle(n))} */}
+                        {renderManaTitle(names[editingQuery])}
+                    </span>
+
+                    <span style={{ flexShrink: 0, textOverflow: "ellipsis", overflow: "hidden" }}><i className="ms ms-ability-learn"></i> Search for Magic cards...</span>
                 </div>
                 <div className="queryPartsContainer">
                     {[...queryParts, newQueryPart].map((queryPart, i) => {
