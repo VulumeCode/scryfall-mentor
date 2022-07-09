@@ -275,6 +275,8 @@ function App(): JSX.Element {
 
     const version = useMemo(() => browser.runtime.getManifest().version, []);
 
+    const searchQueryParts = useMemo((() => [...queryParts, ...maskQueryParts]), [queryParts, maskQueryParts]);
+
     return (
         <div className="App">
             {modal}
@@ -360,7 +362,8 @@ function App(): JSX.Element {
                 {/* <div key="pushDownSpacer" className="pushDownSpacer"></div> */}
 
                 <div className="queryEditor">
-                    <button key={"search"} className="button-n inverted" onMouseUp={(e) => search([...queryParts, ...maskQueryParts], e)}>
+                    <button key={"search"} className="button-n inverted" onMouseUp={(e) => search(searchQueryParts, e)}
+                        title="Hold Ctrl to open in a new tab.">
                         <i className="blueprint-icons-big">{icons["search"].utf}</i> Search
                     </button>
                     {/* <button key={"random"} className="button-n inverted" onMouseUp={(e) => goto("https://scryfall.com/random", e)}>
@@ -376,7 +379,8 @@ function App(): JSX.Element {
 
                     <span style={{ flexShrink: 0, textOverflow: "ellipsis", overflow: "hidden" }}><i className="ms ms-ability-learn"></i> Search for Magic cards...</span>
                 </div>
-                <div className="queryPartsContainer">
+                <div className="queryPartsContainer"
+                    onKeyDown={searchWithEnter(searchQueryParts)}>
                     {[...queryParts, newQueryPart].map((queryPart, i) => {
                         const last = i === queryParts.length;
                         return (
@@ -476,7 +480,8 @@ function App(): JSX.Element {
                 <div key="activeMaskName" className="activeMaskName">
                     <i className="ms ms-ability-menace"></i> Mask
                 </div>
-                <div className="queryPartsContainer">
+                <div className="queryPartsContainer"
+                    onKeyDown={searchWithEnter(searchQueryParts)}>
                     {[...maskQueryParts, newQueryPart].map((queryPart, i) => {
                         const last = i === maskQueryParts.length;
                         return (
@@ -568,7 +573,16 @@ function App(): JSX.Element {
     );
 }
 
-function search(queryParts: QueryPart[], e?: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+function searchWithEnter(queryParts: QueryPart[]): (e: React.KeyboardEvent) => void {
+    return (e) => {
+        if (e.key == "Enter" && !e.shiftKey) {
+            e.preventDefault(); e.stopPropagation();
+            search(queryParts, e);
+        }
+    };
+}
+
+function search(queryParts: QueryPart[], e?: React.MouseEvent | React.KeyboardEvent): void {
     let queryUrl = "https://scryfall.com/search?q=";
 
     queryUrl += encodeURIComponent(
@@ -582,8 +596,8 @@ function search(queryParts: QueryPart[], e?: React.MouseEvent<HTMLButtonElement,
     goto(queryUrl, e);
 }
 
-async function goto(url?: string, e?: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> {
-    if (!!e?.ctrlKey || !!e?.metaKey || e?.button === 1) {
+async function goto(url?: string, e?: React.MouseEvent | React.KeyboardEvent): Promise<void> {
+    if (!!e?.ctrlKey || !!e?.metaKey || (!!e && ("button" in e) && e?.button === 1)) {
         browser.tabs.create({ active: true, url: url });
     } else {
         const activeTab = (await browser.tabs.query({ currentWindow: true, active: true }))[0];
