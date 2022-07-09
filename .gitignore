@@ -24,4 +24,4 @@ yarn-error.log*
 
 sign.ps1
 
-.xpi
+*.xpi
