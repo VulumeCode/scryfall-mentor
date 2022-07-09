@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Scryfall Mentor",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "browser_specific_settings": {
         "gecko": {
             "id": "scryfall-mentor@VulumeCode",
@@ -18,7 +18,12 @@
         "default_title": "Scryfall Mentor",
         "default_panel": "index.html"
     },
-    "permissions": ["history", "tabs", "storage", "webNavigation"],
+    "permissions": [
+        "history",
+        "tabs",
+        "storage",
+        "webNavigation"
+    ],
     "commands": {
         "_execute_sidebar_action": {
             "suggested_key": {
