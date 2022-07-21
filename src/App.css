@@ -150,3 +150,31 @@ body::before {
     margin-right: 0.2em;
     font-weight: normal !important;
 }
+
+.App-footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 100%;
+    flex-grow: 1;
+}
+
+.App-footer a {
+    color: #999 !important;
+    opacity: 50%;
+    position: relative;
+}
+
+.App-footer .debug {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.App-footer .project {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+}

@@ -557,17 +557,40 @@ function App(): JSX.Element {
                         </button>
                     </div>
                 </div>
-                <div style={{ opacity: 0.5, fontSize: "50%" }}>Version {version}</div>
-                <a style={{ opacity: 0.5, fontSize: "50%", position: "relative" }} href="about:devtools-toolbox?id=scryfall-mentor%40VulumeCode&type=extension">
+                <div className="App-footer">
+                    <div className="debug">
+                        <div style={{  fontSize: "50%" }}>Version {version}</div>
+                        <a style={{  fontSize: "50%"  }} href="about:devtools-toolbox?id=scryfall-mentor%40VulumeCode&type=extension">
                     Debug
-                </a>
-                <a
-                    style={{ opacity: 0.5, fontSize: "50%", position: "relative" }}
-                    href={"data:text/json," + JSON.stringify({ queryCollection, queries, names }, undefined, 1)}
-                    download="export.json"
-                >
-                    Export
-                </a>
+                        </a>
+                        <a
+                            style={{  fontSize: "50%"  }}
+                            href={"data:text/json," + JSON.stringify({ queryCollection, queries, names }, undefined, 1)}
+                            download="export.json"
+                        >
+                    Export data
+                        </a>
+                        <a
+                            style={{  fontSize: "50%"  }}
+                            onClick={async () => {
+                                if(confirm("Reset data?")){
+                                    await set_queryCollection_async(() => defaultDataTree);
+                                    await set_names_async(() => defaultNames);
+                                    await set_queries_async(() => defautlQueries);}
+                            }}
+                        >
+                    Reset data
+                        </a>
+                    </div>
+                    <div className="project">
+                        <a  onMouseUp={(e)=>goto("https://github.com/VulumeCode/scryfall-mentor/",e)}>
+                    Project page
+                        </a>
+                        <a  onMouseUp={(e) => goto("https://github.com/VulumeCode/scryfall-mentor/", e)}>
+                    Donate
+                        </a>
+                    </div>
+                </div>
             </header>
         </div>
     );
