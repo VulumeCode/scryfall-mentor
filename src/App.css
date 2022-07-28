@@ -178,3 +178,7 @@ body::before {
     align-items: flex-end;
     justify-content: flex-start;
 }
+
+.App-footer .project i {
+    vertical-align: bottom;
+}

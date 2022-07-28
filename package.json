@@ -20,7 +20,8 @@
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "watch": "cra-build-watch",
-        "pretty": "prettier --write ."
+        "pretty": "prettier --write .",
+        "sign": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./sign.ps1"
     },
     "eslintConfig": {
         "extends": [

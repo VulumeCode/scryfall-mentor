@@ -584,10 +584,10 @@ function App(): JSX.Element {
                     </div>
                     <div className="project">
                         <a  onMouseUp={(e)=>goto("https://github.com/VulumeCode/scryfall-mentor/",e)}>
-                    Project page
+                    GitHub <i className="blueprint-icons-big">{icons["git-branch"].utf}</i>
                         </a>
-                        <a  onMouseUp={(e) => goto("https://github.com/VulumeCode/scryfall-mentor/", e)}>
-                    Donate
+                        <a  onMouseUp={(e) => goto("https://ko-fi.com/vulumecode", e)}>
+                    Donate <i className="blueprint-icons-big">{icons["heart"].utf}</i>
                         </a>
                     </div>
                 </div>

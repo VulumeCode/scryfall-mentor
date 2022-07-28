@@ -25,6 +25,10 @@
                 {
                     "version": "0.1.6",
                     "update_link": "https://github.com/VulumeCode/scryfall-mentor/releases/download/v0.1.6/362c776156d5441d9513-0.1.6.xpi"
+                },
+                {
+                    "version": "0.1.7",
+                    "update_link": "https://github.com/VulumeCode/scryfall-mentor/releases/download/v0.1.7/362c776156d5441d9513-0.1.7.xpi"
                 }
             ]
         }
